@@ -48,7 +48,7 @@ const Dashboard3 = () => {
     return (
         <>
             <div className="row">
-                <div className="col-sm-6 col-xl-3">
+                <div className="col-sm-6 col-xl-3 p-2">
                     <div className="widget-stat card bg-primary overflow-hidden">
                         <div className="card-header border-opacity">
                             <h3 className="card-title text-white">Total Students</h3>

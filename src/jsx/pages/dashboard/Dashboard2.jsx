@@ -93,7 +93,7 @@ const Dashboard2 = () => {
                     <Row>
                         {CarddBlog.map((item, index)=>(
                             <Col xl={"6"} xxl={"6"} sm={"6"} key={index}>
-                                <div className="widget-stat card">                                
+                                <div className="widget-stat card" style={{paddingBottom:"0px"}}>                                
                                     <ProgressCard title={item.title} number={item.number} percent={item.percent} color={item.color}/>
                                 </div>
                             </Col>

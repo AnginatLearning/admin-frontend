@@ -284,7 +284,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   --bs-gray-700: #495057;
   --bs-gray-800: #343a40;
   --bs-gray-900: #212529;
-  --bs-primary: black
+  --bs-primary: #6a73fa;
   --bs-secondary: #673BB7;
   --bs-success: #7ED321;
   --bs-info: #50E3C2;
@@ -2641,19 +2641,19 @@ textarea.form-control-lg {
 
 .btn-primary {
   --bs-btn-color: #000;
-  --bs-btn-bg: #ff875a;
-  --bs-btn-border-color: #ff875a;
+  --bs-btn-bg: #ff725e;
+  --bs-btn-border-color: #6a73fa;
   --bs-btn-hover-color: #000;
-  --bs-btn-hover-bg: #ff875a;
-  --bs-btn-hover-border-color: #ff875a;
+  --bs-btn-hover-bg: #8088fb;
+  --bs-btn-hover-border-color: #7981fb;
   --bs-btn-focus-shadow-rgb: 90, 98, 213;
   --bs-btn-active-color: #000;
-  --bs-btn-active-bg: #ff875a;
-  --bs-btn-active-border-color: #ff875a;
+  --bs-btn-active-bg: #888ffb;
+  --bs-btn-active-border-color: #7981fb;
   --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
   --bs-btn-disabled-color: #000;
-  --bs-btn-disabled-bg: #ff875a;
-  --bs-btn-disabled-border-color: #ff875a; }
+  --bs-btn-disabled-bg: #6a73fa;
+  --bs-btn-disabled-border-color: #6a73fa; }
 
 .btn-secondary {
   --bs-btn-color: #fff;
@@ -15693,7 +15693,7 @@ svg text {
   background: var(--card);
   border-color: var(--border);
   color: var(--text-dark);
-  height: 3.5rem;
+  height: 2.7rem;
   padding: 0.3125rem .95rem; }
   .form-control:hover, .form-control:focus, .form-control.active {
     box-shadow: none; }
@@ -19248,10 +19248,10 @@ button {
   margin-left: 0.255em; }
 
 .card {
-  /* margin-bottom: 1.875rem; */
+  margin-bottom: 1.875rem;
   background-color: var(--card);
   transition: all .5s ease-in-out;
-  
+  position: relative;
   border: 0px solid transparent;
   border-radius: 5px;
   box-shadow: 0px 6px 24px 0px rgba(53, 55, 81, 0.06);
@@ -23163,8 +23163,7 @@ span#counter {
     background-color: transparent; }
     [data-theme-version="dark"] .footer .copyright p {
       color: #fff; }
-
-
+   
       .Section{
         width: 100%;
         height: auto;

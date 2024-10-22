@@ -64,7 +64,7 @@ const Home = () => {
 				{bgCarddBlog.map((item, index)=>(
 					<Col xl={'3'} xxl={'3'} sm={'6'} key={index}>
 						<div className={`widget-stat card bg-${item.color}`}>
-							<div className="card-body">								
+							<div className="card-body " >								
 								<BgCard title={item.title} number={item.number} percent={item.percent} color={item.color} icon={item.icon}/>
 							</div>
 						</div>
