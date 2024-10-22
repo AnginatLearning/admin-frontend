@@ -133,7 +133,7 @@ export const MenuList = [
     {
         title: 'Lead',	        
         to:"Lead-management",
-        iconStyle: <i className="la la-calendar" />,        
+        iconStyle: <i class="las la-headphones"></i>,        
     },
     
     

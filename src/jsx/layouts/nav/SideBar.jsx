@@ -162,10 +162,7 @@ const SideBar = () => {
           })}
         </ul>
         <div className="copyright">
-          <p>Edumin Vite Admin © {dat.getFullYear()} All Rights Reserved</p>
-          <p className="fs-12">Made with <span className="heart"
-            onClick={(e) => e.target.classList.toggle('heart-blast')}
-          ></span> by DexignLab</p>
+         
         </div>
       </div>
     </div>

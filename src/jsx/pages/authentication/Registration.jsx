@@ -147,10 +147,11 @@ function Register(props) {
       <div className="upper">
         <div style={{ paddingTop: "80px", paddingBottom: "80px" }} className=" ">
           <div className="card-body">
-            <div className="mb-2">
-              <p style={{fontSize:"28px",fontWeight:"700",color:"black"}}>ANGINAT</p>     
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }} className="mb-2">
+              <p style={{ fontSize: "28px", fontWeight: "700", color: "black" }}>ANGINAT</p>
+              <Link className="text-primary" to="/login"> <p style={{ marginRight: "10px", color: "#889292" }}>Back to home</p>  </Link>
             </div>
-            <h4 style={{fontSize:"24px",marginTop:"20px" ,fontWeight:"500"}}  className=" mb-4 ">Admin Sign up</h4>
+            <h4 style={{ fontSize: "24px", marginTop: "20px", fontWeight: "500" }} className=" mb-4 ">Admin Sign up</h4>
             {props.errorMessage && (
               <div className='text-danger'>
                 {props.errorMessage}
@@ -217,7 +218,7 @@ function Register(props) {
                 </div>
 
                 <div className="conform-Password-section mb-4 position-relative">
-                  <label className="form-label">Password</label>
+                  <label className="form-label">Confirm Password</label>
                   <input defaultValue={password} className="form-control" placeholder="password"
                     type={`${showPassword ? "text" : "password"}`}
                     onChange={(e) =>
@@ -234,14 +235,14 @@ function Register(props) {
                 </div>
               </div>
 
-              
-             <div>
-                      <div className="form-check custom-checkbox ms-1">
-												<input type="checkbox" className="form-check-input" id="basic_checkbox_1" />
-												<label className="form-check-label" htmlFor="basic_checkbox_1">I agree to the <span style={{color:'#f9a19d'}}>Term Of Service</span> and <span style={{color:'#f9a19d'}}>Privacy Policy.</span></label>
-											</div>
-										
-             </div>
+
+              <div>
+                <div className="form-check custom-checkbox ms-1">
+                  <input type="checkbox" className="form-check-input" id="basic_checkbox_1" />
+                  <label className="form-check-label" htmlFor="basic_checkbox_1">I agree to the <span style={{ color: '#f9a19d' }}>Term Of Service</span> and <span style={{ color: '#f9a19d' }}>Privacy Policy.</span></label>
+                </div>
+
+              </div>
 
               <div className="text-center mt-4">
                 <button
@@ -257,20 +258,22 @@ function Register(props) {
 
         </div>
 
-        <div style={{ marginTop: "0px", backgroundColor: "#fff5f4", paddingTop: "20px", paddingBottom: "20px" }}>
-          <p style={{ fontSize: "15px", textAlign: "center" }}>Or sign in with</p>
-          <div className='google-facebook' style={{ display: "flex", gap: "10px", justifyContent: "center" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "px" }}>
-             <img style={{ width: "28px" }} src={google} alt="" />
-             <p style={{ marginTop: "15px", color: "black", fontWeight: "500" }} >Sign in using google</p>
+       
+
+        <div style={{ display: 'flex', flexDirection: "column", alignItems: "center", justifyContent: "center", marginTop: "0px", backgroundColor: "#fff5f4", paddingTop: "20px", paddingBottom: "20px", height: "240px" }}>
+          <p className="sign-title" style={{  textAlign: "center" }}>Or sign in with</p>
+          <div className='google-facebook' style={{ display: "flex", justifyContent: "center" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+              <div><img className='sign-img' style={{ width: "28px" }} src={google} alt="" /></div>
+              <div><p className='sign-text' style={{ marginTop: "15px", color: "black", fontWeight: "500" }} >Sign in using google</p></div>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-             <img style={{ width: "28px" }} src={facebook} alt="" />
-              <p style={{ marginTop: "15px", color: "black", fontWeight: "500" }}>Sign in using  facebook</p>
+              <div><img className='sign-img' style={{ width: "28px" }} src={facebook} alt="" /></div>
+              <div><p className='sign-text' style={{ marginTop: "15px", color: "black", fontWeight: "500" }}>Sign in using  facebook</p></div>
             </div>
           </div>
           <div className="new-account mt-3">
-            <p style={{ textAlign: "center" }} className="">
+          <p style={{ textAlign: "center" }} className="">
               Already have an account?{" "}
               <Link className="text-primary" to="/login">
                 Sign in

@@ -51,7 +51,7 @@ function Login (props) {
 
 						<div  className='down'>
                                <div style={{display:"flex",alignItems:"center",justifyContent:"center",width:"100%",height:"100%",flexDirection:"column",gap:"20px"}} className='down-body'>
-								      <div ><img className='login-img' src={login} alt="" /></div>
+								      <div ><img style={{width:"400px"}} className='login-img' src={login} alt="" /></div>
 									  <div><p style={{fontSize:"28px",color:"black",fontWeight:"500"}}>Welcome To <br />Spring Learns</p></div>
 									  <p style={{fontSize:"15px",textAlign:"center"}}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
 									  incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
@@ -124,7 +124,7 @@ function Login (props) {
 											<Link  to="/page-register">Sign up</Link>
 										</div> */}
 									</div>
-									<div className="text-center">
+									<div style={{marginTop:"20px"}} className="text-center">
 										<button type="submit" className="btn btn-primary btn-block">Sign Me In</button>
 									</div>
 								</form>
@@ -136,16 +136,16 @@ function Login (props) {
 							</div>
 						</div>
 
-						<div style={{marginTop:"0px" ,backgroundColor:"#fff5f4" ,paddingTop:"20px" ,paddingBottom:"20px"}}>
-							 <p style={{fontSize:"15px" ,  textAlign:"center"}}>Or sign in with</p>
-							 <div className='google-facebook' style={{display:"flex",gap:"10px" ,justifyContent:"center"}}>
+						<div style={{display:'flex' ,flexDirection:"column" ,alignItems:"center",justifyContent:"center",marginTop:"0px" ,backgroundColor:"#fff5f4" ,paddingTop:"20px" ,paddingBottom:"20px",height:"240px"}}>
+							 <p className='sign-title' style={{fontSize:"15px" ,  textAlign:"center"}}>Or sign in with</p>
+							 <div className='google-facebook' style={{display:"flex" ,justifyContent:"center"}}>
 								  <div style={{display:"flex",alignItems:"center",gap:"5px"}}>
-									  <div><img style={{width:"28px"}} src={google} alt="" /></div>
-									  <div  ><p style={{marginTop:"15px",color:"black",fontWeight:"500"}} >Sign in using google</p></div>
+									  <div><img className='sign-img' style={{width:"28px"}} src={google} alt="" /></div>
+									  <div><p className='sign-text' style={{marginTop:"15px",color:"black",fontWeight:"500"}} >Sign in using google</p></div>
 								  </div>
 								  <div style={{display:"flex",alignItems:"center",gap:"5px"}}>
-								      <div><img style={{width:"28px"}} src={facebook} alt="" /></div>
-									  <div><p style={{marginTop:"15px",color:"black",fontWeight:"500"}}>Sign in using  facebook</p></div>
+								      <div><img className='sign-img' style={{width:"28px"}} src={facebook} alt="" /></div>
+									  <div><p className='sign-text' style={{marginTop:"15px",color:"black",fontWeight:"500"}}>Sign in using  facebook</p></div>
 								  </div>
 							 </div>
 							   <div className="new-account mt-3">

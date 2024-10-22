@@ -23223,17 +23223,21 @@ span#counter {
               align-items: center;
               gap: 0px;
         }
+        .sign-text{
+          font-size: 15px;
+        }
        
         
       }
-      @media screen and (min-width: 740px) {
-        
-       .login-img{
-        width: 350px;
-       }
-      
+      @media screen and (min-width: 739px) {
+        .google-facebook{
+          gap: 15px;
+        }
         
       }
+
+     
+     
       
       .two-input{
         display: flex;
@@ -23266,6 +23270,7 @@ span#counter {
         background-color: #ff875a;
        }
       
+      
 
        @media screen and (min-width: 1024px) {
         
@@ -23275,6 +23280,15 @@ span#counter {
         }
         .form-control{
           padding: 1.1rem 1.5rem
+        }
+        .sign-text{
+          font-size: 18px;
+        }
+        .google-facebook{
+          gap: 25px;
+        }
+        .sign-title{
+          font-size: 18px;
         }
          
        }
