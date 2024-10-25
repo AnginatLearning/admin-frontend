@@ -46,7 +46,7 @@ function Selectone(props) {
 
                     <div >
                        <form action="">
-                        <div className='select-button' style={{ padding: "1.875rem", display: 'flex', justifyContent: "space-around", paddingBottom: "300px" }}>
+                        <div className='select-button' style={{ padding: "1.875rem", display: 'flex', justifyContent: "space-around", marginTop:"-50px" }}>
                             <button onClick={handleschool} className='school-button' style={{ display: 'flex', flexDirection: "column", alignItems: "center" }} >
                                 <div><Chalkboard style={{ color: "black" }} size={48} /></div>
                                 <p style={{ fontSize: "30px", fontWeight: "500", color: "black" }}>School</p>
