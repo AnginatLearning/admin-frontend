@@ -111,7 +111,7 @@ const AddBlog = () => {
                     <div className="mb-4">
                         <ul className="d-flex align-items-center flex-wrap">
                             <li><Link to={"/blog"} className="btn btn-sm btn-primary">Blog List</Link></li>
-                            <li><Link to={"/blog-category"} className="btn btn-sm btn-primary mx-1">Blog Category</Link></li>
+                            <li><Link to={"/"} className="btn btn-sm btn-primary mx-1">Blog Category</Link></li>
                             <li><Link to={"/blog-category"} className="btn btn-sm btn-primary me-1 mt-sm-0 mt-1">Add Blog Category</Link></li>
                             <li>
                                 <Link to={"#"} className="btn btn-sm btn-primary open mt-1 mt-md-0"

@@ -1,24 +1,22 @@
 export const MenuList = [
+   //Dashboard
+    {
+        title: 'Dashboard',	
+        classsChange: 'mm-collapse',
+        to: 'dashboard',		
+        iconStyle: <i className="la la-home" />,
+        
+        
+    },
+
     //Dashboard
     {
         title:"Main Menu",
         classsChange: "menu-title",
         extraclass:"first"
     },
-    //Dashboard
-    {
-        title: 'Dashboard',	
-        classsChange: 'mm-collapse',		
-        iconStyle: <i className="la la-home" />,
-        content: [
-            {
-                title: 'Dashboard 1',
-                to: 'dashboard',					
-            },
-           
-           
-        ],
-    },
+    
+    
     
 
     
@@ -128,7 +126,58 @@ export const MenuList = [
         to:"Lead-management",
         iconStyle: <i class="las la-headphones"></i>,        
     },
+
+
+
     
+    {
+        title: 'CMS',	
+        classsChange: 'mm-collapse',		
+        iconStyle: <i className="la la-book" />,
+        content: [
+            {
+                title: 'Content',
+                to: 'content',					
+            },
+            {
+                title: 'Menu',
+                to: 'menu',
+            },
+            {
+                title: 'Email-template',
+                to: 'email-template',
+            }, 
+            {
+                title: 'Blog',
+                to: 'blog',
+            },            
+            {
+                title: 'Content-add',
+                to: 'content-add',
+            }, 
+            {
+                title: 'Add-email',
+                to: 'add-email',
+            }, 
+           
+            {
+                title: 'Add-blog',
+                to: 'add-blog',
+            }, 
+
+            {
+                title: 'Blog-category',
+                to: 'blog-category',
+            }, 
+
+            {
+                title: 'Add-email',
+                to: 'add-email',
+            }, 
+
+           
+        ],
+    },
     
    
 

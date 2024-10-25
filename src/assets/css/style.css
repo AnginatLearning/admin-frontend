@@ -10914,7 +10914,7 @@ svg.pulse-svg {
   .dlabnav .metismenu {
     display: flex;
     flex-direction: var(--dz-side-menu-direction);
-    padding-top: 0.9375rem; }
+    }
     .dlabnav .metismenu.fixed {
       position: fixed;
       top: 0;
@@ -23347,6 +23347,7 @@ span#counter {
       .signin{
         padding-bottom: 140px;
       }
+    
     }
     @media (min-width: 1024px) {
       .school-button{
