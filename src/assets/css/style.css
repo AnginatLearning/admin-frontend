@@ -1934,7 +1934,7 @@ progress {
 .form-control {
   display: block;
   width: 100%;
-  padding: 0.375rem 0.75rem;
+  padding: 0.375rem 2rem;
   font-size: 0.937rem;
   font-weight: 400;
   line-height: 1.5;
@@ -15693,7 +15693,7 @@ svg text {
   background: var(--card);
   border-color: var(--border);
   color: var(--text-dark);
-  height: 2.7rem;
+  height: 3.2rem;
   padding: 0.3125rem .95rem; }
   .form-control:hover, .form-control:focus, .form-control.active {
     box-shadow: none; }
@@ -23186,6 +23186,7 @@ span#counter {
       }
       .down{
         width: 50%;
+        
         background-color: #fdebe9;
       }
       .body-down{
@@ -23225,6 +23226,9 @@ span#counter {
         .sign-text{
           font-size: 15px;
         }
+        
+       
+
        
         
       }
@@ -23268,7 +23272,8 @@ span#counter {
        .button{
         background-color: #ff875a;
        }
-      
+       
+       
       
 
        @media screen and (min-width: 1024px) {
@@ -23290,5 +23295,73 @@ span#counter {
           font-size: 18px;
         }
          
+        
+       } 
+       @media screen and (max-width: 1440px) {
+        .sign-in{
+          margin-top: 1000px;
+        }
        }
+
+       @media (max-width: 739px) {
+        .select-button{
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 40px;
+          background-color: white;
+        }
+        .school-button{
+          padding: 0.2rem 4rem;
+          background-color: white;
+          border-radius: 5px;
+          padding-top: 15px;
+          border:solid 1px #FFDEDA;
+        }
+        .Institute-button{
+          padding: 0.2rem 3.3rem;
+          background-color: white;
+          border-radius: 5px;
+          padding-top: 15px;
+          border:solid 1px #FFDEDA;
+        }
+    }
+
+    @media (min-width: 739px) {
+      .school-button{
+        padding: 0.2rem 1.5rem;
+        background-color: white;
+        border-radius: 5px;
+        padding-top: 15px;
+        border:solid 1px #FFDEDA;
+      }
+      .Institute-button{
+        padding: 0.2rem 0.7rem;
+        background-color: white;
+        border-radius: 5px;
+        padding-top: 15px;
+        border:solid 1px #FFDEDA;
+      }
+      .signin{
+        padding-bottom: 140px;
+      }
+    }
+    @media (min-width: 1024px) {
+      .school-button{
+        padding: 0.2rem 3.7rem;
+        background-color: white;
+        border-radius: 5px;
+        padding-top: 15px;
+        border:solid 1px #FFDEDA;
+      }
+      .Institute-button{
+        padding: 0.2rem 3rem;
+        background-color: white;
+        border-radius: 5px;
+        padding-top: 15px;
+        border:solid 1px #FFDEDA;
+      }
+    }
+
 /*# sourceMappingURL=style.css.map */

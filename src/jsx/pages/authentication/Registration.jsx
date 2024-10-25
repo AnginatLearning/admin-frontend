@@ -36,7 +36,7 @@ function Register(props) {
       })
     }
     if (password === '') {
-      errorObj.password = 'Password is Required';
+      errorObj.password = 'Password isd Require';
       error = true;
       Swal.fire({
         icon: 'error',
@@ -49,88 +49,12 @@ function Register(props) {
     dispatch(loadingToggleAction(true));
     dispatch(signupAction(email, password, navigate));
   }
+
+  const handleSelectone = () => {
+    navigate('/select-one');
+};
   return (
-    // <div className="fix-wrapper">
-    //   <div className="container ">
-    //     <div className="row justify-content-center">
-    //       <div className="col-lg-5 col-md-6">
-
-
-    //             <div className="card mb-0 h-auto">
-    //               <div className="card-body">
-    //                 <div className="text-center mb-2">
-    //                     <Link to="/login"><img src={logoFull} alt="" /></Link>
-    //                 </div>
-    //                 <h4 className="text-center mb-4 ">Sign up your account</h4>
-    //                   {props.errorMessage && (
-    //                     <div className='text-danger'>
-    //                       {props.errorMessage}
-    //                     </div>
-    //                   )}
-    //                   {props.successMessage && (
-    //                     <div className='text-danger'>
-    //                       {props.successMessage}
-    //                     </div>
-    //                   )}
-    //                 <form onSubmit={onSignUp}>
-    //                   <div className="form-group">
-    //                     <label className="form-label">Username</label>
-    //                     <input
-    //                       type="text"
-    //                       className="form-control"
-    //                       placeholder="username"
-    //                     />
-    //                   </div>
-    //                   <div className="form-group">
-    //                     <label className="form-label">Email</label>
-    //                     <input
-    //                       defaultValue={email}
-    //                       onChange={(e) => setEmail(e.target.value)}
-    //                       className="form-control"
-    //                       placeholder="email"
-    //                     />
-    // 			              {errors.email && <div className="text-danger">{errors.email}</div>}
-    //                   </div>
-    //                   <div className="mb-4 position-relative">
-    //                     <label className="form-label">Password</label>
-    //                     <input defaultValue={password} className="form-control" placeholder="password"
-    //                       type={`${showPassword ? "text" : "password"}`}
-    //                         onChange={(e) =>
-    //                           setPassword(e.target.value)
-    //                         }
-    //                     />
-    //                     <span className={`show-pass eye ${showPassword ? 'active' : '' }`}
-    //                       onClick={()=>setShowPassword(!showPassword)}
-    //                     >
-    //                         <i className="fa fa-eye-slash" />
-    //                         <i className="fa fa-eye" />
-    //                     </span>
-    // 			              {errors.password && <div className="text-danger">{errors.password}</div>}
-    //                   </div>
-    //                   <div className="text-center mt-4">
-    //                     <button
-    //                       type="submit"
-    //                       className="btn btn-primary btn-block"
-    //                     >
-    //                       Sign me up
-    //                     </button>
-    //                   </div>
-    //                 </form>
-    //                 <div className="new-account mt-3">
-    //                   <p className="">
-    //                     Already have an account?{" "}
-    //                     <Link className="text-primary" to="/login">
-    //                       Sign in
-    //                     </Link>
-    //                   </p>
-    //                 </div>
-    //               </div>
-    //             </div>
-
-    //       </div>
-    //     </div>
-    //   </div>
-    // </div>
+    
 
     <div className="Section">
 
@@ -246,10 +170,11 @@ function Register(props) {
 
               <div className="text-center mt-4">
                 <button
+                onClick={handleSelectone}
                   type="submit"
                   className="btn btn-primary btn-block"
                 >
-                  Get OTP
+                 Submit
                 </button>
               </div>
             </form>

@@ -38,7 +38,14 @@ function Login (props) {
 		}
 		dispatch(loadingToggleAction(true));	
         dispatch(loginAction(email, password, navigate));
+		
     }
+	
+   
+
+    const handleForgotPassword = () => {
+        navigate('/forgot-password');
+    };
 
 	// const element = document.querySelector("body"); 
 	// let dataTheme = element.getAttribute("data-theme-version");
@@ -50,10 +57,10 @@ function Login (props) {
 					<div className="Section">
 
 						<div  className='down'>
-                               <div style={{display:"flex",alignItems:"center",justifyContent:"center",width:"100%",height:"100%",flexDirection:"column",gap:"20px"}} className='down-body'>
-								      <div ><img style={{width:"400px"}} className='login-img' src={login} alt="" /></div>
+                               <div style={{display:"flex",alignItems:"center",justifyContent:"center",width:"100%",height:"100vh",flexDirection:"column",gap:"20px"}} className='down-body'>
+								      <div ><img style={{width:"450px"}} className='login-img' src={login} alt="" /></div>
 									  <div><p style={{fontSize:"28px",color:"black",fontWeight:"500"}}>Welcome To <br />Spring Learns</p></div>
-									  <p style={{fontSize:"15px",textAlign:"center"}}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+									  <p style={{fontSize:"16px",textAlign:"center"}}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
 									  incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
 							   </div>
 
@@ -62,7 +69,7 @@ function Login (props) {
 					 <div className='upper'>
 
 						
-						 <div style={{paddingTop:"80px",paddingBottom:"80px"}} className=" ">
+						 <div  style={{paddingTop:"80px",paddingBottom:"80px"}} className=" signin">
 							<div className="card-body">
 								<div className=" mb-2">
 									
@@ -86,7 +93,7 @@ function Login (props) {
 
 									
 									<div className="mb-3">
-										<label className="mb-1"><strong>Email</strong></label>												
+										<label className="mb-1">Email</label>												
 										<input type="email" className="form-control"
 											value={email}
 											onChange={(e) => setEmail(e.target.value)}
@@ -95,7 +102,7 @@ function Login (props) {
 										{errors.email && <div className="text-danger fs-12">{errors.email}</div>}
 									</div>
 									<div className="mb-3">
-										<label className="mb-1"><strong>Password</strong></label>
+										<label className="mb-1">Password</label>
 										<input
 											type="password"
 											className="form-control"
@@ -109,7 +116,9 @@ function Login (props) {
 									</div>
 
 									<div>
-										<p className='password'>Forgot Password ?</p>
+									<p className='password' onClick={handleForgotPassword} style={{ cursor: 'pointer' }}>
+                                     Forgot Password?
+                                    </p>
 									</div>
 
 								</div>

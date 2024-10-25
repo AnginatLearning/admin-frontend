@@ -20,22 +20,23 @@ export const NAVTOGGLE = 'NAVTOGGLE';
 export function signupAction(email, password, navigate) {
 	
     return (dispatch) => {
-        signUp(email, password)
-        .then((response) => {
-            saveTokenInLocalStorage(response.data);
-            runLogoutTimer(
-                dispatch,
-                response.data.expiresIn * 1000,
-                //history,
-            );
-            dispatch(confirmedSignupAction(response.data));
-            navigate('/dashboard');
-			//history.push('/dashboard');
-        })
-        .catch((error) => {
-            const errorMessage = formatError(error.response.data);
-            dispatch(signupFailedAction(errorMessage));
-        });
+        navigate('/dashboard');
+        // signUp(email, password)
+        // .then((response) => {
+        //     saveTokenInLocalStorage(response.data);
+        //     runLogoutTimer(
+        //         dispatch,
+        //         response.data.expiresIn * 1000,
+        //         //history,
+        //     );
+        //     dispatch(confirmedSignupAction(response.data));
+        //     navigate('/dashboard');
+		// 	//history.push('/dashboard');
+        // })
+        // .catch((error) => {
+        //     const errorMessage = formatError(error.response.data);
+        //     dispatch(signupFailedAction(errorMessage));
+        // });
     };
 }
 

@@ -9,6 +9,11 @@ import { isAuthenticated } from './store/selectors/AuthSelectors';
 /// Style
 import 'rsuite/dist/rsuite-no-reset.min.css';
 import "./assets/css/style.css";
+import Forgotpassword from './jsx/pages/authentication/Forgetpassword';
+import Resetpassword from './jsx/pages/authentication/Resetpassword';
+import Selectone from './jsx/pages/authentication/Selectone';
+import School from './jsx/pages/authentication/School';
+import Institute from './jsx/pages/authentication/Institute';
 
 
 const SignUp = lazy(() => import('./jsx/pages/authentication/Registration'));
@@ -45,7 +50,13 @@ function App(props) {
     let routeblog = (
         <Routes>
             <Route path='/login' element={<Login />} />
+            <Route path='/forgot-password' element={<Forgotpassword />} />
+            <Route path='/reset-password' element={<Resetpassword />} />
+            <Route path='/select-one' element={<Selectone/>} />
+            <Route path='/school' element={<School/>} />
+            <Route path='/institute' element={<Institute/>} />
             <Route path='/page-register' element={<SignUp />} />
+            
         </Routes>
     );
     if (props.isAuthenticated) {

@@ -15,14 +15,7 @@ export const MenuList = [
                 title: 'Dashboard 1',
                 to: 'dashboard',					
             },
-            {
-                title: 'Dashboard 2',
-                to: 'index-2',
-            },
-            {
-                title: 'Dashboard 3',
-                to: 'index-3',
-            },
+           
            
         ],
     },
