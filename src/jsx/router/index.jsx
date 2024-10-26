@@ -158,6 +158,9 @@ import Error403 from './../pages/error/Error403'
 import Error404 from './../pages/error/Error404'
 import Error500 from './../pages/error/Error500'
 import Error503 from './../pages/error/Error503'
+import Leadtrash from "../pages/dashboard/Leadtrash";
+
+import Editlead from "../pages/dashboard/Editlead";
 
 
 const Markup = () => {
@@ -169,6 +172,9 @@ const Markup = () => {
     { url: "index-3", component: <Dashboard3 /> },
     { url: "event-management", component: <EventManagement /> },
     { url: "Lead-management", component: <LeadManagement /> },
+    { url: "Lead-Emptytrash", component: <Leadtrash /> },
+    { url: "Editlead", component: <Editlead /> },
+
 
     //Professors
     { url: "all-professors", component: <AllProfessor /> },

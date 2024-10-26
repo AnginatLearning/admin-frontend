@@ -43,7 +43,7 @@ function Forgetpassword(props) {
     }
 
     const next = () => {
-        navigate("/reset-password");
+        navigate("/forgotpass-verify-otp");
     };
 
     return (

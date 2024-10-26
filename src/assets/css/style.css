@@ -23327,6 +23327,16 @@ span#counter {
           padding-top: 15px;
           border:solid 1px #FFDEDA;
         }
+        .verify-input{
+          height: 45px;
+          width:45px;
+          border-radius: 05px;
+          border: solid 1px #FFDEDAB5;
+          
+        }
+        .inputs{
+          gap:05px;
+     }
     }
 
     @media (min-width: 739px) {
@@ -23347,6 +23357,18 @@ span#counter {
       .signin{
         padding-bottom: 140px;
       }
+      .verify-input{
+        height: 50px;
+        width :50px;
+        border-radius: 05px;
+        border: solid 1px #FFDEDAB5;
+        
+      }
+      .inputs{
+        gap:05px;
+   }
+      
+      
     
     }
     @media (min-width: 1024px) {
@@ -23364,10 +23386,42 @@ span#counter {
         padding-top: 15px;
         border:solid 1px #FFDEDA;
       }
+      .verify-input{
+        height: 60px;
+        width :60px;
+        border-radius: 05px;
+        border: solid 1px #FFDEDAB5;
+       
+      }
+      
     }
     .hover-pointer:hover{
       cursor: pointer;
     }
-
-
+    .my-title-class {
+      font-size: 24px;
+      color:#312a2a;
+  }
+  
+  .my-text-class {
+      font-size: 16px;
+      color: #333; /* Example color */
+  }
+  
+  .my-popup-class{
+    background-color: #e2dcdc !important;
+    border-radius: 20px !important;
+  }
+ .my-cancel-button-class{
+  background: $d1c6c6 !important;
+ }
+ .my-confirm-button-class{
+  background: #6a73fa !important;
+ }
+ .my-confirm-button-class-2{
+  background: #ff1616 !important;
+ }
+ .my-cancel-button-class-2{
+  background: #d1c6c6 !important;
+ }
 /*# sourceMappingURL=style.css.map */

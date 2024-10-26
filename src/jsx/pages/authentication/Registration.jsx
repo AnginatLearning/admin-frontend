@@ -51,7 +51,7 @@ function Register(props) {
   }
 
   const handleSelectone = () => {
-    navigate('/select-one');
+    navigate('/verify-otp');
 };
   return (
     
@@ -174,7 +174,7 @@ function Register(props) {
                   type="submit"
                   className="btn btn-primary btn-block"
                 >
-                 Submit
+                 Get OTP
                 </button>
               </div>
             </form>

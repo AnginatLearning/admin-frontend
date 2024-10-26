@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Dropdown, Row, Nav, Tab } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { Export,Trash,FunnelSimple } from "@phosphor-icons/react";
-
+import Swal from 'sweetalert2';
 import { IMAGES } from '../../constant/theme';
 import { gridDataBlog } from '../staff/GridData';
 
@@ -115,15 +115,46 @@ const LeadManagement = () => {
     
     const navigate = useNavigate()
     const Leademptytrash = () =>{
-        navigate("/lead-trashfiles")
+        navigate("/Lead-Emptytrash")
     }
+
+    const handleDelete = (id) => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you really want to delete this?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Delete',
+            cancelButtonText: 'Cancel',
+            customClass: {
+                title: 'my-title-class',
+                text: 'my-text-class',
+                confirmButton: 'my-confirm-button-class-2',
+                cancelButton: 'my-cancel-button-class-2',
+                popup: 'my-popup-class',
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const updatedData = feeData.filter(item => item.id !== id);
+                setFeeDate(updatedData);
+                Swal.fire('Deleted!', 'Your file has been deleted.', 'success');
+            }
+        });
+    };
+
+    const Editlead = () =>{
+       navigate('/Editlead')
+    }
+
     return (
         <>
 
             <Row>
                 <Tab.Container defaultActiveKey={"List"}>
 
-                    <div className="col-lg-12">S
+                    <div className="col-lg-12">
                         <Tab.Content className="row tab-content">
                             <Tab.Pane eventKey="List" className="col-lg-12">
                                 <div className="card">
@@ -161,7 +192,7 @@ const LeadManagement = () => {
                                                              </div>
                                                        </div>
 
-                                                       <div className='hover-pointer' style={{border:"solid 01px #E6E6E6",padding:"7px",borderRadius:'5px'}}>
+                                                       <div  className='hover-pointer' style={{border:"solid 01px #E6E6E6",padding:"7px",borderRadius:'5px'}}>
                                                              <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:"4px"}}>
                                                                  <Export size={16} />
                                                                  <label htmlFor="">Export</label>
@@ -230,8 +261,8 @@ const LeadManagement = () => {
                                                                 <td>{data.join}</td>
                                                                 <td><strong>{data.status}</strong></td>
                                                                 <td>
-                                                                    <Link to={"#"} className="btn btn-xs sharp btn-primary me-1"><i className="fa fa-pencil" /></Link>
-                                                                    <Link to={"#"} className="btn btn-xs sharp btn-danger"><i className="fa fa-trash" /></Link>
+                                                                   <button style={{outline:"none",border:"none"}} onClick={Editlead}><Link   to={"#"} className="btn btn-xs sharp btn-primary me-1"><i className="fa fa-pencil" /></Link></button> 
+                                                                    <Link  onClick={() => handleDelete(data.id)} to={"#"} className="btn btn-xs sharp btn-danger"><i className="fa fa-trash" /></Link>
                                                                 </td>
                                                             </tr>
                                                         ))}
