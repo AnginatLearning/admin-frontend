@@ -1,10 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Dropdown, Row, Nav, Tab } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Export,Trash,FunnelSimple } from "@phosphor-icons/react";
 
 import { IMAGES } from '../../constant/theme';
 import { gridDataBlog } from '../staff/GridData';
+
+
+
+
+
 
 const holidayTable = [
     { id: 1, status: 'Approved', name: 'Garrett Winters', profile: IMAGES.smallpic1, education: 'B.A, B.C.A', mobile: '987 654 3210', email: 'info@example.com', join: '2020/07/25' },
@@ -107,13 +112,18 @@ const LeadManagement = () => {
         });
         setFeeDate([...updatesDate])
     }
+    
+    const navigate = useNavigate()
+    const Leademptytrash = () =>{
+        navigate("/lead-trashfiles")
+    }
     return (
         <>
 
             <Row>
                 <Tab.Container defaultActiveKey={"List"}>
 
-                    <div className="col-lg-12">
+                    <div className="col-lg-12">S
                         <Tab.Content className="row tab-content">
                             <Tab.Pane eventKey="List" className="col-lg-12">
                                 <div className="card">
@@ -126,8 +136,8 @@ const LeadManagement = () => {
                                             <div id='holidayList' className='dataTables_wrapper no-footer'>
                                                 <div className='justify-content-between d-sm-flex'>
                                                     <div style={{display:"flex",flexWrap:"wrap",gap:"20px"}} className='dataTables_length'>
-                                                        <div>
-                                                            <label className='d-flex align-items-center'>
+                                                        <div className='hover-pointer'>
+                                                            <label className='d-flex align-items-center hover-pointer'>
                                                                 Show
                                                                 <Dropdown className='search-drop'>
                                                                     <Dropdown.Toggle as="div" className="search-drop-btn">
@@ -143,26 +153,28 @@ const LeadManagement = () => {
                                                             </label>
                                                         </div>
 
-                                                       <div style={{border:"solid 01px #E6E6E6",padding:"7px",borderRadius:'5px'}}>
-                                                             <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:"4px"}}>
-                                                             <Trash size={16} />
-                                                                 <label htmlFor="">Trash</label>
-                                                             </div>
-                                                       </div>
-
-                                                       <div style={{border:"solid 01px #E6E6E6",padding:"7px",borderRadius:'5px'}}>
-                                                             <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:"4px"}}>
-                                                                 <Export size={16} />
-                                                                 <label htmlFor="">Export</label>
-                                                             </div>
-                                                       </div>
-
-                                                       <div style={{border:"solid 01px #E6E6E6",padding:"7px",borderRadius:'5px'}}>
+                                                       
+                                                       <div className='hover-pointer' style={{border:"solid 01px #E6E6E6",padding:"7px",borderRadius:'5px'}}>
                                                              <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:"4px"}}>
                                                                  <FunnelSimple size={16} />
                                                                   <label htmlFor="">Filter</label>
                                                              </div>
                                                        </div>
+
+                                                       <div className='hover-pointer' style={{border:"solid 01px #E6E6E6",padding:"7px",borderRadius:'5px'}}>
+                                                             <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:"4px"}}>
+                                                                 <Export size={16} />
+                                                                 <label htmlFor="">Export</label>
+                                                             </div>
+                                                       </div>
+                                                         
+                                                         <div onClick={Leademptytrash} className='hover-pointer' style={{border:"solid 01px #E6E6E6",padding:"7px",borderRadius:'5px'}}>
+                                                             <div className='hover-pointer' style={{display:"flex",alignItems:"center",justifyContent:"center",gap:"4px"}}>
+                                                                 <Trash size={16} />
+                                                                 <label htmlFor="">Empty Trash</label>
+                                                             </div>
+                                                       </div>
+                                                      
 
                                                        
 
@@ -176,7 +188,7 @@ const LeadManagement = () => {
                                                     </div> */}
 
 
-                                                    <div className="dataTables_filter">
+                                                    <div  className="dataTables_filter ">
                                                         <label>Search : <input type="search" className="" placeholder=""
                                                             onChange={DataSearch}
                                                         />

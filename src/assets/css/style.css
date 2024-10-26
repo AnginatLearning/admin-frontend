@@ -23365,5 +23365,9 @@ span#counter {
         border:solid 1px #FFDEDA;
       }
     }
+    .hover-pointer:hover{
+      cursor: pointer;
+    }
+
 
 /*# sourceMappingURL=style.css.map */

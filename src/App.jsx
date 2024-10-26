@@ -14,6 +14,7 @@ import Resetpassword from './jsx/pages/authentication/Resetpassword';
 import Selectone from './jsx/pages/authentication/Selectone';
 import School from './jsx/pages/authentication/School';
 import Institute from './jsx/pages/authentication/Institute';
+import Leadtrash from './jsx/pages/dashboard/Leadtrash';
 
 
 const SignUp = lazy(() => import('./jsx/pages/authentication/Registration'));
@@ -56,6 +57,7 @@ function App(props) {
             <Route path='/school' element={<School/>} />
             <Route path='/institute' element={<Institute/>} />
             <Route path='/page-register' element={<SignUp />} />
+            <Route path='/lead-trashfiles' element={<Leadtrash />} />
             
         </Routes>
     );
