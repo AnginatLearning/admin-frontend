@@ -80,7 +80,7 @@ function Login (props) {
 								<h4 style={{fontSize:"24px",marginTop:"20px" ,fontWeight:"500"}} className=" mb-4">Admin Sign in</h4>														
 								{props.errorMessage && (
 									<div className='text-danger p-1 my-2'>
-										{props.errorMessage}
+										{props.errorMessage.message}
 									</div>
 								)}
 								{props.successMessage && (
@@ -158,7 +158,7 @@ function Login (props) {
 								  </div>
 							 </div>
 							   <div className="new-account mt-3">
-									<p style={{textAlign:"center"}}>New user? <Link  to="/page-register" className="text-primary">Create an Account</Link></p>
+									<p style={{textAlign:"center"}}>New user? <Link  to="/select-one" className="text-primary">Create an Account</Link></p>
 								</div>
 							 
 						</div>

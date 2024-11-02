@@ -9,9 +9,12 @@ function School(props) {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [address, setAddress] = useState('');
+    const [domain, setDomain] = useState('');
+
     const [nameError, setNameError] = useState('');
     const [emailError, setEmailError] = useState('');
     const [addressError, setAddressError] = useState('');
+    const [domainError, setDomainError] = useState('');
 
     const navigate = useNavigate();
 
@@ -20,31 +23,34 @@ function School(props) {
         return emailPattern.test(email);
     };
 
+    const validateDomain = (domain) => {
+        const domainPattern = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return domainPattern.test(domain);
+    };
+
     const handleEmailChange = (e) => {
         const value = e.target.value;
         setEmail(value);
 
-        // Validate email on change
         if (!value) {
             setEmailError('School Email is required.');
         } else if (!validateEmail(value)) {
             setEmailError('Please enter a valid email address.');
         } else {
-            setEmailError(''); // Clear error if valid
+            setEmailError('');
         }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Reset error messages
         setNameError('');
         setEmailError('');
         setAddressError('');
+        setDomainError('');
 
         let valid = true;
 
-        // Check for empty fields
         if (!name) {
             setNameError('School Name is required.');
             valid = false;
@@ -63,7 +69,14 @@ function School(props) {
             valid = false;
         }
 
-        // If all fields are valid, show success alert and navigate
+        if (!domain) {
+            setDomainError('Institute Domain Name is required.');
+            valid = false;
+        } else if (!validateDomain(domain)) {
+            setDomainError('Please enter a valid domain name (e.g., springlearns.com).');
+            valid = false;
+        }
+
         if (valid) {
             await Swal.fire({
                 icon: 'success',
@@ -71,10 +84,9 @@ function School(props) {
                 text: 'Your information has been submitted.',
             });
 
-            // Navigate to another page (replace with your target path)
             navigate("/login");
         }
-    }
+    };
 
     return (
         <div>
@@ -108,6 +120,7 @@ function School(props) {
                                         />
                                         {nameError && <div className="text-danger fs-12">{nameError}</div>}
                                     </div>
+
                                     <div className="mb-3">
                                         <label className="form-label">School Email</label>
                                         <input
@@ -119,6 +132,7 @@ function School(props) {
                                         />
                                         {emailError && <div className="text-danger fs-12">{emailError}</div>}
                                     </div>
+
                                     <div className="mb-3">
                                         <label className="form-label">School Address</label>
                                         <input
@@ -130,12 +144,28 @@ function School(props) {
                                         />
                                         {addressError && <div className="text-danger fs-12">{addressError}</div>}
                                     </div>
+
+                                    <div className="mb-3">
+                                        <label className="form-label">School Domain Name</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            placeholder="e.g., springlearns.com"
+                                            value={domain}
+                                            onChange={(e) => setDomain(e.target.value)}
+                                        />
+                                        {domainError && <div className="text-danger fs-12">{domainError}</div>}
+                                        <div className="form-text">Please enter your institute's domain in the correct format (e.g., springlearns.com).</div>
+                                    </div>
                                 </div>
 
-                                <div style={{marginTop:"20px"}} className="form-check custom-checkbox ms-1">
+                                <div style={{ marginTop: "20px" }} className="form-check custom-checkbox ms-1">
                                     <input type="checkbox" className="form-check-input" id="basic_checkbox_1" />
-                                    <label className="form-check-label" htmlFor="basic_checkbox_1">I agree to the <span style={{ color: '#f9a19d' }}>Term Of Service</span> and <span style={{ color: '#f9a19d' }}>Privacy Policy.</span></label>
+                                    <label className="form-check-label" htmlFor="basic_checkbox_1">
+                                        I agree to the <span style={{ color: '#f9a19d' }}>Term Of Service</span> and <span style={{ color: '#f9a19d' }}>Privacy Policy.</span>
+                                    </label>
                                 </div>
+
                                 <div style={{ marginTop: "20px" }} className="text-center">
                                     <button type="submit" className="btn btn-primary btn-block">Submit</button>
                                 </div>

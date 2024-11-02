@@ -5,6 +5,7 @@ import { Export,Trash,FunnelSimple } from "@phosphor-icons/react";
 import Swal from 'sweetalert2';
 import { IMAGES } from '../../constant/theme';
 import { gridDataBlog } from '../staff/GridData';
+import axios from 'axios';
 
 
 
@@ -36,6 +37,34 @@ const LeadManagement = () => {
     const [data, setData] = useState(
         document.querySelectorAll('#holidayList tbody tr')
     )
+
+    useEffect(() => {
+        const fetchLeads = async () => {
+            const token = localStorage.getItem('accessToken');
+            
+            if (!token) {
+                console.error('No token found'); // Handle missing token
+                return;
+            }
+
+            try {
+                const res = await axios.get('http://88.222.212.252:3001/api/lead/leads', {
+                    headers: {
+                        Authorization: token // Add Authorization header
+                    }
+                });
+
+                // Handle successful response
+                console.log('Leads fetched:', res.data);
+                setFeeDate(res.data.data.leads)
+            } catch (error) {
+                // Handle error response
+                console.error('Error fetching leads:', error.response ? error.response.data : error.message);
+            }
+        };
+
+        fetchLeads(); // Call the async function
+    }, []);
 
     const activePag = useRef(0)
     const [test, settest] = useState(0)
@@ -250,23 +279,47 @@ const LeadManagement = () => {
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        {feeData.map((data, ind) => (
+                                                    {feeData.length > 0 ? (
+                                                        feeData.map((data, ind) => (
                                                             <tr key={ind}>
-                                                                <td><input style={{ height: "15px", width: "15px" }} type="checkbox" /> </td>
-
-                                                                <td>{data.name}</td>
-                                                                <td>{data.education}</td>
-                                                                <td><Link to={"#"}><strong>{data.mobile}</strong></Link></td>
-                                                                <td><Link to={"#"}><strong>{data.email}</strong></Link></td>
-                                                                <td>{data.join}</td>
-                                                                <td><strong>{data.status}</strong></td>
                                                                 <td>
-                                                                   <button style={{outline:"none",border:"none"}} onClick={Editlead}><Link   to={"#"} className="btn btn-xs sharp btn-primary me-1"><i className="fa fa-pencil" /></Link></button> 
-                                                                    <Link  onClick={() => handleDelete(data.id)} to={"#"} className="btn btn-xs sharp btn-danger"><i className="fa fa-trash" /></Link>
+                                                                    <input style={{ height: "15px", width: "15px" }} type="checkbox" />
+                                                                </td>
+                                                                <td>{data.applicantName}</td>
+                                                                <td>{data.course}</td>
+                                                                <td>
+                                                                    <Link to="#">
+                                                                        <strong>{data.phoneNumber}</strong>
+                                                                    </Link>
+                                                                </td>
+                                                                <td>
+                                                                    <Link to="#">
+                                                                        <strong>{data.email}</strong>
+                                                                    </Link>
+                                                                </td>
+                                                                <td>{data.date}</td>
+                                                                <td>
+                                                                    <strong>{data.status}</strong>
+                                                                </td>
+                                                                <td>
+                                                                    <button style={{ outline: "none", border: "none" }} onClick={Editlead}>
+                                                                        <Link to="#" className="btn btn-xs sharp btn-primary me-1">
+                                                                            <i className="fa fa-pencil" />
+                                                                        </Link>
+                                                                    </button>
+                                                                    <Link onClick={() => handleDelete(data.id)} to="#" className="btn btn-xs sharp btn-danger">
+                                                                        <i className="fa fa-trash" />
+                                                                    </Link>
                                                                 </td>
                                                             </tr>
-                                                        ))}
-                                                    </tbody>
+                                                        ))
+                                                    ) : (
+                                                        <tr>
+                                                            <td colSpan={8} style={{ textAlign: 'center' }}>No leads yet</td>
+                                                        </tr>
+                                                    )}
+                                                </tbody>
+
                                                 </table>
                                                 <div className='d-sm-flex text-center justify-content-between align-items-center mt-3'>
                                                     <div className='dataTables_info'>

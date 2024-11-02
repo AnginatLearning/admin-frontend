@@ -41,7 +41,7 @@ export function signupAction(email, password, navigate) {
 }
 
 export function Logout(navigate) {
-	localStorage.removeItem('userDetails');
+	localStorage.removeItem('accessToken');
     navigate('/login');
     
 	return {
@@ -53,7 +53,8 @@ export function loginAction(email, password, navigate) {
     return (dispatch) => {
          login(email, password)
             .then((response) => { 
-                saveTokenInLocalStorage(response.data);
+                console.log(response);
+                saveTokenInLocalStorage(response.data.data);
                 runLogoutTimer(
                     dispatch,
                     response.data.expiresIn * 1000,
@@ -62,7 +63,8 @@ export function loginAction(email, password, navigate) {
                dispatch(loginConfirmedAction(response.data));			              
 				navigate('/dashboard');                
             })
-            .catch((error) => {				
+            .catch((error) => {	
+                console.log(error)			
                 const errorMessage = formatError(error.response.data);
                 dispatch(loginFailedAction(errorMessage));
             });

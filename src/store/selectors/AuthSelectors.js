@@ -1,4 +1,5 @@
 export const isAuthenticated = (state) => {
-    if (state.auth.auth.idToken) return true;
+    const token = localStorage?.getItem('accessToken')
+    if (token) return true;
     return false;
 };

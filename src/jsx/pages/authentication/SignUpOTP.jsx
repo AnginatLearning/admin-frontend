@@ -1,16 +1,26 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useRegistration } from '../../../context/RegistrationContext'; // Import your context
+import Swal from 'sweetalert2'; // For alert notifications
 
 // images
 import login from "../../../assets/images/login-img.png";
 import google from "../../../assets/images/download (1).png";
 import facebook from "../../../assets/images/download (2).png";
+import { verifyOtpOnEmail } from '../../../services/api';
+import axios from 'axios';
 
-function  SignUpOTP(props) {
+function SignUpOTP() {
+    const { ownerData, institutionType, institutionData } = useRegistration(); // Access owner data from context
     const [otp, setOtp] = useState(Array(6).fill('')); // State to hold OTP inputs
-
+    const navigate = useNavigate();
     const handleChange = (e, index) => {
         const value = e.target.value;
+
+        if (!/^\d*$/.test(value) || value.length > 1) {
+            return; // Ignore non-numeric input and more than one character
+        }
+
         const newOtp = [...otp];
         newOtp[index] = value.slice(-1); // Only keep the last character
 
@@ -19,18 +29,89 @@ function  SignUpOTP(props) {
             document.getElementById(`otp-input-${index + 1}`).focus();
         }
 
-        // Move to the previous input if backspace is pressed
-        if (value.length === 0 && index > 0) {
-            document.getElementById(`otp-input-${index - 1}`).focus();
-        }
-
         setOtp(newOtp);
     };
 
-    const handleSubmit = (e) => {
+    const handleKeyDown = (e, index) => {
+        // Handle left/right arrow keys and backspace
+        if (e.key === 'Backspace' && otp[index] === '' && index > 0) {
+            document.getElementById(`otp-input-${index - 1}`).focus();
+        } else if (e.key === 'ArrowLeft' && index > 0) {
+            document.getElementById(`otp-input-${index - 1}`).focus();
+        } else if (e.key === 'ArrowRight' && index < 5) {
+            document.getElementById(`otp-input-${index + 1}`).focus();
+        }
+    };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Submit the OTP
-        console.log("OTP Submitted: ", otp.join(''));
+        const otpCode = otp.join('');
+
+        // Call API to verify OTP
+        try {
+            const response = await verifyOtpOnEmail(otpCode);
+            console.log(response)
+            // const data = await response;
+            if (response.status === "success") {
+                // OTP verification successful
+                Swal.fire('Success', 'OTP verified successfully!', 'success');
+
+                // Now register the institution
+                await registerInstitution();
+            } else {
+                // Handle failure case
+                Swal.fire('Error', 'Invalid OTP. Please try again.', 'error');
+            }
+        } catch (error) {
+            console.error('Error verifying OTP:', error);
+            Swal.fire('Error', 'Something went wrong. Please try again later.', 'error');
+        }
+    };
+
+    const registerInstitution = async () => {
+        // Prepare payload for registration
+        const academyType = institutionType
+        const payload = {
+            email: ownerData.email,
+            phoneNumber: ownerData.phoneNumber,
+            username: ownerData.username,
+            password: ownerData.password,
+            role: "admin",
+            status: "active",
+            institutionData: {
+                name: institutionData.name, // Adjust based on your context
+                address: institutionData.address, // Adjust based on your context
+                institutionType: academyType, // Correctly map institution type
+                email: institutionData.email, // Adjust based on your context
+                domainName: institutionData.domainName, // Adjust based on your context
+                status: "active",
+            }
+        };
+    
+        try {
+            console.log(payload)
+            const response = await axios.post('http://88.222.212.252:3001/api/auth/register', payload);
+    
+            // Assuming your backend responds with a 200 status code on success
+            if (response.status === "success") {
+                Swal.fire('Success', 'Institution registered successfully! Now you may login with the Email and Password', 'success');
+                // Navigate to the next step or perform any other action
+                navigate('/login')
+            } else {
+                // If response is not a 200, handle it gracefully
+                Swal.fire('Error', response.data.message || 'Registration failed. Please try again.', 'error');
+            }
+        } catch (error) {
+            console.error('Error registering institution:', error);
+    
+            // If error response is available, display specific message
+            if (error.response && error.response.data && error.response.data.message) {
+                Swal.fire('Error', error.response.data.message, 'error');
+            } else {
+                // Fallback for any other types of errors
+                Swal.fire('Error', 'An unexpected error occurred. Please try again later.', 'error');
+            }
+        }
     };
 
     return (
@@ -47,19 +128,16 @@ function  SignUpOTP(props) {
                 <div className='upper'>
                     <div style={{ paddingTop: "100px", paddingBottom: "80px" }}>
                         <div className="card-body">
-                            <div style={{display:"flex",justifyContent:'space-between',alignItems:"center"}} className="mb-2">
+                            <div style={{ display: "flex", justifyContent: 'space-between', alignItems: "center" }} className="mb-2">
                                 <p style={{ fontSize: "28px", fontWeight: "700", color: "black" }}>ANGINAT</p>
                                 <Link className="text-primary" to="/login"> <p style={{ marginRight: "10px", color: "#889292" }}>Back to home</p>  </Link>
                             </div>
 
                             <h4 style={{ fontSize: "24px", marginTop: "20px", fontWeight: "500" }} className="mb-4">Verify OTP Code</h4>
                             <p>Please enter the 6-digit code we sent to</p>
+                            <p><a href="#">{ownerData.email}</a></p>
                             <form onSubmit={handleSubmit}>
-                                <p><a href="http://">kamlesh1223@gmail.com</a></p>
-                                <div style={{display:"flex",flexDirection:"column",gap:"20px"}}>
-
-                               
-                                <div className='inputs' style={{ display: 'flex', justifyContent: '' ,flexDirection:'row'}}>
+                                <div style={{ display: "flex", flexDirection: "row", justifyContent: 'space-between', marginBottom: '20px', width: '70%' }}>
                                     {otp.map((digit, index) => (
                                         <input
                                             key={index}
@@ -68,47 +146,18 @@ function  SignUpOTP(props) {
                                             value={digit}
                                             maxLength="1"
                                             onChange={(e) => handleChange(e, index)}
-                                             className='verify-input'
-                                            // style={{ width: "50px", height: "50px", textAlign: "center", fontSize: "24px", margin: "0 5px",borderRadius:"10px" }}
+                                            onKeyDown={(e) => handleKeyDown(e, index)} // Added key down event
+                                            className='verify-input text-center'
                                         />
                                     ))}
                                 </div>
-
-                                
-                               <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-
-                            
-                                   <a href="tel:+1234567890">+1 234 567 890 <span><i class="las la-pen"></i></span></a>
-                                   <div className='inputs' style={{ display: 'flex', justifyContent: '' ,flexDirection:'row'}}>
-                                    {otp.map((digit, index) => (
-                                        <input
-                                            key={index}
-                                            id={`otp-input-${index}`}
-                                            type="text"
-                                            value={digit}
-                                            maxLength="1"
-                                            onChange={(e) => handleChange(e, index)}
-                                            className='verify-input'
-                                            // style={{ width: "50px", height: "50px", textAlign: "center", fontSize: "24px", margin: "0 5px",borderRadius:"10px" }}
-                                        />
-                                     ))}
-                                  </div>
-                               </div>
-
-                               <a style={{textAlign:"center"}}>Didn’t Receive OTP ? <span  style={{color:"red"}}>Resend OTP</span> </a>
-                                
-                             </div>
-                              
+                                <a style={{ textAlign: "center" }}>Didn’t Receive OTP? <span style={{ color: "red" }}>Resend OTP</span></a>
                                 <div style={{ marginTop: "20px" }} className="text-center">
                                     <button type="submit" className="btn btn-primary btn-block">Verify</button>
                                 </div>
-
-                                <div style={{marginTop:"20px"}}>
-                                    <p style={{textAlign:"center"}}>OTP will expire in <span style={{color:"red"}}>09:59s</span> </p>
+                                <div style={{ marginTop: "20px" }}>
+                                    <p style={{ textAlign: "center" }}>OTP will expire in <span style={{ color: "red" }}>09:59s</span> </p>
                                 </div>
-                              
-                               
-                               
                             </form>
                         </div>
                     </div>

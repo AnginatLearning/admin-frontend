@@ -21,18 +21,17 @@ export function signUp(email, password) {
 
 export function login(email, password) {
     const postData = {
-        email,
-        password,
-        returnSecureToken: true,
+        "emailOrUsername": email,
+        "password": password,
+        // returnSecureToken: true,
     };
     return axios.post(
-        `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyD3RPAp3nuETDn9OQimqn_YF6zdzqWITII`,
-        postData,
+        `http://88.222.212.252:3001/api/auth/login`, postData
     );
 }
 
 export function formatError(errorResponse) {
-    switch (errorResponse.error.message) {
+    switch (errorResponse.message) {
         case 'EMAIL_EXISTS':
             //return 'Email already exists';
             // swal("Oops", "Email already exists", "error");
@@ -51,7 +50,7 @@ export function formatError(errorResponse) {
             //return 'Email not found';
                 //swal("Oops", "Email not found", "error",{ button: "Try Again!",});
            break;
-        case 'INVALID_PASSWORD':
+        case 'Invalid Credentials':
             //return 'Invalid Password';
             // swal("Oops", "Invalid Password", "error",{ button: "Try Again!",});
             Swal.fire({
@@ -69,38 +68,44 @@ export function formatError(errorResponse) {
 }
 
 export function saveTokenInLocalStorage(tokenDetails) {
-    tokenDetails.expireDate = new Date(
-        new Date().getTime() + tokenDetails.expiresIn * 1000,
-    );
-    localStorage.setItem('userDetails', JSON.stringify(tokenDetails));
+    // Optional: Calculate and store token expiration date
+    // tokenDetails.expireDate = new Date(
+    //     new Date().getTime() + tokenDetails.expiresIn * 1000
+    // );
+
+    // Store the token in local storage
+    localStorage.setItem('accessToken', `Bearer ${tokenDetails.accessToken}`);
 }
+
 
 export function runLogoutTimer(dispatch, timer, navigate) {
     setTimeout(() => {
-        //dispatch(Logout(history));
+        dispatch(Logout(history));
         dispatch(Logout(navigate));
     }, timer);
 }
 
 export function checkAutoLogin(dispatch, navigate) {
-    const tokenDetailsString = localStorage.getItem('userDetails');
-    let tokenDetails = '';
-    if (!tokenDetailsString) {
-        dispatch(Logout(navigate));
-		return;
-    }
+    const tokenDetailsString = localStorage.getItem('accessToken');
+    // let tokenDetails = '';
+    // if (!tokenDetailsString) {
+    //     dispatch(Logout(navigate));
+	// 	return;
+    // }
 
-    tokenDetails = JSON.parse(tokenDetailsString);
-    let expireDate = new Date(tokenDetails.expireDate);
-    let todaysDate = new Date();
+    // tokenDetails = JSON.parse(tokenDetailsString);
+    // let expireDate = new Date(tokenDetails.expireDate);
+    // let todaysDate = new Date();
 
-    if (todaysDate > expireDate) {
-        dispatch(Logout(navigate));
-        return;
-    }
-		
-    dispatch(loginConfirmedAction(tokenDetails));
+    // if (todaysDate > expireDate) {
+    //     dispatch(Logout(navigate));
+    //     return;
+    // }
+		if(tokenDetailsString){
+            dispatch(loginConfirmedAction(tokenDetailsString));
+        }
+    
 	
-    const timer = expireDate.getTime() - todaysDate.getTime();
-    runLogoutTimer(dispatch, timer, navigate);
+    // const timer = expireDate.getTime() - todaysDate.getTime();
+    // runLogoutTimer(dispatch, timer, navigate);
 }
