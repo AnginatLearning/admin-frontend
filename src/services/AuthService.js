@@ -26,7 +26,7 @@ export function login(email, password) {
         // returnSecureToken: true,
     };
     return axios.post(
-        `http://88.222.212.252:3001/api/auth/login`, postData
+        `https://back-end.anginat.com/api/auth/login`, postData
     );
 }
 

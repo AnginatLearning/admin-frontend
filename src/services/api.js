@@ -5,7 +5,7 @@ import axios from 'axios';
 
 export const sendOtpOnEmail = async (email) => {
   try {
-    const response = await axios.post(`http://88.222.212.252:3001/api/otp/generate`, { 
+    const response = await axios.post(`https://back-end.anginat.com/api/otp/generate`, { 
         "email": email,     
         "otpType": "email"
     });
@@ -17,7 +17,7 @@ export const sendOtpOnEmail = async (email) => {
 
 export const verifyOtpOnEmail = async (otp) => {
     try {
-      const response = await axios.post(`http://88.222.212.252:3001/api/otp/verify`, { 
+      const response = await axios.post(`https://back-end.anginat.com/api/otp/verify`, { 
           "otp": otp,     
           "otpType": "email"
       });

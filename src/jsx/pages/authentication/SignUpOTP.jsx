@@ -90,7 +90,7 @@ function SignUpOTP() {
     
         try {
             console.log(payload)
-            const response = await axios.post('http://88.222.212.252:3001/api/auth/register', payload);
+            const response = await axios.post('https://back-end.anginat.com/api/auth/register', payload);
     
             // Assuming your backend responds with a 200 status code on success
             if (response.status === "success") {
