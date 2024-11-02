@@ -1,10 +1,8 @@
 /* eslint-disable camelcase */
+import path from 'node:path';
+'use strict';
 
-'use strict'
-
-const path = require('node:path')
-
-module.exports = {
+export default {
   spec_dir: 'scss',
   // Make Jasmine look for `.test.scss` files
   spec_files: ['**/*.{test,spec}.scss'],
@@ -13,4 +11,4 @@ module.exports = {
   // Ensure we use `require` so that the require.extensions works
   // as `import` completely bypasses it
   jsLoader: 'require'
-}
+};
