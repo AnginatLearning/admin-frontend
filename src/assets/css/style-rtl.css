@@ -12932,9 +12932,9 @@ svg.pulse-svg {
   [data-nav-headerbg="color_2"] .nav-header .brand-logo .brand-title path {
     fill: #fff; }
 
-[data-nav-headerbg="color_3"][data-theme-version="dark"],
+/* [data-nav-headerbg="color_3"][data-theme-version="dark"],
 [data-nav-headerbg="color_3"] {
-  --nav-headbg: #6a73fa; }
+  --nav-headbg: #6a73fa; } */
   [data-nav-headerbg="color_3"][data-theme-version="dark"] .nav-header .logo-abbr g rect,
   [data-nav-headerbg="color_3"] .nav-header .logo-abbr g rect {
     fill: #fff; }
