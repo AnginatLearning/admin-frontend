@@ -4,7 +4,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Export,Trash,FunnelSimple } from "@phosphor-icons/react";
 import Swal from 'sweetalert2';
 import { IMAGES } from '../../constant/theme';
-import { gridDataBlog } from '../staff/GridData';
 import axios from 'axios';
 
 
@@ -371,46 +370,6 @@ const LeadManagement = () => {
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </Tab.Pane>
-                            <Tab.Pane eventKey="Grid" className="col-lg-12">
-                                <div className="row">
-                                    {gridDataBlog.map((item, ind) => (
-                                        <div className="col-lg-4 col-md-6 col-sm-6 col-12" key={ind}>
-                                            <div className="card card-profile">
-                                                <div className="card-header justify-content-end pb-0 border-0">
-                                                    <Dropdown>
-                                                        <Dropdown.Toggle as="button" className="btn btn-link i-false" type="button">
-                                                            <span className="dropdown-dots fs--1"></span>
-                                                        </Dropdown.Toggle>
-                                                        <Dropdown.Menu align="end" className="dropdown-menu dropdown-menu-right border py-0">
-                                                            <div className="py-2">
-                                                                <Link to={"#"} className="dropdown-item">Edit</Link>
-                                                                <Link to={"#"} className="dropdown-item text-danger">Delete</Link>
-                                                            </div>
-                                                        </Dropdown.Menu>
-                                                    </Dropdown>
-                                                </div>
-                                                <div className="card-body pt-2">
-                                                    <div className="text-center">
-                                                        <div className="profile-photo">
-                                                            <img src={item.image} width="100" className="img-fluid rounded-circle" alt="" />
-                                                        </div>
-                                                        <h3 className="mt-4 mb-1">{item.name}</h3>
-                                                        <p className="text-muted">{item.subject}</p>
-                                                        <ul className="list-group mb-3 list-group-flush">
-                                                            {item.content.map((data, ind) => (
-                                                                <li className="list-group-item px-0 d-flex justify-content-between" key={ind}>
-                                                                    <span className="mb-0">{data.title} :</span><strong>{data.subtitle}</strong>
-                                                                </li>
-                                                            ))}
-                                                        </ul>
-                                                        <Link to={"/about-student"} className="btn btn-outline-primary btn-rounded mt-3 px-4">Read More</Link>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
                                 </div>
                             </Tab.Pane>
                         </Tab.Content>

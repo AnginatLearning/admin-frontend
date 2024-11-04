@@ -68,14 +68,17 @@ export function formatError(errorResponse) {
 }
 
 export function saveTokenInLocalStorage(tokenDetails) {
-    // Optional: Calculate and store token expiration date
-    // tokenDetails.expireDate = new Date(
-    //     new Date().getTime() + tokenDetails.expiresIn * 1000
-    // );
+    // Calculate and store token expiration date if `expiresIn` is provided
+    if (tokenDetails.expiresIn) {
+        const expireDate = new Date(new Date().getTime() + tokenDetails.expiresIn * 1000);
+        localStorage.setItem('expireDate', expireDate.toISOString());
+    }
 
-    // Store the token in local storage
+    // Store the access token in local storage
+    console.log(tokenDetails.accessToken);
     localStorage.setItem('accessToken', `Bearer ${tokenDetails.accessToken}`);
 }
+
 
 
 export function runLogoutTimer(dispatch, timer, navigate) {

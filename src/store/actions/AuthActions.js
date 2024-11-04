@@ -1,3 +1,5 @@
+
+import { useNavigate } from 'react-router-dom';
 import {
     formatError,
     login,
@@ -40,7 +42,8 @@ export function signupAction(email, password, navigate) {
     };
 }
 
-export function Logout(navigate) {
+export function Logout() {
+    const navigate = useNavigate();
 	localStorage.removeItem('accessToken');
     navigate('/login');
     
