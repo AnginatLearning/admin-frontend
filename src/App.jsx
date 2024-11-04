@@ -67,7 +67,7 @@ function App(props) {
             <Route path='/verify-otp' element={<SignUpOTP/>} />
             
             <Route path='/forgotpass-verify-otp' element={<ForgetpassOTP/>} />
-         
+            <Route path='/*' element={<Login />} />
             
         </Routes>
         </RegistrationProvider>

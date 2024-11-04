@@ -47,7 +47,7 @@ const LeadManagement = () => {
             }
 
             try {
-                const res = await axios.get('http://88.222.212.252:3001/api/lead/leads', {
+                const res = await axios.get('https://back-end.anginat.com/api/lead/leads', {
                     headers: {
                         Authorization: token // Add Authorization header
                     }
