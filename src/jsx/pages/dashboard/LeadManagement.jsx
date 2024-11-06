@@ -5,6 +5,7 @@ import { Export,Trash,FunnelSimple } from "@phosphor-icons/react";
 import Swal from 'sweetalert2';
 import { IMAGES } from '../../constant/theme';
 import axios from 'axios';
+import api from '../../../services/AxiosInstance';
 
 
 const theadData = [
@@ -35,11 +36,7 @@ const LeadManagement = () => {
                 return;
             }
             try {
-                const res = await axios.get('https://back-end.anginat.com/api/lead/leads', {
-                    headers: {
-                        Authorization: token
-                    }
-                });
+                const res = await api.get('lead/leads')
                 setFeeData(res.data.data.leads);
                 setFilteredFeeData(res.data.data.leads);
             } catch (error) {
