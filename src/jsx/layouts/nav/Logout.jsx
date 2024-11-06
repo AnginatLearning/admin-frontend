@@ -23,12 +23,13 @@ function withRouter(Component) {
 
 function LogoutPage(props){
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     function onLogout() {
-       dispatch(Logout());
+       dispatch(Logout(navigate));
     }
     return(
         <>
-            <button  className="dropdown-item ai-icon" onClick={()=>onLogout}>
+            <button  className="dropdown-item ai-icon" onClick={()=>onLogout()}>
                 <svg
                   id="icon-logout" xmlns="http://www.w3.org/2000/svg"
                   className="text-danger" width={18} height={18} viewBox="0 0 24 24" 

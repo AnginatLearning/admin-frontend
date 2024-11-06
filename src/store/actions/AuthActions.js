@@ -42,8 +42,7 @@ export function signupAction(email, password, navigate) {
     };
 }
 
-export function Logout() {
-    const navigate = useNavigate();
+export function Logout(navigate) {
 	localStorage.removeItem('accessToken');
     navigate('/login');
     

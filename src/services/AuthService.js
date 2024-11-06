@@ -83,8 +83,8 @@ export function saveTokenInLocalStorage(tokenDetails) {
 
 export function runLogoutTimer(dispatch, timer, navigate) {
     setTimeout(() => {
-        dispatch(Logout(history));
-        dispatch(Logout(navigate));
+        // dispatch(Logout(history));
+        // dispatch(Logout(navigate));
     }, timer);
 }
 

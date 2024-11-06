@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { Logout } from '../store/actions/AuthActions';
+import { useNavigate } from 'react-router-dom';
 
 // Create an axios instance
 const api = axios.create({
@@ -6,6 +8,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true,
 });
 
 // Request interceptor to add the Authorization header
@@ -24,7 +27,14 @@ api.interceptors.response.use(
     if (response.data?.data?.accessToken) {
       const newToken = response.data.data.accessToken;
       localStorage.setItem('accessToken', `Bearer ${newToken}`);
+      
     }
+    // try {
+    //     const refreshResponse = await api.post('auth/refresh-token');
+    //     console.log(refreshResponse)
+    //   } catch (error) {
+    //     console.error(error)
+    //   }
     return response;
   },
   async (error) => {
@@ -37,6 +47,7 @@ api.interceptors.response.use(
       error.response.data.message === 'Invalid or expired token'
     ) {
       try {
+        console.log(document.cookie)
         // Hit the refresh-token endpoint
         const refreshResponse = await api.post('auth/refresh-token');
         
@@ -53,6 +64,8 @@ api.interceptors.response.use(
         // Handle token refresh failure (e.g., logout user)
         console.error('Token refresh failed:', refreshError);
         // Optionally, you could redirect to login page here
+        const navigate = useNavigate();
+        Logout(navigate)
         return Promise.reject(refreshError);
       }
     }
