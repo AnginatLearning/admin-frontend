@@ -5,6 +5,7 @@ import {
     loginConfirmedAction,
     Logout,
 } from '../store/actions/AuthActions';
+import api from './AxiosInstance';
 
 export function signUp(email, password) {
     //axios call
@@ -25,9 +26,7 @@ export function login(email, password) {
         "password": password,
         // returnSecureToken: true,
     };
-    return axios.post(
-        `https://back-end.anginat.com/api/auth/login`, postData
-    );
+    return api.post('auth/login', postData);
 }
 
 export function formatError(errorResponse) {

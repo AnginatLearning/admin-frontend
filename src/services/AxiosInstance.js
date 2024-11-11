@@ -29,12 +29,14 @@ api.interceptors.response.use(
       localStorage.setItem('accessToken', `Bearer ${newToken}`);
       
     }
-    // try {
-    //     const refreshResponse = await api.post('auth/refresh-token');
-    //     console.log(refreshResponse)
-    //   } catch (error) {
-    //     console.error(error)
-    //   }
+    try {
+      const cookie = document.cookie
+      console.log(cookie)
+        const refreshResponse = await api.post('auth/refresh-token');
+        console.log(refreshResponse)
+      } catch (error) {
+        console.error(error)
+      }
     return response;
   },
   async (error) => {
