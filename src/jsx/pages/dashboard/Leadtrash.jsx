@@ -1,33 +1,13 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Dropdown, Row, Nav, Tab } from 'react-bootstrap';
-<<<<<<< HEAD
 import { Link, useNavigate } from 'react-router-dom';
-import { Export, Trash, FunnelSimple } from "@phosphor-icons/react";
-import Swal from 'sweetalert2';
-import axios from 'axios';
-import api from '../../../services/AxiosInstance';
-import { ClockClockwise } from "@phosphor-icons/react";
-=======
-import { Link, } from 'react-router-dom';
-import { Export,Trash,FunnelSimple,ClockClockwise } from "@phosphor-icons/react";
+import { Export,Trash,FunnelSimple } from "@phosphor-icons/react";
 import Swal from 'sweetalert2';
 import { IMAGES } from '../../constant/theme';
-import { gridDataBlog } from '../staff/GridData';
-
-
-
-
-
-
-const holidayTable = [
-    { id: 1, status: 'Closed', name: 'Garrett Winters', profile: IMAGES.smallpic1, education: 'B.A, B.C.A', mobile: '987 654 3210', email: 'info@example.com', join: '2020/07/25' },
-    { id: 9, status: 'Pending', name: 'Airi Satou', profile: IMAGES.smallpic2, education: 'B.A, B.C.A', mobile: '987 654 3210', email: 'info@example.com', join: '2021/11/28' },
-    { id: 10, status: 'Pending', name: 'Airi Satou', profile: IMAGES.smallpic2, education: 'B.A, B.C.A', mobile: '987 654 3210', email: 'info@example.com', join: '2021/11/28' },
-
-
-
-];
->>>>>>> 09d98e3264af7005781002c610d0ab5e859da14d
+import axios from 'axios';
+import api from '../../../services/AxiosInstance';
+import {ClockClockwise } from "@phosphor-icons/react";
 
 const theadData = [
     { heading: 'Select', sortingVale: "Select" },
@@ -40,13 +20,14 @@ const theadData = [
     { heading: 'Action', sortingVale: "action" }
 ];
 
-<<<<<<< HEAD
-const LeadManagement = () => {
+
+const Leadtrash = () => {
     const [sort, setSortata] = useState(10);
     const [feeData, setFeeData] = useState([]);
+    const [data, setData] = useState(
+        document.querySelectorAll('#holidayList tbody tr')
+    )
     const [filteredFeeData, setFilteredFeeData] = useState([]);
-
-    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchLeads = async () => {
@@ -56,19 +37,15 @@ const LeadManagement = () => {
                 return;
             }
             try {
-                const res = await api.get('lead/leads');
-                
-                // Filter the leads to only show trashed and deleted ones
-                const filteredLeads = res.data.data.leads.filter(lead => lead.status === 'Trashed' || lead.status === 'Deleted');
-                setFeeData(filteredLeads);
-                setFilteredFeeData(filteredLeads);
+                const res = await api.get('lead/leads')
+                setFeeData(res.data.data.leads);
+                setFilteredFeeData(res.data.data.leads);
             } catch (error) {
                 console.error('Error fetching leads:', error.response ? error.response.data : error.message);
             }
         };
         fetchLeads();
     }, []);
-    
 
     const handleSearch = (e) => {
         const searchValue = e.target.value.toLowerCase();
@@ -78,133 +55,6 @@ const LeadManagement = () => {
         });
         setFilteredFeeData(filteredData);
     };
-
-    const Leademptytrash = () => {
-        navigate("/Lead-Emptytrash");
-    };
-
-    const handleDelete = async (id) => {
-        try {
-           
-            const lead = feeData.find(lead => lead._id === id);
-    
-            if (lead) {
-               
-                console.log("Lead Information to delete:", lead);
-                
-               
-                const response = await api.patch('/lead/lead/status', {
-                    leadId: id,
-                    status: 'Deleted', 
-                });
-    
-                if (response.status === 200) {
-                    Swal.fire('Deleted!', 'Lead status has been moved to Trash', 'success');
-    
-                 
-                    setFeeData(feeData.filter(lead => lead._id !== id));
-                    setFilteredFeeData(filteredFeeData.filter(lead => lead._id !== id));
-                } else {
-                    Swal.fire('Error', 'Something went wrong!', 'error');
-                }
-            } else {
-                console.log("Lead not found with ID:", id);
-            }
-        } catch (error) {
-            Swal.fire('Error', 'Failed to update lead status.', 'error');
-            console.error('Error deleting lead:', error.response ? error.response.data : error.message);
-        }
-    };
-    const handlerestoreicon = () => {
-              Swal.fire({
-                title: 'Restore items',
-                text: 'Do you want to restore these items? Theyll be moved back to their original location.',
-                imageUrl:'../../../assets/images/restore.png',
-                imageWidth: 64,
-                imageHeight: 64,
-                showCancelButton: true,
-                confirmButtonText: 'Restore',
-                cancelButtonText: 'Cancel',
-                
-                customClass: {
-                    title: 'my-title-class',
-                    text: 'my-text-class',
-                    confirmButton: 'my-confirm-button-class',
-                    cancelButton: 'my-cancel-button-class',
-                    popup: 'my-popup-class' ,
-                }
-                
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    
-                    console.log('Restore action confirmed');
-                } else if (result.isDismissed) {
-                   
-                    console.log('Action canceled');
-                }
-            });
-            };
-
-            const handledeleteicon = () => {
-                    Swal.fire({
-                        title: 'Delete Items',
-                        text: 'Are you sure you want to permanently delete these items? This action cannot be undone.',
-                        imageUrl: '../../../assets/images/restore.png',
-                        imageWidth: 64,
-                        imageHeight: 64,
-                        showCancelButton: true,
-                        confirmButtonText: 'Yes',
-                        cancelButtonText: 'No',
-                        customClass: {
-                            title: 'my-title-class',
-                            text: 'my-text-class',
-                            confirmButton: 'my-confirm-button-class-2',
-                            cancelButton: 'my-cancel-button-class-2',
-                            popup: 'my-popup-class',
-                        }
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            
-                            Swal.fire({
-                                title: 'Are You Sure?',
-                                text: 'Do you really want to permanently delete this ?',
-                                icon: 'warning',
-                                showCancelButton: true,
-                                confirmButtonText: 'Yes',
-                                cancelButtonText: 'No',
-                                customClass: {
-                                    title: 'my-title-class',
-                                    text: 'my-text-class',
-                                    confirmButton: 'my-confirm-button-class-2',
-                                    cancelButton: 'my-cancel-button-class-2', popup: 'my-popup-class',
-                                }
-                            }).then((secondResult) => {
-                                if (secondResult.isConfirmed) {
-                                    
-                                    console.log('Final delete action confirmed');
-                                   
-                                } else {
-                                    console.log('Delete action canceled');
-                                }
-                            });
-                        } else {
-                            console.log('Initial action canceled');
-                        }
-                    });
-                }
-
-    return (
-        <>
-            <Row>
-                <Tab.Container defaultActiveKey={"List"}>
-=======
-
-const Leadtrash = () => {
-    const [sort, setSortata] = useState(10);
-    const [data, setData] = useState(
-        document.querySelectorAll('#holidayList tbody tr')
-    )
-
     const activePag = useRef(0)
     const [test, settest] = useState(0)
 
@@ -217,7 +67,6 @@ const Leadtrash = () => {
             }
         }
     }
-    
 
     useEffect(() => {
         setData(document.querySelectorAll('#holidayList tbody tr'))
@@ -237,87 +86,28 @@ const Leadtrash = () => {
         settest(i)
     }
 
-    const [feeData, setFeeDate] = useState([...holidayTable]);
     const [iconData, setIconDate] = useState({ complete: false, ind: Number });
-
-    const handlerestoreicon = () => {
-      Swal.fire({
-        title: 'Restore items',
-        text: 'Do you want to restore these items? Theyll be moved back to their original location.',
-        imageUrl:'../../../assets/images/restore.png',
-        imageWidth: 64,
-        imageHeight: 64,
-        showCancelButton: true,
-        confirmButtonText: 'Restore',
-        cancelButtonText: 'Cancel',
-        
-        customClass: {
-            title: 'my-title-class',
-            text: 'my-text-class',
-            confirmButton: 'my-confirm-button-class',
-            cancelButton: 'my-cancel-button-class',
-            popup: 'my-popup-class' ,
+    
+    useEffect(() => {
+    const fetchLeads = async () => {
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+            console.error('No token found');
+            return;
         }
-        
-    }).then((result) => {
-        if (result.isConfirmed) {
-            
-            console.log('Restore action confirmed');
-        } else if (result.isDismissed) {
+        try {
+            const res = await api.get('lead/leads');
            
-            console.log('Action canceled');
+            const activeLeads = res.data.data.leads.filter(lead => lead.status == 'Trashed' , lead => lead.status !== '');
+            setFeeData(activeLeads);
+            setFilteredFeeData(activeLeads);
+        } catch (error) {
+            console.error('Error fetching leads:', error.response ? error.response.data : error.message);
         }
-    });
     };
+    fetchLeads();
+}, []);
 
-    const handledeleteicon = () => {
-    Swal.fire({
-        title: 'Delete Items',
-        text: 'Are you sure you want to permanently delete these items? This action cannot be undone.',
-        imageUrl: '../../../assets/images/restore.png',
-        imageWidth: 64,
-        imageHeight: 64,
-        showCancelButton: true,
-        confirmButtonText: 'Yes',
-        cancelButtonText: 'No',
-        customClass: {
-            title: 'my-title-class',
-            text: 'my-text-class',
-            confirmButton: 'my-confirm-button-class-2',
-            cancelButton: 'my-cancel-button-class-2',
-            popup: 'my-popup-class',
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            
-            Swal.fire({
-                title: 'Are You Sure?',
-                text: 'Do you really want to permanently delete this ?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Yes',
-                cancelButtonText: 'No',
-                customClass: {
-                    title: 'my-title-class',
-                    text: 'my-text-class',
-                    confirmButton: 'my-confirm-button-class-2',
-                    cancelButton: 'my-cancel-button-class-2', popup: 'my-popup-class',
-                }
-            }).then((secondResult) => {
-                if (secondResult.isConfirmed) {
-                    
-                    console.log('Final delete action confirmed');
-                   
-                } else {
-                    console.log('Delete action canceled');
-                }
-            });
-        } else {
-            console.log('Initial action canceled');
-        }
-    });
-}
-  
 
     function SotingData(name) {
         const sortedPeople = [...feeData];
@@ -350,17 +140,50 @@ const Leadtrash = () => {
             default:
                 break;
         }
-        setFeeDate(sortedPeople);
-    }
-    function DataSearch(e) {
-        const updatesDate = holidayTable.filter(item => {
-            let selectdata = `${item.name} ${item.join} ${item.education} ${item.mobile}`.toLowerCase();
-            return selectdata.includes(e.target.value.toLowerCase())
-        });
-        setFeeDate([...updatesDate])
+        setFeeData(sortedPeople);
     }
     
+    const navigate = useNavigate()
+    const Leademptytrash = () =>{
+        navigate("/Lead-Emptytrash")
+    }
+
+    const handleDelete = async (id) => {
+        try {
+           
+            const lead = feeData.find(lead => lead._id === id);
     
+            if (lead) {
+               
+                console.log("Lead Information to delete:", lead);
+                
+               
+                const response = await api.patch('/lead/lead/status', {
+                    leadId: id,
+                    status: 'Trashed', 
+                });
+    
+                if (response.status === 200) {
+                    Swal.fire('Deleted!', 'Lead status has been moved to Trash', 'success');
+    
+                 
+                    setFeeData(feeData.filter(lead => lead._id !== id));
+                    setFilteredFeeData(filteredFeeData.filter(lead => lead._id !== id));
+                } else {
+                    Swal.fire('Error', 'Something went wrong!', 'error');
+                }
+            } else {
+                console.log("Lead not found with ID:", id);
+            }
+        } catch (error) {
+            Swal.fire('Error', 'Failed to update lead status.', 'error');
+            console.error('Error deleting lead:', error.response ? error.response.data : error.message);
+        }
+    };
+    
+    const Editlead = () =>{
+    //    navigate('/Editlead')
+    }
 
     return (
         <>
@@ -368,18 +191,13 @@ const Leadtrash = () => {
             <Row>
                 <Tab.Container defaultActiveKey={"List"}>
 
->>>>>>> 09d98e3264af7005781002c610d0ab5e859da14d
                     <div className="col-lg-12">
                         <Tab.Content className="row tab-content">
                             <Tab.Pane eventKey="List" className="col-lg-12">
                                 <div className="card">
                                     <div className="card-header">
-<<<<<<< HEAD
-                                        <h4 className="card-title">Trashed Leads</h4>
-=======
                                         <h4 className="card-title" >Trash Files</h4>
 
->>>>>>> 09d98e3264af7005781002c610d0ab5e859da14d
                                     </div>
                                     <div className="card-body">
                                         <div className="table-responsive">
@@ -403,33 +221,6 @@ const Leadtrash = () => {
                                                             </label>
                                                         </div>
 
-<<<<<<< HEAD
-                                                        <div className='hover-pointer' style={{border:"solid 01px #E6E6E6",padding:"7px",borderRadius:'5px'}}>
-                                                            <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:"4px"}}>
-                                                                <FunnelSimple size={16} />
-                                                                <label htmlFor="">Filter</label>
-                                                            </div>
-                                                        </div>
-
-                                                        <div className='hover-pointer' style={{border:"solid 01px #E6E6E6",padding:"7px",borderRadius:'5px'}}>
-                                                            <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:"4px"}}>
-                                                                <Export size={16} />
-                                                                <label htmlFor="">Export</label>
-                                                            </div>
-                                                        </div>
-                                                        
-                                                        <div onClick={Leademptytrash} className='hover-pointer' style={{border:"solid 01px #E6E6E6",padding:"7px",borderRadius:'5px'}}>
-                                                            <div className='hover-pointer' style={{display:"flex",alignItems:"center",justifyContent:"center",gap:"4px"}}>
-                                                                <Trash size={16} />
-                                                                <label htmlFor="">Empty Trash</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="dataTables_filter">
-                                                        <label>Search : <input type="search" className="" placeholder=""
-                                                            onChange={handleSearch}
-=======
                                                        
                                                        <div className='hover-pointer' style={{border:"solid 01px #E6E6E6",padding:"7px",borderRadius:'5px'}}>
                                                              <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:"4px"}}>
@@ -438,14 +229,14 @@ const Leadtrash = () => {
                                                              </div>
                                                        </div>
 
-                                                       <div className='hover-pointer' style={{border:"solid 01px #E6E6E6",padding:"7px",borderRadius:'5px'}}>
+                                                       <div  className='hover-pointer' style={{border:"solid 01px #E6E6E6",padding:"7px",borderRadius:'5px'}}>
                                                              <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:"4px"}}>
                                                                  <Export size={16} />
                                                                  <label htmlFor="">Export</label>
                                                              </div>
                                                        </div>
                                                          
-                                                         <div  className='hover-pointer' style={{border:"solid 01px #E6E6E6",padding:"7px",borderRadius:'5px'}}>
+                                                         <div onClick={Leademptytrash} className='hover-pointer' style={{border:"solid 01px #E6E6E6",padding:"7px",borderRadius:'5px'}}>
                                                              <div className='hover-pointer' style={{display:"flex",alignItems:"center",justifyContent:"center",gap:"4px"}}>
                                                                  <Trash size={16} />
                                                                  <label htmlFor="">Empty Trash</label>
@@ -467,19 +258,11 @@ const Leadtrash = () => {
 
                                                     <div  className="dataTables_filter ">
                                                         <label>Search : <input type="search" className="" placeholder=""
-                                                            onChange={DataSearch}
->>>>>>> 09d98e3264af7005781002c610d0ab5e859da14d
+                                                            onChange={handleSearch}
                                                         />
                                                         </label>
                                                     </div>
                                                 </div>
-<<<<<<< HEAD
-                                                <table id="example4" className="display dataTable no-footer w-100">
-                                                    <thead>
-                                                        <tr>
-                                                            {theadData.map((item, ind) => (
-                                                                <th key={ind}>{item.heading}</th>
-=======
                                                 <table id="example4" className="display dataTable no-footer w-100" >
                                                     <thead>
                                                         <tr>
@@ -500,12 +283,10 @@ const Leadtrash = () => {
                                                                         }
                                                                     </span>
                                                                 </th>
->>>>>>> 09d98e3264af7005781002c610d0ab5e859da14d
                                                             ))}
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-<<<<<<< HEAD
                                                     {filteredFeeData.length > 0 ? (
                                                         filteredFeeData.map((data, ind) => (
                                                             <tr key={ind}>
@@ -528,38 +309,22 @@ const Leadtrash = () => {
                                                                 <td>
                                                                     <strong>{data.status}</strong>
                                                                 </td>
-                                                                <td className=''>
-
-                                                                <Link  onClick={handlerestoreicon} to={"#"} className="btn btn-xs sharp btn-primary me-1"><ClockClockwise size={16} weight="bold"/></Link>
-                                                                <Link onClick={handledeleteicon} to={"#"} className="btn btn-xs sharp btn-danger"><i  className="fa fa-trash" /></Link>
+                                                                <td>
+                                                                    <button style={{ outline: "none", border: "none" }} onClick={Editlead}>
+                                                                    <Link to={"#"} className="btn btn-xs sharp btn-primary me-1"><ClockClockwise size={16} weight="bold"  /></Link>
+                                                                    
+                                                                    </button>
+                                                                    <Link to={"#"} className="btn btn-xs sharp btn-danger"><i  className="fa fa-trash" /></Link>
                                                                 </td>
                                                             </tr>
                                                         ))
                                                     ) : (
                                                         <tr>
-                                                            <td colSpan={8} style={{ textAlign: 'center' }}>No trashed leads</td>
+                                                            <td colSpan={8} style={{ textAlign: 'center' }}>No leads yet</td>
                                                         </tr>
                                                     )}
                                                 </tbody>
-                                                </table>
-=======
-                                                        {feeData.map((data, ind) => (
-                                                            <tr key={ind}>
-                                                                <td><input style={{ height: "15px", width: "15px" }} type="checkbox" /> </td>
 
-                                                                <td>{data.name}</td>
-                                                                <td>{data.education}</td>
-                                                                <td><Link to={"#"}><strong>{data.mobile}</strong></Link></td>
-                                                                <td><Link to={"#"}><strong>{data.email}</strong></Link></td>
-                                                                <td>{data.join}</td>
-                                                                <td><strong>{data.status}</strong></td>
-                                                                <td>
-                                                                    <Link to={"#"} className="btn btn-xs sharp btn-primary me-1"><ClockClockwise size={16} weight="bold" onClick={handlerestoreicon} /></Link>
-                                                                    <Link to={"#"} className="btn btn-xs sharp btn-danger"><i onClick={handledeleteicon} className="fa fa-trash" /></Link>
-                                                                </td>
-                                                            </tr>
-                                                        ))}
-                                                    </tbody>
                                                 </table>
                                                 <div className='d-sm-flex text-center justify-content-between align-items-center mt-3'>
                                                     <div className='dataTables_info'>
@@ -608,55 +373,11 @@ const Leadtrash = () => {
                                                         </Link>
                                                     </div>
                                                 </div>
->>>>>>> 09d98e3264af7005781002c610d0ab5e859da14d
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </Tab.Pane>
-<<<<<<< HEAD
-=======
-                            <Tab.Pane eventKey="Grid" className="col-lg-12">
-                                <div className="row">
-                                    {gridDataBlog.map((item, ind) => (
-                                        <div className="col-lg-4 col-md-6 col-sm-6 col-12" key={ind}>
-                                            <div className="card card-profile">
-                                                <div className="card-header justify-content-end pb-0 border-0">
-                                                    <Dropdown>
-                                                        <Dropdown.Toggle as="button" className="btn btn-link i-false" type="button">
-                                                            <span className="dropdown-dots fs--1"></span>
-                                                        </Dropdown.Toggle>
-                                                        <Dropdown.Menu align="end" className="dropdown-menu dropdown-menu-right border py-0">
-                                                            <div className="py-2">
-                                                                <Link to={"#"} className="dropdown-item">Edit</Link>
-                                                                <Link to={"#"} className="dropdown-item text-danger">Delete</Link>
-                                                            </div>
-                                                        </Dropdown.Menu>
-                                                    </Dropdown>
-                                                </div>
-                                                <div className="card-body pt-2">
-                                                    <div className="text-center">
-                                                        <div className="profile-photo">
-                                                            <img src={item.image} width="100" className="img-fluid rounded-circle" alt="" />
-                                                        </div>
-                                                        <h3 className="mt-4 mb-1">{item.name}</h3>
-                                                        <p className="text-muted">{item.subject}</p>
-                                                        <ul className="list-group mb-3 list-group-flush">
-                                                            {item.content.map((data, ind) => (
-                                                                <li className="list-group-item px-0 d-flex justify-content-between" key={ind}>
-                                                                    <span className="mb-0">{data.title} :</span><strong>{data.subtitle}</strong>
-                                                                </li>
-                                                            ))}
-                                                        </ul>
-                                                        <Link to={"/about-student"} className="btn btn-outline-primary btn-rounded mt-3 px-4">Read More</Link>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </Tab.Pane>
->>>>>>> 09d98e3264af7005781002c610d0ab5e859da14d
                         </Tab.Content>
                     </div>
                 </Tab.Container>
@@ -665,9 +386,7 @@ const Leadtrash = () => {
     );
 };
 
-<<<<<<< HEAD
-export default LeadManagement;
-
+export default Leadtrash;
 // import React, { useState, useRef, useEffect } from 'react';
 // import { Dropdown, Row, Nav, Tab } from 'react-bootstrap';
 // import { Link, } from 'react-router-dom';
@@ -685,6 +404,9 @@ export default LeadManagement;
 //     { id: 1, status: 'Closed', name: 'Garrett Winters', profile: IMAGES.smallpic1, education: 'B.A, B.C.A', mobile: '987 654 3210', email: 'info@example.com', join: '2020/07/25' },
 //     { id: 9, status: 'Pending', name: 'Airi Satou', profile: IMAGES.smallpic2, education: 'B.A, B.C.A', mobile: '987 654 3210', email: 'info@example.com', join: '2021/11/28' },
 //     { id: 10, status: 'Pending', name: 'Airi Satou', profile: IMAGES.smallpic2, education: 'B.A, B.C.A', mobile: '987 654 3210', email: 'info@example.com', join: '2021/11/28' },
+
+
+
 // ];
 
 // const theadData = [
@@ -1083,6 +805,3 @@ export default LeadManagement;
 // };
 
 // export default Leadtrash;
-=======
-export default Leadtrash;
->>>>>>> 09d98e3264af7005781002c610d0ab5e859da14d

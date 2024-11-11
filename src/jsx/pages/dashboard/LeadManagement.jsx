@@ -86,7 +86,7 @@ const LeadManagement = () => {
     }
 
     const [iconData, setIconDate] = useState({ complete: false, ind: Number });
-<<<<<<< HEAD
+    
     useEffect(() => {
     const fetchLeads = async () => {
         const token = localStorage.getItem('accessToken');
@@ -97,7 +97,7 @@ const LeadManagement = () => {
         try {
             const res = await api.get('lead/leads');
            
-            const activeLeads = res.data.data.leads.filter(lead => lead.status !== 'Trashed');
+            const activeLeads = res.data.data.leads.filter(lead => lead.status !== 'Trashed' , lead => lead.status !== '');
             setFeeData(activeLeads);
             setFilteredFeeData(activeLeads);
         } catch (error) {
@@ -106,8 +106,6 @@ const LeadManagement = () => {
     };
     fetchLeads();
 }, []);
-=======
->>>>>>> 09d98e3264af7005781002c610d0ab5e859da14d
 
 
     function SotingData(name) {
@@ -146,7 +144,6 @@ const LeadManagement = () => {
     
     const navigate = useNavigate()
     const Leademptytrash = () =>{
-<<<<<<< HEAD
         navigate("/Lead-Emptytrash")
     }
 
@@ -183,37 +180,6 @@ const LeadManagement = () => {
         }
     };
     
-=======
-        // navigate("/Lead-Emptytrash")
-    }
-
-    const handleDelete = (id) => {
-        // Swal.fire({
-        //     title: 'Are you sure?',
-        //     text: "Do you really want to delete this?",
-        //     icon: 'warning',
-        //     showCancelButton: true,
-        //     confirmButtonColor: '#3085d6',
-        //     cancelButtonColor: '#d33',
-        //     confirmButtonText: 'Delete',
-        //     cancelButtonText: 'Cancel',
-        //     customClass: {
-        //         title: 'my-title-class',
-        //         text: 'my-text-class',
-        //         confirmButton: 'my-confirm-button-class-2',
-        //         cancelButton: 'my-cancel-button-class-2',
-        //         popup: 'my-popup-class',
-        //     }
-        // }).then((result) => {
-        //     if (result.isConfirmed) {
-        //         const updatedData = feeData.filter(item => item.id !== id);
-        //         setFeeDate(updatedData);
-        //         Swal.fire('Deleted!', 'Your file has been deleted.', 'success');
-        //     }
-        // });
-    };
-
->>>>>>> 09d98e3264af7005781002c610d0ab5e859da14d
     const Editlead = () =>{
     //    navigate('/Editlead')
     }
@@ -348,11 +314,7 @@ const LeadManagement = () => {
                                                                             <i className="fa fa-pencil" />
                                                                         </Link>
                                                                     </button>
-<<<<<<< HEAD
                                                                     <Link onClick={() => handleDelete(data._id)} to="#" className="btn btn-xs sharp btn-danger">
-=======
-                                                                    <Link onClick={() =>handleDelete(data.id)} to="#" className="btn btn-xs sharp btn-danger">
->>>>>>> 09d98e3264af7005781002c610d0ab5e859da14d
                                                                         <i className="fa fa-trash" />
                                                                     </Link>
                                                                 </td>
