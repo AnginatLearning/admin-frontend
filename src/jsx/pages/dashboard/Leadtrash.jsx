@@ -149,35 +149,133 @@ const Leadtrash = () => {
     }
 
     const handleDelete = async (id) => {
-        try {
-           
-            const lead = feeData.find(lead => lead._id === id);
-    
-            if (lead) {
-               
-                console.log("Lead Information to delete:", lead);
+        
+        const firstResult = await Swal.fire({
+            title: 'Delete items',
+            text: 'Are you sure you want to permanently delete these items? This action cannot be undone.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
+            background: '#e6e6e6',
+            customClass:  {
                 
-               
-                const response = await api.patch('/lead/lead/status', {
-                    leadId: id,
-                    status: 'Trashed', 
-                });
+                confirmButton: 'swal-btn-confirm', 
+                cancelButton: 'swal-btn-cancel' 
+            },
+        });
     
-                if (response.status === 200) {
-                    Swal.fire('Deleted!', 'Lead status has been moved to Trash', 'success');
+      
+        if (firstResult.isConfirmed) {
+           
+            const secondResult = await Swal.fire({
+                title: 'Are You Sure?',
+                text: 'Do you really want to permanently delete this ?',
+                icon: 'error',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No',
+                background: '#e6e6e6',
+                customClass:  {
+                    confirmButton: 'swal-btn-confirm', 
+                    cancelButton: 'swal-btn-cancel' 
+                },
+            });
     
-                 
-                    setFeeData(feeData.filter(lead => lead._id !== id));
-                    setFilteredFeeData(filteredFeeData.filter(lead => lead._id !== id));
-                } else {
-                    Swal.fire('Error', 'Something went wrong!', 'error');
+          
+            if (secondResult.isConfirmed) {
+                try {
+                    const lead = feeData.find(lead => lead._id === id);
+        
+                    if (lead) {
+                        console.log("Lead Information to delete:", lead);
+                        
+                       
+                        const response = await api.patch('/lead/lead/status', {
+                            leadId: id,
+                            status: 'Deleted', 
+                        });
+    
+                        if (response.status === 200) {
+                            Swal.fire('Deleted!', 'Lead status has been moved to Trash', 'success');
+        
+                            
+                            setFeeData(feeData.filter(lead => lead._id !== id));
+                            setFilteredFeeData(filteredFeeData.filter(lead => lead._id !== id));
+                        } else {
+                            Swal.fire('Error', 'Something went wrong!', 'error');
+                        }
+                    } else {
+                        console.log("Lead not found with ID:", id);
+                    }
+                } catch (error) {
+                    Swal.fire('Error', 'Failed to update lead status.', 'error');
+                    console.error('Error deleting lead:', error.response ? error.response.data : error.message);
                 }
             } else {
-                console.log("Lead not found with ID:", id);
+                
+                Swal.fire('Cancelled', 'The lead is safe :)', 'info');
             }
-        } catch (error) {
-            Swal.fire('Error', 'Failed to update lead status.', 'error');
-            console.error('Error deleting lead:', error.response ? error.response.data : error.message);
+        } else {
+           
+            Swal.fire('Cancelled', 'The lead was not deleted.', 'info');
+        }
+    };
+    
+
+    const handleRestore = async (id) => {
+       
+        const firstResult = await Swal.fire({
+            title: 'Restore items',
+            text: 'Do you want to restore these items? They will be moved back to their original location.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
+            background: '#e6e6e6',
+            customClass: {
+                confirmButton: 'swal-btn-confirm',
+                cancelButton: 'swal-btn-cancel',
+            },
+           
+        });
+    
+      
+        if (firstResult.isConfirmed) {
+            try {
+                const lead = feeData.find(lead => lead._id === id);
+    
+                if (lead) {
+                    console.log("Lead Information to restore:", lead);
+    
+                   
+                    const response = await api.patch('/lead/lead/status', {
+                        leadId: id,
+                        status: 'Pending', 
+                    });
+    
+                    if (response.status === 200) {
+                        
+                        Swal.fire('Restored!', 'Lead has been successfully restored.', 'success');
+    
+                       
+                        setFeeData(feeData.filter(lead => lead._id !== id));
+                        setFilteredFeeData(filteredFeeData.filter(lead => lead._id !== id));
+                    } else {
+                        
+                        Swal.fire('Error', 'Something went wrong while restoring the lead!', 'error');
+                    }
+                } else {
+                    console.log("Lead not found with ID:", id);
+                    Swal.fire('Error', 'Lead not found!', 'error');
+                }
+            } catch (error) {
+          
+                Swal.fire('Error', 'Failed to restore lead status.', 'error');
+                console.error('Error restoring lead:', error.response ? error.response.data : error.message);
+            }
+        } else {
+             Swal.fire('Cancelled', 'The lead was not restored.', 'info');
         }
     };
     
@@ -311,10 +409,10 @@ const Leadtrash = () => {
                                                                 </td>
                                                                 <td>
                                                                     <button style={{ outline: "none", border: "none" }} onClick={Editlead}>
-                                                                    <Link to={"#"} className="btn btn-xs sharp btn-primary me-1"><ClockClockwise size={16} weight="bold"  /></Link>
+                                                                    <Link to={"#"} onClick={() => handleRestore(data._id)} className="btn btn-xs sharp btn-primary me-1"><ClockClockwise size={16} weight="bold"  /></Link>
                                                                     
                                                                     </button>
-                                                                    <Link to={"#"} className="btn btn-xs sharp btn-danger"><i  className="fa fa-trash" /></Link>
+                                                                    <Link to={"#"}  onClick={() => handleDelete(data._id)} className="btn btn-xs sharp btn-danger"><i  className="fa fa-trash" /></Link>
                                                                 </td>
                                                             </tr>
                                                         ))

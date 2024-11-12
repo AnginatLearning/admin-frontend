@@ -23424,4 +23424,10 @@ span#counter {
  .my-cancel-button-class-2{
   background: #d1c6c6 !important;
  }
+
+
+.swal-btn-confirm{
+  background-color: red;
+  color: red;
+}
 /*# sourceMappingURL=style.css.map */

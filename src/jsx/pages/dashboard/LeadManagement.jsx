@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Dropdown, Row, Nav, Tab } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
@@ -97,7 +98,7 @@ const LeadManagement = () => {
         try {
             const res = await api.get('lead/leads');
            
-            const activeLeads = res.data.data.leads.filter(lead => lead.status !== 'Trashed' , lead => lead.status !== '');
+            const activeLeads = res.data.data.leads.filter(lead => lead.status !== 'Deleted' && lead.status !== 'Trashed' );
             setFeeData(activeLeads);
             setFilteredFeeData(activeLeads);
         } catch (error) {
@@ -148,41 +149,57 @@ const LeadManagement = () => {
     }
 
     const handleDelete = async (id) => {
-        try {
-           
-            const lead = feeData.find(lead => lead._id === id);
-    
-            if (lead) {
-               
-                console.log("Lead Information to delete:", lead);
+       
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: 'Do you really want to delete this?',
+            icon: 'sucess',
+            showCancelButton: true,
+            confirmButtonText: 'Delete',
+            cancelButtonText: 'Cancel',
+            customClass:  {
                 
-               
-                const response = await api.patch('/lead/lead/status', {
-                    leadId: id,
-                    status: 'Trashed', 
-                });
+                confirmButton: 'swal-btn-confirm', 
+                cancelButton: 'swal-btn-cancel' 
+            },
+        });
     
-                if (response.status === 200) {
-                    Swal.fire('Deleted!', 'Lead status has been moved to Trash', 'success');
+        if (result.isConfirmed) {
+            try {
+                const lead = feeData.find(lead => lead._id === id);
     
-                 
-                    setFeeData(feeData.filter(lead => lead._id !== id));
-                    setFilteredFeeData(filteredFeeData.filter(lead => lead._id !== id));
+                if (lead) {
+                    console.log("Lead Information to delete:", lead);
+    
+                    const response = await api.patch('/lead/lead/status', {
+                        leadId: id,
+                        status: 'Trashed', 
+                    });
+    
+                    if (response.status === 200) {
+                        Swal.fire('Deleted!', 'success');
+    
+                        setFeeData(feeData.filter(lead => lead._id !== id));
+                        setFilteredFeeData(filteredFeeData.filter(lead => lead._id !== id));
+                    } else {
+                        Swal.fire('Error', 'Something went wrong!', 'error');
+                    }
                 } else {
-                    Swal.fire('Error', 'Something went wrong!', 'error');
+                    console.log("Lead not found with ID:", id);
                 }
-            } else {
-                console.log("Lead not found with ID:", id);
+            } catch (error) {
+                Swal.fire('Error', 'Failed to update lead status.', 'error');
+                console.error('Error deleting lead:', error.response ? error.response.data : error.message);
             }
-        } catch (error) {
-            Swal.fire('Error', 'Failed to update lead status.', 'error');
-            console.error('Error deleting lead:', error.response ? error.response.data : error.message);
+        } else {
+            // If the user canceled, just log or handle accordingly
+            console.log("Deletion canceled");
         }
     };
     
-    const Editlead = () =>{
-    //    navigate('/Editlead')
-    }
+    const Editlead = (id) => {
+  navigate(`/edit-lead/${id}`);
+};
 
     return (
         <>
@@ -309,7 +326,7 @@ const LeadManagement = () => {
                                                                     <strong>{data.status}</strong>
                                                                 </td>
                                                                 <td>
-                                                                    <button style={{ outline: "none", border: "none" }} onClick={Editlead}>
+                                                                    <button style={{ outline: "none", border: "none" }}  onClick={() => Editlead(data._id)}>
                                                                         <Link to="#" className="btn btn-xs sharp btn-primary me-1">
                                                                             <i className="fa fa-pencil" />
                                                                         </Link>

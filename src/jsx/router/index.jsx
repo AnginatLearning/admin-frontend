@@ -173,7 +173,7 @@ const Markup = () => {
     { url: "event-management", component: <EventManagement /> },
     { url: "Lead-management", component: <LeadManagement /> },
     { url: "Lead-Emptytrash", component: <Leadtrash /> },
-    { url: "Editlead", component: <Editlead /> },
+    { url: "/edit-lead/:id", component: <Editlead /> },
 
 
     //Professors

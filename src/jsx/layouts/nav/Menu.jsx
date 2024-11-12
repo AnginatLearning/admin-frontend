@@ -48,7 +48,8 @@ export const MenuList = [
            
     //     ],
     // },
-    // //Student    
+    
+    //Student    
     // {
     //     title: 'Students',	
     //     classsChange: 'mm-collapse',		

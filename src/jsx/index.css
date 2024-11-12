@@ -815,6 +815,7 @@ button.react-calendar__tile.react-calendar__tile--active.react-calendar__tile--r
   animation: anim-bell 2s linear forwards
 }
 
+
 @keyframes anim-bell {
   0% {
     stroke-dashoffset: 0px;
