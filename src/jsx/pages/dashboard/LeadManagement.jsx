@@ -128,7 +128,7 @@ const LeadManagement = () => {
     
     const navigate = useNavigate()
     const Leademptytrash = () =>{
-        navigate("/Lead-Emptytrash")
+        navigate("/Lead-managementEmptytrash")
     }
 
     const handleDelete = async (id) => {
@@ -180,7 +180,7 @@ const LeadManagement = () => {
     };
     
     const Editlead = (id) => {
-  navigate(`/edit-lead/${id}`);
+  navigate(`/Lead-management-edit-lead/${id}`);
 };
 
     return (
