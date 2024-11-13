@@ -44,6 +44,7 @@ export function signupAction(email, password, navigate) {
 
 export function Logout(navigate) {
 	localStorage.removeItem('accessToken');
+    localStorage.removeItem('loginTimestamp');
     navigate('/login');
     
 	return {
