@@ -37,9 +37,12 @@ const LeadManagement = () => {
                 return;
             }
             try {
-                const res = await api.get('lead/leads')
-                setFeeData(res.data.data.leads);
-                setFilteredFeeData(res.data.data.leads);
+                const res = await api.get('lead/leads');
+                // console.log(res.data.data.leads)
+                const allLeads = res.data.data.leads;
+                const activeLeads = allLeads.filter(lead => lead.status !== 'Deleted' && lead.status !== 'Trashed' );
+                setFeeData(activeLeads);
+                setFilteredFeeData(activeLeads);
             } catch (error) {
                 console.error('Error fetching leads:', error.response ? error.response.data : error.message);
             }
@@ -87,30 +90,10 @@ const LeadManagement = () => {
     }
 
     const [iconData, setIconDate] = useState({ complete: false, ind: Number });
-    
-    useEffect(() => {
-    const fetchLeads = async () => {
-        const token = localStorage.getItem('accessToken');
-        if (!token) {
-            console.error('No token found');
-            return;
-        }
-        try {
-            const res = await api.get('lead/leads');
-           
-            const activeLeads = res.data.data.leads.filter(lead => lead.status !== 'Deleted' && lead.status !== 'Trashed' );
-            setFeeData(activeLeads);
-            setFilteredFeeData(activeLeads);
-        } catch (error) {
-            console.error('Error fetching leads:', error.response ? error.response.data : error.message);
-        }
-    };
-    fetchLeads();
-}, []);
 
 
     function SotingData(name) {
-        const sortedPeople = [...feeData];
+        const sortedPeople = [...filteredFeeData];
         switch (name) {
             case "rollno":
                 sortedPeople.sort((a, b) => {
@@ -140,7 +123,7 @@ const LeadManagement = () => {
             default:
                 break;
         }
-        setFeeData(sortedPeople);
+        setFilteredFeeData(sortedPeople);
     }
     
     const navigate = useNavigate()
@@ -166,7 +149,7 @@ const LeadManagement = () => {
     
         if (result.isConfirmed) {
             try {
-                const lead = feeData.find(lead => lead._id === id);
+                const lead = filteredFeeData.find(lead => lead._id === id);
     
                 if (lead) {
                     console.log("Lead Information to delete:", lead);
@@ -179,7 +162,6 @@ const LeadManagement = () => {
                     if (response.status === 200) {
                         Swal.fire('Deleted!', 'success');
     
-                        setFeeData(feeData.filter(lead => lead._id !== id));
                         setFilteredFeeData(filteredFeeData.filter(lead => lead._id !== id));
                     } else {
                         Swal.fire('Error', 'Something went wrong!', 'error');
