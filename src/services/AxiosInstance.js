@@ -59,7 +59,7 @@ api.interceptors.response.use(
         console.error('Token refresh failed:', refreshError);
         // Optionally, you could redirect to login page here
         const navigate = useNavigate();
-        dispatch(Logout(navigate))
+        Logout(navigate)
         return Promise.reject(refreshError);
       }
     }

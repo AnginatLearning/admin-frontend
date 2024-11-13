@@ -1,5 +1,4 @@
 import axios from 'axios';
-// import swal from "sweetalert";
 import Swal from "sweetalert2";
 import {
     loginConfirmedAction,
@@ -8,14 +7,13 @@ import {
 import api from './AxiosInstance';
 
 export function signUp(email, password) {
-    //axios call
     const postData = {
         email,
         password,
         returnSecureToken: true,
     };
     return axios.post(
-        `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyD3RPAp3nuETDn9OQimqn_YF6zdzqWITII`,
+        `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=API_KEY`,
         postData,
     );
 }
@@ -24,7 +22,6 @@ export function login(email, password) {
     const postData = {
         "emailOrUsername": email,
         "password": password,
-        // returnSecureToken: true,
     };
     return api.post('auth/login', postData);
 }
@@ -32,82 +29,88 @@ export function login(email, password) {
 export function formatError(errorResponse) {
     switch (errorResponse.message) {
         case 'EMAIL_EXISTS':
-            //return 'Email already exists';
-            // swal("Oops", "Email already exists", "error");
-              Swal.fire({
+            Swal.fire({
                 icon: 'error',
                 title: 'Oops',
                 text: 'Email already exists',                        
-              })
+            });
             break;
         case 'EMAIL_NOT_FOUND':
-             Swal.fire({
+            Swal.fire({
                 icon: 'error',
                 title: 'Oops',
                 text: 'Email not found',                        
-              })
-            //return 'Email not found';
-                //swal("Oops", "Email not found", "error",{ button: "Try Again!",});
-           break;
+            });
+            break;
         case 'Invalid Credentials':
-            //return 'Invalid Password';
-            // swal("Oops", "Invalid Password", "error",{ button: "Try Again!",});
             Swal.fire({
                 icon: 'error',
                 title: 'Oops',
                 text: 'Invalid Password',                        
-            })
+            });
             break;
         case 'USER_DISABLED':
-            return 'User Disabled';
-
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops',
+                text: 'User account is disabled',                        
+            });
+            break;
         default:
-            return '';
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'An unexpected error occurred',
+            });
+            break;
     }
 }
 
 export function saveTokenInLocalStorage(tokenDetails) {
-    // Calculate and store token expiration date if `expiresIn` is provided
-    if (tokenDetails.expiresIn) {
-        const expireDate = new Date(new Date().getTime() + tokenDetails.expiresIn * 1000);
-        localStorage.setItem('expireDate', expireDate.toISOString());
-    }
-
-    // Store the access token in local storage
-    console.log(tokenDetails.accessToken);
+    const currentTime = new Date().getTime();
+    localStorage.setItem('loginTimestamp', currentTime);
     localStorage.setItem('accessToken', `Bearer ${tokenDetails.accessToken}`);
 }
 
+export function checkTokenExpiry(dispatch, navigate) {
+    const loginTimestamp = localStorage.getItem('loginTimestamp');
+    if (loginTimestamp) {
+        const currentTime = new Date().getTime();
+        const timeElapsed = currentTime - loginTimestamp;
+        const expiryTime = 24 * 60 * 60 * 1000;
 
+        if (timeElapsed >= expiryTime) {
+            dispatch(Logout(navigate)); // Log out if 24 hours have passed
+        }
+    }
+}
 
 export function runLogoutTimer(dispatch, timer, navigate) {
     setTimeout(() => {
-        // dispatch(Logout(history));
-        // dispatch(Logout(navigate));
+        console.log(timer)
+        dispatch(Logout(navigate));
     }, timer);
 }
 
 export function checkAutoLogin(dispatch, navigate) {
     const tokenDetailsString = localStorage.getItem('accessToken');
-    // let tokenDetails = '';
-    // if (!tokenDetailsString) {
-    //     dispatch(Logout(navigate));
-	// 	return;
-    // }
-
-    // tokenDetails = JSON.parse(tokenDetailsString);
-    // let expireDate = new Date(tokenDetails.expireDate);
-    // let todaysDate = new Date();
-
-    // if (todaysDate > expireDate) {
-    //     dispatch(Logout(navigate));
-    //     return;
-    // }
-		if(tokenDetailsString){
-            dispatch(loginConfirmedAction(tokenDetailsString));
-        }
+    const loginTimestamp = localStorage.getItem('loginTimestamp');
     
-	
-    // const timer = expireDate.getTime() - todaysDate.getTime();
-    // runLogoutTimer(dispatch, timer, navigate);
+    if (!tokenDetailsString || !loginTimestamp) {
+        dispatch(Logout(navigate));
+        return;
+    }
+
+    const expireDate = new Date(parseInt(loginTimestamp) + 24 * 60 * 60 * 1000);
+    const currentDate = new Date();
+
+    if (currentDate > expireDate) {
+        dispatch(Logout(navigate));
+        return;
+    }
+
+    // Confirm login and calculate remaining time
+    dispatch(loginConfirmedAction(tokenDetailsString));
+    const timer = expireDate.getTime() - currentDate.getTime();
+    runLogoutTimer(dispatch, timer, navigate);
 }
