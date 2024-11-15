@@ -5,6 +5,8 @@ import { CiEdit } from "react-icons/ci";
 import Loginimage from '../../components/chatBox/Loginimage';
 import google from "../../../assets/images/download (1).png";
 import facebook from "../../../assets/images/download (2).png";
+import axios from 'axios';
+import api from '../../../services/AxiosInstance';
 
 function SignUpOTP(props) {
     const location = useLocation();
@@ -14,14 +16,17 @@ function SignUpOTP(props) {
     const [otp, setOtp] = useState(Array(6).fill(''));
     const [timer, setTimer] = useState(600);
     const [resending, setResending] = useState(false);
-
-    // State to track whether the user is typing OTP
     const [isTyping, setIsTyping] = useState(false);
-
-    // State to disable only the "Resend OTP" span
     const [isResendDisabled, setIsResendDisabled] = useState(false);
 
     let typingTimeout;
+
+    // Store email in session storage on component mount
+    useEffect(() => {
+        if (email) {
+            sessionStorage.setItem('email', email); // Store the email in sessionStorage
+        }
+    }, [email]);
 
     const handleChange = (e, index) => {
         const value = e.target.value;
@@ -53,27 +58,43 @@ function SignUpOTP(props) {
         }
     }, [otp, isTyping]);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const otpString = otp.join('');
+        const otpString = otp.join(''); 
         console.log("OTP Submitted: ", otpString);
 
-        if (otpString === "123456") {
-            Swal.fire({
-                title: 'Success!',
-                text: 'OTP verified successfully!',
-                icon: 'success',
-                confirmButtonText: 'Go to Reset Password',
-            }).then(() => {
-                navigate('/reset-password');
+        try {
+            const response = await api.post('otp/verify', {
+                otp: otpString,
+                otpType: 'email',
+                receiverId: email,  
             });
-        } else {
+
+            if (response.status === 200) {
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'OTP verified successfully!',
+                    icon: 'success',
+                    confirmButtonText: 'Go to Reset Password',
+                }).then(() => {
+                    navigate('/reset-password', { state: email });
+                });
+            } else {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Invalid OTP, please try again.',
+                    icon: 'error',
+                    confirmButtonText: 'Try Again',
+                });
+            }
+        } catch (error) {
             Swal.fire({
                 title: 'Error!',
-                text: 'Invalid OTP, please try again.',
+                text: 'Failed to verify OTP, please try again.',
                 icon: 'error',
                 confirmButtonText: 'Try Again',
             });
+            console.error(error);
         }
     };
 
@@ -157,7 +178,8 @@ function SignUpOTP(props) {
                                 <div style={{ display: "flex", flexDirection: "column", gap: "20px", marginBottom: "10px" }}>
                                     <div className='inputs' style={{ display: 'flex', flexDirection: 'row' }}>
                                         {otp.map((digit, index) => (
-                                            <input style={{textAlign:"center"}}
+                                            <input
+                                                style={{ textAlign: "center" }}
                                                 key={index}
                                                 id={`otp-input-${index}`}
                                                 type="text"

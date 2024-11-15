@@ -136,7 +136,7 @@ const LeadManagement = () => {
         const result = await Swal.fire({
             title: 'Are you sure?',
             text: 'Do you really want to delete this?',
-            icon: 'sucess',
+            icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Delete',
             cancelButtonText: 'Cancel',
@@ -159,7 +159,7 @@ const LeadManagement = () => {
                         status: 'Trashed', 
                     });
     
-                    if (response.status === 200) {
+                    if (response.data.status === 'success') {
                         Swal.fire('Deleted!', 'success');
     
                         setFilteredFeeData(filteredFeeData.filter(lead => lead._id !== id));

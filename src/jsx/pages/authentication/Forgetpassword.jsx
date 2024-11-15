@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { Link, useNavigate,useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 // images
 import login from "../../../assets/images/login-img.png";
 import google from "../../../assets/images/download (1).png";
 import facebook from "../../../assets/images/download (2).png";
 import Loginimage from '../../components/chatBox/Loginimage';
+import api from '../../../services/AxiosInstance';
 
 function Forgetpassword(props) {
     
@@ -13,6 +15,7 @@ function Forgetpassword(props) {
     let errorsObj = { email: '', password: '' };
     const [errors, setErrors] = useState(errorsObj);
     const [touched, setTouched] = useState(false);
+    const [loading, setLoading] = useState(false);  // For handling loading state
     const navigate = useNavigate();
 
     const validateEmail = (email) => {
@@ -20,7 +23,7 @@ function Forgetpassword(props) {
         return re.test(String(email).toLowerCase());
     };
 
-    function onLogin(e) {
+    const onLogin = async (e) => {
         e.preventDefault();
         let error = false;
         const errorObj = { ...errorsObj };
@@ -41,8 +44,29 @@ function Forgetpassword(props) {
             return;
         }
 
-        next();
-    }
+        // Make the API call for forgot password using POST method with axios
+        try {
+            setLoading(true);  // Show loader while waiting for response
+
+            const response = await api.post('auth/forgot-password', {
+                email: email,
+                otpType: 'email',  // Assuming otpType is email for email-based verification
+            });
+
+            if (response.status === 200) {
+                // If the API call is successful, navigate to the OTP verification page
+                next();
+            } else {
+                // Handle API error (e.g., user not found or other issues)
+                setErrors({ ...errors, email: response.data.message || 'Something went wrong' });
+            }
+        } catch (err) {
+            console.error('Error:', err);
+            setErrors({ ...errors, email: 'Failed to connect to the server' });
+        } finally {
+            setLoading(false);  // Hide loader after response
+        }
+    };
 
     const next = () => {
         navigate("/forgotpass-verify-otp", { state: { email } });
@@ -80,7 +104,9 @@ function Forgetpassword(props) {
                                     </div>
                                 </div>
                                 <div style={{ marginTop: "20px" }} className="text-center">
-                                    <button type="submit" className="btn btn-primary btn-block">Next</button>
+                                    <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
+                                        {loading ? 'Loading...' : 'Next'}
+                                    </button>
                                 </div>
                             </form>
                         </div>
