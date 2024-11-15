@@ -194,7 +194,7 @@ const LeadManagement = () => {
     return (
         <>
 
-            <Row>s
+            <Row>
                 <Tab.Container defaultActiveKey={"List"}>
 
                     <div className="col-lg-12">
