@@ -2,34 +2,36 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
-
 // Images
 import login from "../../../assets/images/login-img.png";
 import { useRegistration } from '../../../context/RegistrationContext';
+import Loginimage from '../../components/chatBox/Loginimage';
 
 function Institute() {
     const {
         institutionData,
         setInstitutionData,
         institutionType,
-    } = useRegistration(); // Access global state and setter functions
+    } = useRegistration(); 
 
     const [nameError, setNameError] = useState('');
     const [emailError, setEmailError] = useState('');
     const [addressError, setAddressError] = useState('');
     const [domainError, setDomainError] = useState('');
+    const [checkboxError, setCheckboxError] = useState(''); 
+    const [isChecked, setIsChecked] = useState(false); 
 
     const navigate = useNavigate();
-    const location = useLocation(); // Access current route location
+    const location = useLocation(); 
 
-    // Determine if the current route should display "School" or "Institute"
+
     const label = location.pathname.includes("school") ? "School" : "Institute";
 
-    // Validation functions
+  
     const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     const validateDomain = (domain) => /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(domain);
 
-    // Initialize form data with context values
+   
     useEffect(() => {
         setInstitutionData((prevData) => ({
             ...prevData,
@@ -45,16 +47,24 @@ function Institute() {
         }));
     };
 
+    const handleCheckboxChange = (e) => {
+        setIsChecked(e.target.checked);
+        if (e.target.checked) {
+            setCheckboxError(''); 
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setNameError('');
         setEmailError('');
         setAddressError('');
         setDomainError('');
+        setCheckboxError(''); 
 
         let valid = true;
 
-        // Validations
+    
         if (!institutionData.name) {
             setNameError(`${label} Name is required.`);
             valid = false;
@@ -71,15 +81,19 @@ function Institute() {
             setDomainError(!institutionData.domainName ? `${label} Domain is required.` : 'Enter a valid domain (e.g., springlearns.com).');
             valid = false;
         }
+        if (!isChecked) {
+            setCheckboxError('You must agree to the Terms of Service and Privacy Policy.');
+            valid = false;
+        }
 
-        // If all validations pass
+       
         if (valid) {
             await Swal.fire({
                 icon: 'success',
                 title: 'Success!',
                 text: 'Your information has been submitted.',
             });
-            navigate("/page-register"); // Navigate to the next step
+            navigate("/register");
         }
     };
 
@@ -87,13 +101,7 @@ function Institute() {
         <div>
             <div className="Section">
                 <div className='down'>
-                    <div className='down-body' style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "100%", height: "100vh", flexDirection: "column", gap: "20px" }}>
-                        <img style={{ width: "400px" }} className='login-img' src={login} alt="" />
-                        <p style={{ fontSize: "28px", color: "black", fontWeight: "500" }}>Welcome To <br />Spring Learns</p>
-                        <p style={{ fontSize: "15px", textAlign: "center" }}>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
-                        </p>
-                    </div>
+                  <Loginimage />
                 </div>
 
                 <div className='upper'>
@@ -113,7 +121,7 @@ function Institute() {
                                         <input
                                             type="text"
                                             className="form-control"
-                                            name="name" // Add name for identification
+                                            name="name"
                                             placeholder={`Type Your ${label} Name`}
                                             value={institutionData.name}
                                             onChange={handleChange}
@@ -126,7 +134,7 @@ function Institute() {
                                         <input
                                             type="email"
                                             className="form-control"
-                                            name="email" // Add name for identification
+                                            name="email"
                                             placeholder={`Type Your ${label} Email`}
                                             value={institutionData.email}
                                             onChange={handleChange}
@@ -139,7 +147,7 @@ function Institute() {
                                         <input
                                             type="text"
                                             className="form-control"
-                                            name="address" // Add name for identification
+                                            name="address"
                                             placeholder={`Type Your ${label} Address`}
                                             value={institutionData.address}
                                             onChange={handleChange}
@@ -152,7 +160,7 @@ function Institute() {
                                         <input
                                             type="text"
                                             className="form-control"
-                                            name="domainName" // Add name for identification
+                                            name="domainName"
                                             placeholder="e.g., springlearns.com"
                                             value={institutionData.domainName}
                                             onChange={handleChange}
@@ -162,10 +170,17 @@ function Institute() {
                                 </div>
 
                                 <div className="form-check custom-checkbox ms-1" style={{ marginTop: "20px" }}>
-                                    <input type="checkbox" className="form-check-input" id="basic_checkbox_1" />
+                                    <input
+                                        type="checkbox"
+                                        className="form-check-input"
+                                        id="basic_checkbox_1"
+                                        checked={isChecked}
+                                        onChange={handleCheckboxChange}
+                                    />
                                     <label className="form-check-label" htmlFor="basic_checkbox_1">
                                         I agree to the <span style={{ color: '#f9a19d' }}>Term Of Service</span> and <span style={{ color: '#f9a19d' }}>Privacy Policy</span>.
                                     </label>
+                                    {checkboxError && <div className="text-danger fs-12">{checkboxError}</div>}
                                 </div>
 
                                 <div className="text-center" style={{ marginTop: "20px" }}>

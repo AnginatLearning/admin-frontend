@@ -1,19 +1,21 @@
+
 import React, { useState } from 'react';
 import { connect, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { loadingToggleAction, loginAction } from '../../../store/actions/AuthActions';
+import { FaEye, FaEyeSlash } from 'react-icons/fa'; 
 
-// image
-import login from "../../../assets/images/login-img.png";
+
+
 import google from "../../../assets/images/download (1).png";
 import facebook from "../../../assets/images/download (2).png";
 import logoFull from "../../../assets/images/logo-full.png";
-import { FaEye, FaEyeSlash } from 'react-icons/fa'; 
+import Loginimage from '../../components/chatBox/Loginimage';
 
 function Login(props) {
   const [email, setEmail] = useState('demo@example.com');
   const [password, setPassword] = useState('123456');
-  const [errors, setErrors] = useState({ email: '', password: '', checkbox: '' });
+  const [errors, setErrors] = useState({ email: '', password: '' });
   const [isChecked, setIsChecked] = useState(false); 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false); 
 
@@ -25,7 +27,6 @@ function Login(props) {
     let error = false;
     const errorObj = { email: '', password: '', checkbox: '' };
 
-    
     if (email === '') {
       errorObj.email = 'Email is Required';
       error = true;
@@ -35,20 +36,14 @@ function Login(props) {
       error = true;
     }
 
-    
-    if (!isChecked) {
-      errorObj.checkbox = 'You must agree to remember your preference.';
-      error = true;
-    }
+   
 
     setErrors(errorObj);
 
- 
     if (error) {
       return;
     }
 
-    
     dispatch(loadingToggleAction(true));
     dispatch(loginAction(email, password, navigate));
   }
@@ -61,7 +56,6 @@ function Login(props) {
     navigate('/forgot-password');
   };
 
-  // Toggle password visibility
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
@@ -71,41 +65,13 @@ function Login(props) {
       <div className="">
         <div className="">
           <div className="Section">
-            <div className="down">
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "100%",
-                  height: "100vh",
-                  flexDirection: "column",
-                  gap: "20px",
-                }}
-                className="down-body"
-              >
-                <div>
-                  <img
-                    style={{ width: "450px" }}
-                    className="login-img"
-                    src={login}
-                    alt=""
-                  />
-                </div>
-                <div>
-                  <p style={{ fontSize: "28px", color: "black", fontWeight: "500" }}>
-                    Welcome To <br />Spring Learns
-                  </p>
-                </div>
-                <p style={{ fontSize: "16px", textAlign: "center" }}>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                  incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
-                </p>
-              </div>
-            </div>
+          <div className="down">
+          <Loginimage />
+          </div>
+             
 
             <div className="upper">
-              <div style={{ paddingTop: "80px", paddingBottom: "80px" }} className="signin">
+              <div style={{ paddingTop: "80px", paddingBottom: "80px", backgroundColor:"white" }} className="signin">
                 <div className="card-body">
                   <div className="mb-2">
                     <p style={{ fontSize: "28px", fontWeight: "700", color: "black" }}>
@@ -182,7 +148,7 @@ function Login(props) {
                             Remember my preference
                           </label>
                         </div>
-                        {errors.checkbox && <div className="text-danger fs-12">{errors.checkbox}</div>}
+                     
                       </div>
                     </div>
 
@@ -192,8 +158,10 @@ function Login(props) {
                       </button>
                     </div>
                   </form>
-
-                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", marginTop: "0px", backgroundColor: "#fff5f4", paddingTop: "20px", paddingBottom: "20px", height: "240px" }}>
+                </div>
+              </div>
+             
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", marginTop: "0px", backgroundColor: "#fff5f4", paddingTop: "20px", paddingBottom: "20px", height: "240px" }}>
                     <p className="sign-title" style={{ fontSize: "15px", textAlign: "center" }}>
                       Or sign in with
                     </p>
@@ -213,10 +181,10 @@ function Login(props) {
                       </p>
                     </div>
                   </div>
-                </div>
-              </div>
+              
             </div>
           </div>
+          
         </div>
       </div>
     </div>

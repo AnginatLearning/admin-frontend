@@ -4,12 +4,15 @@ import Swal from 'sweetalert2';
 
 // images
 import login from "../../../assets/images/login-img.png";
+import Loginimage from '../../components/chatBox/Loginimage';
 
 function School(props) {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [address, setAddress] = useState('');
     const [domain, setDomain] = useState('');
+    const [agree, setAgree] = useState(false); // State to track checkbox
+    const [checkboxError, setCheckboxError] = useState(''); // State to track checkbox error
 
     const [nameError, setNameError] = useState('');
     const [emailError, setEmailError] = useState('');
@@ -48,6 +51,7 @@ function School(props) {
         setEmailError('');
         setAddressError('');
         setDomainError('');
+        setCheckboxError('');
 
         let valid = true;
 
@@ -77,6 +81,11 @@ function School(props) {
             valid = false;
         }
 
+        if (!agree) {
+            setCheckboxError('You must agree to the Terms of Service and Privacy Policy.');
+            valid = false;
+        }
+
         if (valid) {
             await Swal.fire({
                 icon: 'success',
@@ -84,7 +93,7 @@ function School(props) {
                 text: 'Your information has been submitted.',
             });
 
-            navigate("/login");
+            navigate("/register");
         }
     };
 
@@ -92,11 +101,7 @@ function School(props) {
         <div>
             <div className="Section">
                 <div className='down'>
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "100%", height: "100vh", flexDirection: "column", gap: "20px" }} className='down-body'>
-                        <div><img style={{ width: "400px" }} className='login-img' src={login} alt="" /></div>
-                        <div><p style={{ fontSize: "28px", color: "black", fontWeight: "500" }}>Welcome To <br />Spring Learns</p></div>
-                        <p style={{ fontSize: "15px", textAlign: "center" }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
-                    </div>
+                    <Loginimage />
                 </div>
 
                 <div className='upper'>
@@ -160,10 +165,17 @@ function School(props) {
                                 </div>
 
                                 <div style={{ marginTop: "20px" }} className="form-check custom-checkbox ms-1">
-                                    <input type="checkbox" className="form-check-input" id="basic_checkbox_1" />
+                                    <input 
+                                        type="checkbox" 
+                                        className="form-check-input" 
+                                        id="basic_checkbox_1"
+                                        checked={agree}
+                                        onChange={(e) => setAgree(e.target.checked)} 
+                                    />
                                     <label className="form-check-label" htmlFor="basic_checkbox_1">
                                         I agree to the <span style={{ color: '#f9a19d' }}>Term Of Service</span> and <span style={{ color: '#f9a19d' }}>Privacy Policy.</span>
                                     </label>
+                                    {checkboxError && <div className="text-danger fs-12">{checkboxError}</div>}
                                 </div>
 
                                 <div style={{ marginTop: "20px" }} className="text-center">

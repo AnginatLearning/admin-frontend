@@ -1,110 +1,206 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-
-// images
-import login from "../../../assets/images/login-img.png";
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import { CiEdit } from "react-icons/ci";
+import Loginimage from '../../components/chatBox/Loginimage';
 import google from "../../../assets/images/download (1).png";
 import facebook from "../../../assets/images/download (2).png";
 
-function  SignUpOTP(props) {
-    const [otp, setOtp] = useState(Array(6).fill('')); // State to hold OTP inputs
+function SignUpOTP(props) {
+    const location = useLocation();
+    const { email } = location.state || {};
+    const navigate = useNavigate();
+
+    const [otp, setOtp] = useState(Array(6).fill(''));
+    const [timer, setTimer] = useState(600);
+    const [resending, setResending] = useState(false);
+
+    // State to track whether the user is typing OTP
+    const [isTyping, setIsTyping] = useState(false);
+
+    // State to disable only the "Resend OTP" span
+    const [isResendDisabled, setIsResendDisabled] = useState(false);
+
+    let typingTimeout;
 
     const handleChange = (e, index) => {
         const value = e.target.value;
         const newOtp = [...otp];
-        newOtp[index] = value.slice(-1); // Only keep the last character
+        newOtp[index] = value.slice(-1);
 
-        // Move to the next input if the current input is filled
         if (value.length === 1 && index < 5) {
             document.getElementById(`otp-input-${index + 1}`).focus();
         }
 
-        // Move to the previous input if backspace is pressed
         if (value.length === 0 && index > 0) {
             document.getElementById(`otp-input-${index - 1}`).focus();
         }
 
         setOtp(newOtp);
+
+        if (typingTimeout) clearTimeout(typingTimeout);
+
+        setIsTyping(true);
+        typingTimeout = setTimeout(() => {
+            setIsTyping(false);
+        }, 500);
     };
+
+    useEffect(() => {
+        const allFilled = otp.every(digit => digit !== '');
+        if (allFilled && !isTyping) {
+            setIsTyping(false);
+        }
+    }, [otp, isTyping]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Submit the OTP
-        console.log("OTP Submitted: ", otp.join(''));
-    };
-    const navigate = useNavigate()
-    const verify = () => {
+        const otpString = otp.join('');
+        console.log("OTP Submitted: ", otpString);
 
-        navigate('/reset-password')
-    }
- 
+        if (otpString === "123456") {
+            Swal.fire({
+                title: 'Success!',
+                text: 'OTP verified successfully!',
+                icon: 'success',
+                confirmButtonText: 'Go to Reset Password',
+            }).then(() => {
+                navigate('/reset-password');
+            });
+        } else {
+            Swal.fire({
+                title: 'Error!',
+                text: 'Invalid OTP, please try again.',
+                icon: 'error',
+                confirmButtonText: 'Try Again',
+            });
+        }
+    };
+
+    const verify = () => {
+        handleSubmit();
+    };
+
+    const editEmail = () => {
+        navigate('/forgot-password', { state: { email } });
+    };
+
+    const handleResendOTP = () => {
+        if (resending || isResendDisabled) return;
+
+        setResending(true);
+        setIsResendDisabled(true); // Disable "Resend OTP" link
+        setTimeout(() => {
+            Swal.fire({
+                title: 'OTP Resent!',
+                text: 'A new OTP has been sent to your email.',
+                icon: 'success',
+                confirmButtonText: 'Okay',
+            });
+            setTimer(600);
+            setResending(false);
+        }, 2000);
+    };
+
+    useEffect(() => {
+        if (timer === 0) {
+            setIsResendDisabled(false); // Enable "Resend OTP" link when timer finishes
+            return;
+        }
+
+        const interval = setInterval(() => {
+            setTimer(prevTimer => {
+                if (prevTimer === 0) {
+                    clearInterval(interval);
+                    return 0;
+                }
+                return prevTimer - 1;
+            });
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [timer]);
+
+    const formatTime = (time) => {
+        const minutes = Math.floor(time / 60);
+        const seconds = time % 60;
+        return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    };
+
+    const isOtpComplete = otp.every(digit => digit !== '');
+
     return (
         <div>
             <div className="Section">
                 <div className='down'>
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "100%", height: "100%", flexDirection: "column", gap: "20px" }} className='down-body'>
-                        <div><img style={{ width: "400px" }} className='login-img' src={login} alt="" /></div>
-                        <div><p style={{ fontSize: "28px", color: "black", fontWeight: "500" }}>Welcome To <br />Spring Learns</p></div>
-                        <p style={{ fontSize: "15px", textAlign: "center" }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
-                    </div>
+                    <Loginimage />
                 </div>
 
                 <div className='upper'>
                     <div style={{ paddingTop: "100px", paddingBottom: "100px" }}>
                         <div className="card-body">
-                            <div style={{display:"flex",justifyContent:'space-between',alignItems:"center"}} className="mb-2">
+                            <div style={{ display: "flex", justifyContent: 'space-between', alignItems: "center" }} className="mb-2">
                                 <p style={{ fontSize: "28px", fontWeight: "700", color: "black" }}>ANGINAT</p>
-                                <Link className="text-primary" to="/login"> <p style={{ marginRight: "10px", color: "#889292" }}>Back to home</p>  </Link>
+                                <Link className="text-primary" to="/login">
+                                    <p style={{ marginRight: "10px", color: "#889292" }}>Back to home</p>
+                                </Link>
                             </div>
 
                             <h4 style={{ fontSize: "24px", marginTop: "20px", fontWeight: "500" }} className="mb-4">Verify OTP Code</h4>
                             <p>Please enter the 6-digit code we sent to</p>
                             <form onSubmit={handleSubmit}>
-                                <p><a href="http://">kamlesh1223@gmail.com</a></p>
-                                <div style={{display:"flex",flexDirection:"column",gap:"20px"}}>
-
-                               
-                                <div className='inputs' style={{ display: 'flex', justifyContent: '' ,flexDirection:'row'}}>
-                                    {otp.map((digit, index) => (
-                                        <input
-                                            key={index}
-                                            id={`otp-input-${index}`}
-                                            type="text"
-                                            value={digit}
-                                            maxLength="1"
-                                            onChange={(e) => handleChange(e, index)}
-                                             className='verify-input'
-                                            // style={{ width: "50px", height: "50px", textAlign: "center", fontSize: "24px", margin: "0 5px",borderRadius:"10px" }}
-                                        />
-                                    ))}
+                                <div style={{ display: "flex", gap: "5px" }}>
+                                    <a style={{ textDecoration: "underline" }} href="#">{email}</a>
+                                    <CiEdit onClick={editEmail} size={18} />
                                 </div>
 
-                                
-                               
-
-                            
-                                
-                             </div>
-                                
-
-                                <div style={{marginTop:"80px"}}>
-
-                                
-                                <div  style={{ marginTop: "20px",textAlign:"center" }}>
-                                <a style={{textAlign:"center"}}>Didn’t Receive OTP ? <span  style={{color:"red"}}>Resend OTP</span> </a>
-                                </div>
-                              
-                              
-                                <div onClick={verify} style={{ marginTop: "20px" }} className="text-center">
-                                    <button type="submit" className="btn btn-primary btn-block">Verify</button>
+                                <div style={{ display: "flex", flexDirection: "column", gap: "20px", marginBottom: "10px" }}>
+                                    <div className='inputs' style={{ display: 'flex', flexDirection: 'row' }}>
+                                        {otp.map((digit, index) => (
+                                            <input style={{textAlign:"center"}}
+                                                key={index}
+                                                id={`otp-input-${index}`}
+                                                type="text"
+                                                value={digit}
+                                                maxLength="1"
+                                                onChange={(e) => handleChange(e, index)}
+                                                className='verify-input'
+                                            />
+                                        ))}
+                                    </div>
                                 </div>
 
-                                <div style={{marginTop:"20px"}}>
-                                    <p style={{textAlign:"center"}}>OTP will expire in <span style={{color:"red"}}>09:59s</span> </p>
+                                <div style={{ marginTop: "80px" }}>
+                                    <div style={{ marginTop: "20px", textAlign: "center" }}>
+                                        <p style={{ textAlign: "center" }}>
+                                            Didn’t Receive OTP? 
+                                            <span 
+                                                style={{ 
+                                                    color: isResendDisabled ? 'gray' : 'red', 
+                                                    cursor: isResendDisabled ? 'not-allowed' : 'pointer',
+                                                    textDecoration: isResendDisabled ? 'none' : 'underline'
+                                                }} 
+                                                onClick={!isResendDisabled ? handleResendOTP : null}
+                                            >
+                                                {resending ? 'Resending...' : 'Resend OTP'}
+                                            </span>
+                                        </p>
+                                    </div>
+
+                                    <div onClick={verify} style={{ marginTop: "20px" }} className="text-center">
+                                        <button 
+                                            type="submit" 
+                                            className="btn btn-primary btn-block" 
+                                            disabled={isTyping}
+                                        >
+                                            Verify
+                                        </button>
+                                    </div>
+
+                                    <div style={{ marginTop: "20px" }}>
+                                        <p style={{ textAlign: "center" }}>OTP will expire in <span style={{ color: "red" }}>{formatTime(timer)}</span></p>
+                                    </div>
                                 </div>
-                                </div>
-                               
-                               
                             </form>
                         </div>
                     </div>

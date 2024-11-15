@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate,useLocation } from 'react-router-dom';
 
 // images
 import login from "../../../assets/images/login-img.png";
 import google from "../../../assets/images/download (1).png";
 import facebook from "../../../assets/images/download (2).png";
+import Loginimage from '../../components/chatBox/Loginimage';
 
 function Forgetpassword(props) {
+    
     const [email, setEmail] = useState('');
     let errorsObj = { email: '', password: '' };
     const [errors, setErrors] = useState(errorsObj);
@@ -43,19 +45,14 @@ function Forgetpassword(props) {
     }
 
     const next = () => {
-        navigate("/forgotpass-verify-otp");
+        navigate("/forgotpass-verify-otp", { state: { email } });
     };
 
     return (
         <div>
             <div className="Section">
                 <div className='down'>
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "100%", height: "100%", flexDirection: "column", gap: "20px" }} className='down-body'>
-                        <div><img style={{ width: "400px" }} className='login-img' src={login} alt="" /></div>
-                        <div><p style={{ fontSize: "28px", color: "black", fontWeight: "500" }}>Welcome To <br />Spring Learns</p></div>
-                        <p style={{ fontSize: "15px", textAlign: "center" }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
-                    </div>
+                  <Loginimage />
                 </div>
 
                 <div className='upper'>
@@ -75,7 +72,7 @@ function Forgetpassword(props) {
                                             value={email}
                                             onChange={(e) => {
                                                 setEmail(e.target.value);
-                                                if (e.target.value !== '') setTouched(true); // Set touched if input is not empty
+                                                if (e.target.value !== '') setTouched(true);
                                             }}
                                             placeholder="Type Your Email Address"
                                         />

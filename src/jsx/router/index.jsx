@@ -172,7 +172,7 @@ const Markup = () => {
     { url: "index-3", component: <Dashboard3 /> },
     { url: "event-management", component: <EventManagement /> },
     { url: "Lead-management", component: <LeadManagement /> },
-    { url: "Lead-management-Emptytrash", component: <Leadtrash /> },
+    { url: "Lead-management-emptytrash", component: <Leadtrash /> },
     { url: "Lead-management-edit-lead/:id", component: <Editlead /> },
 
 

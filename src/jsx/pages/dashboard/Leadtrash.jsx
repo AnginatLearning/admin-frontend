@@ -107,7 +107,7 @@ const Leadtrash = () => {
     };
     fetchLeads();
 }, []);
-
+ 
 
     function SotingData(name) {
         const sortedPeople = [...feeData];
@@ -145,7 +145,7 @@ const Leadtrash = () => {
     
     const navigate = useNavigate()
     const Leademptytrash = () =>{
-        navigate("/Lead-Emptytrash")
+        navigate("/Lead-management-emptytrash")
     }
 
     const handleDelete = async (id) => {
@@ -279,9 +279,17 @@ const Leadtrash = () => {
         }
     };
     
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0'); 
+        const day = date.getDate().toString().padStart(2, '0'); 
+        return `${year}-${month}-${day}`;  
+    };
     const Editlead = () =>{
     //    navigate('/Editlead')
     }
+    
 
     return (
         <>
@@ -395,17 +403,17 @@ const Leadtrash = () => {
                                                                 <td>{data.course}</td>
                                                                 <td>
                                                                     <Link to="#">
-                                                                        <strong>{data.phoneNumber}</strong>
+                                                                        {data.phoneNumber}
                                                                     </Link>
                                                                 </td>
                                                                 <td>
                                                                     <Link to="#">
-                                                                        <strong>{data.email}</strong>
+                                                                        {data.email}
                                                                     </Link>
                                                                 </td>
-                                                                <td>{data.date}</td>
+                                                                <td>{formatDate(data.date)}</td> 
                                                                 <td>
-                                                                    <strong>{data.status}</strong>
+                                                                    {data.status}
                                                                 </td>
                                                                 <td>
                                                                     <button style={{ outline: "none", border: "none" }} onClick={Editlead}>

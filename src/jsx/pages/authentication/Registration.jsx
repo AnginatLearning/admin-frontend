@@ -10,11 +10,15 @@ import { sendOtpOnEmail } from "../../../services/api";  // Adjust the import ac
 import google from "../../../assets/images/download (1).png";
 import facebook from "../../../assets/images/download (2).png";
 import login from "../../../assets/images/login-img.png";
+import Loginimage from "../../components/chatBox/Loginimage";
 
 function Register(props) {
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); // Toggle for Password field visibility
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // Toggle for Confirm Password field visibility
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState(''); // New state for confirm password
+  const [confirmPassword, setConfirmPassword] = useState(''); 
+  const [agreeToTerms, setAgreeToTerms] = useState(false);  // New state to track checkbox for agreement
+  const [error, setError] = useState('');  // Error message state for form validation
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -22,7 +26,16 @@ function Register(props) {
 
   // Handler to send OTP
   const handleGetOtp = async (e) => {
-    e.preventDefault(); // Prevent form submission
+    e.preventDefault();
+    
+    // Check if the user has agreed to the terms
+    if (!agreeToTerms) {
+      setError("You must agree to the Terms of Service and Privacy Policy to proceed.");
+      return;
+    } else {
+      setError(""); // Clear error if checkbox is checked
+    }
+
     if (!ownerData.email) {
       Swal.fire({ icon: 'error', title: 'Oops', text: 'Email is required to send OTP.' });
       return;
@@ -34,17 +47,15 @@ function Register(props) {
     }
 
     try {
-      // Optionally set the password in ownerData
-      setOwnerData({ ...ownerData, password }); // Add password to ownerData
+      setOwnerData({ ...ownerData, password }); 
       await sendOtpOnEmail(ownerData.email);
       Swal.fire({ icon: 'success', title: 'Success', text: 'OTP sent to your email!' });
-      navigate('/verify-otp'); // Navigate to the OTP verification page
+      navigate('/verify-otp');
     } catch (error) {
       Swal.fire({ icon: 'error', title: 'Error', text: error.message });
     }
   };
 
-  // Handle input changes for owner data
   const handleChange = (e) => {
     setOwnerData({ ...ownerData, [e.target.name]: e.target.value });
   };
@@ -52,11 +63,7 @@ function Register(props) {
   return (
     <div className="Section">
       <div className='down'>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "100%", height: "100%", flexDirection: "column", gap: "20px" }} className='down-body'>
-          <div><img className='login-img' src={login} alt="" /></div>
-          <div><p style={{ fontSize: "28px", color: "black", fontWeight: "500" }}>Welcome To <br />Spring Learns</p></div>
-          <p style={{ fontSize: "15px", textAlign: "center" }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
-        </div>
+        <Loginimage />
       </div>
 
       <div className="upper">
@@ -77,6 +84,7 @@ function Register(props) {
                 {props.successMessage}
               </div>
             )}
+            
             <form onSubmit={handleGetOtp}>
               <div className="two-input" style={{ display: "flex", justifyContent: "space-between" }}>
                 <div className="Email-section form-group">
@@ -126,11 +134,12 @@ function Register(props) {
                     name="password"
                     className="form-control"
                     placeholder="Password"
-                    type={`${showPassword ? "text" : "password"}`}
+                    type={showPassword ? "text" : "password"}
                     onChange={(e) => setPassword(e.target.value)}
                     required
                   />
-                  <span className={`show-pass eye ${showPassword ? 'active' : ''}`}
+                  <span 
+                    className={`show-pass eye ${showPassword ? 'active' : ''}`}
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     <i className="fa fa-eye-slash" />
@@ -144,12 +153,13 @@ function Register(props) {
                     value={confirmPassword}
                     className="form-control"
                     placeholder="Confirm Password"
-                    type={`${showPassword ? "text" : "password"}`}
+                    type={showConfirmPassword ? "text" : "password"}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required
                   />
-                  <span className={`show-pass eye ${showPassword ? 'active' : ''}`}
-                    onClick={() => setShowPassword(!showPassword)}
+                  <span 
+                    className={`show-pass eye ${showConfirmPassword ? 'active' : ''}`}
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   >
                     <i className="fa fa-eye-slash" />
                     <i className="fa fa-eye" />
@@ -159,8 +169,19 @@ function Register(props) {
 
               <div>
                 <div className="form-check custom-checkbox ms-1">
-                  <input type="checkbox" className="form-check-input" id="basic_checkbox_1" />
-                  <label className="form-check-label" htmlFor="basic_checkbox_1">I agree to the <span style={{ color: '#f9a19d' }}>Term Of Service</span> and <span style={{ color: '#f9a19d' }}>Privacy Policy.</span></label>
+                  <input
+                    type="checkbox"
+                    className="form-check-input"
+                    id="basic_checkbox_1"
+                    checked={agreeToTerms}
+                    onChange={() => setAgreeToTerms(!agreeToTerms)}  // Toggle agreement state
+                  />
+                  <label className="form-check-label" htmlFor="basic_checkbox_1">
+                    I agree to the <span style={{ color: '#f9a19d' }}>Term Of Service</span> and <span style={{ color: '#f9a19d' }}>Privacy Policy.</span>
+                  </label>
+                  {error && (
+                 <div className="text-danger mb-3">{error}</div>  
+                  )}
                 </div>
               </div>
 

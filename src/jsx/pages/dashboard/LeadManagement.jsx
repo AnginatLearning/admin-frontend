@@ -128,7 +128,7 @@ const LeadManagement = () => {
     
     const navigate = useNavigate()
     const Leademptytrash = () =>{
-        navigate("/Lead-managementEmptytrash")
+        navigate("/Lead-management-emptytrash")
     }
 
     const handleDelete = async (id) => {
@@ -178,6 +178,14 @@ const LeadManagement = () => {
             console.log("Deletion canceled");
         }
     };
+
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');  // Ensure two digits
+        const day = date.getDate().toString().padStart(2, '0'); // Ensure two digits
+        return `${year}-${month}-${day}`;  // Return in YYYY-MM-DD format
+    };
     
     const Editlead = (id) => {
   navigate(`/Lead-management-edit-lead/${id}`);
@@ -186,7 +194,7 @@ const LeadManagement = () => {
     return (
         <>
 
-            <Row>
+            <Row>s
                 <Tab.Container defaultActiveKey={"List"}>
 
                     <div className="col-lg-12">
@@ -295,17 +303,17 @@ const LeadManagement = () => {
                                                                 <td>{data.course}</td>
                                                                 <td>
                                                                     <Link to="#">
-                                                                        <strong>{data.phoneNumber}</strong>
+                                                                        {data.phoneNumber}
                                                                     </Link>
                                                                 </td>
                                                                 <td>
                                                                     <Link to="#">
-                                                                        <strong>{data.email}</strong>
+                                                                        {data.email}
                                                                     </Link>
                                                                 </td>
-                                                                <td>{data.date}</td>
+                                                                <td>{formatDate(data.date)}</td> 
                                                                 <td>
-                                                                    <strong>{data.status}</strong>
+                                                                    {data.status}
                                                                 </td>
                                                                 <td>
                                                                     <button style={{ outline: "none", border: "none" }}  onClick={() => Editlead(data._id)}>

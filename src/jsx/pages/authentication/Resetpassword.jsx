@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import login from "../../../assets/images/login-img.png";
 import google from "../../../assets/images/download (1).png";
 import facebook from "../../../assets/images/download (2).png";
+import Loginimage from '../../components/chatBox/Loginimage';
 
 
 function Resetpassword(props) {
@@ -41,12 +42,7 @@ function Resetpassword(props) {
         <div>
             <div className="Section">
                 <div className='down'>
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "100%", height: "100%", flexDirection: "column", gap: "20px" }} className='down-body'>
-                        <div><img style={{ width: "400px" }} className='login-img' src={login} alt="" /></div>
-                        <div><p style={{ fontSize: "28px", color: "black", fontWeight: "500" }}>Welcome To <br />Spring Learns</p></div>
-                        <p style={{ fontSize: "15px", textAlign: "center" }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
-                    </div>
+                 <Loginimage />
                 </div>
 
                 <div className='upper'>

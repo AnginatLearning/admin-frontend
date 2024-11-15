@@ -1,10 +1,11 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Chalkboard } from "@phosphor-icons/react";
+import { Chalkboard ,Backpack} from "@phosphor-icons/react";
 
 // images
 import login from "../../../assets/images/login-img.png";
 import { useRegistration } from '../../../context/RegistrationContext';
+import Loginimage from '../../components/chatBox/Loginimage';
 
 function Selectone(props) {
     const { setInstitutionType } = useRegistration();
@@ -19,12 +20,7 @@ function Selectone(props) {
         <div>
             <div className="Section">
                 <div className='down'>
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "100%", height: "100vh", flexDirection: "column", gap: "20px" }} className='down-body'>
-                        <div><img style={{ width: "400px" }} className='login-img' src={login} alt="" /></div>
-                        <div><p style={{ fontSize: "28px", color: "black", fontWeight: "500" }}>Welcome To <br />Spring Learns</p></div>
-                        <p style={{ fontSize: "15px", textAlign: "center" }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
-                    </div>
+                 <Loginimage />
                 </div>
 
                 <div className='upper'>
@@ -46,7 +42,7 @@ function Selectone(props) {
                                     className='school-button' 
                                     style={{ display: 'flex', flexDirection: "column", alignItems: "center" }} 
                                 >
-                                    <div><Chalkboard style={{ color: "black" }} size={48} /></div>
+                                    <div><Backpack  style={{ color: "black" }} size={48} /></div>
                                     <p style={{ fontSize: "30px", fontWeight: "500", color: "black" }}>School</p>
                                 </button>
 

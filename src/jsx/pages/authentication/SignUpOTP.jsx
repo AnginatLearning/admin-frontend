@@ -9,8 +9,11 @@ import google from "../../../assets/images/download (1).png";
 import facebook from "../../../assets/images/download (2).png";
 import { verifyOtpOnEmail } from '../../../services/api';
 import axios from 'axios';
+import Loginimage from '../../components/chatBox/Loginimage';
+import api from '../../../services/AxiosInstance';
 
 function SignUpOTP() {
+
     const { ownerData, institutionType, institutionData } = useRegistration(); // Access owner data from context
     const [otp, setOtp] = useState(Array(6).fill('')); // State to hold OTP inputs
     const navigate = useNavigate();
@@ -49,7 +52,7 @@ function SignUpOTP() {
 
         // Call API to verify OTP
         try {
-            const response = await verifyOtpOnEmail(otpCode);
+            const response = await verifyOtpOnEmail(otpCode,ownerData.email);
             console.log(response)
             // const data = await response;
             if (response.status === "success") {
@@ -90,15 +93,15 @@ function SignUpOTP() {
     
         try {
             console.log(payload)
-            const response = await axios.post('https://back-end.anginat.com/api/auth/register', payload);
+            const response = await api.post('auth/register', payload);
     
-            // Assuming your backend responds with a 200 status code on success
-            if (response.status === "success") {
+           
+            if (response.data.status === "success") {
                 Swal.fire('Success', 'Institution registered successfully! Now you may login with the Email and Password', 'success');
-                // Navigate to the next step or perform any other action
+               
                 navigate('/login')
             } else {
-                // If response is not a 200, handle it gracefully
+              
                 Swal.fire('Error', response.data.message || 'Registration failed. Please try again.', 'error');
             }
         } catch (error) {
@@ -118,11 +121,7 @@ function SignUpOTP() {
         <div>
             <div className="Section">
                 <div className='down'>
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "100%", height: "100%", flexDirection: "column", gap: "20px" }} className='down-body'>
-                        <div><img style={{ width: "400px" }} className='login-img' src={login} alt="" /></div>
-                        <div><p style={{ fontSize: "28px", color: "black", fontWeight: "500" }}>Welcome To <br />Spring Learns</p></div>
-                        <p style={{ fontSize: "15px", textAlign: "center" }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
-                    </div>
+                   <Loginimage />
                 </div>
 
                 <div className='upper'>

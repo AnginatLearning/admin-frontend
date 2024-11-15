@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import api from '../../../services/AxiosInstance';
 import Select from 'react-select';
+import Swal from 'sweetalert2'; 
 
 const Editlead = () => {
   const { id } = useParams(); 
@@ -10,6 +11,9 @@ const Editlead = () => {
   const [loading, setLoading] = useState(true);  
   const [error, setError] = useState(null);
   const [updates, setUpdates] = useState({});
+  const [isOpen, setIsOpen] = useState(false);  
+  
+  const navigate = useNavigate();  
 
   const options1 = [
     { value: '1', label: 'Pending' },
@@ -56,25 +60,54 @@ const Editlead = () => {
     }));
   };
 
+  const handleDropdownOpen = () => {
+    setIsOpen(true);
+  };
+
+  const handleDropdownClose = () => {
+    setIsOpen(false);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log(updates)
+      console.log(updates);
       const res = await api.patch('/lead/lead/status', {
         leadId: lead._id,
         ...updates,
       });
       console.log('Update response:', res);
-      // Optionally, reload or redirect after successful update
+      
+      Swal.fire({
+        title: 'Success!',
+        text: 'Lead updated successfully.',
+        icon: 'success',
+        confirmButtonText: 'Ok',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate(-1);
+        }
+      });
     } catch (error) {
       console.error("Error updating lead:", error);
+      
+      Swal.fire({
+        title: 'Error!',
+        text: 'Failed to update lead.',
+        icon: 'error',
+        confirmButtonText: 'Ok',
+      });
     }
+  };
+
+  const handleCancel = () => {
+    navigate(-1);
   };
 
   if (loading) {
     return <div>Loading...</div>; 
   }
-  
+
   if (error) {
     return <div>{error}</div>;
   }
@@ -148,18 +181,28 @@ const Editlead = () => {
                 <div className="col-sm-6">
                   <div className="form-group">
                     <label className="form-label">Status</label>
-                    <Select 
+                    <Select
                       isSearchable={false}
                       defaultValue={options1.find(option => option.label === lead.status) || options1[0]}
                       options={options1}
                       className="custom-react-select"
                       onChange={handleStatusChange}
+                      onMenuOpen={handleDropdownOpen} 
+                      onMenuClose={handleDropdownClose} 
+                      styles={{
+                        indicatorSeparator: () => ({ display: 'none' }),
+                        dropdownIndicator: (provided) => ({
+                          ...provided,
+                          transform: isOpen ? 'rotate(-90deg)' : 'rotate(0deg)',  
+                          transition: 'transform 0.3s ease',
+                        }),
+                      }}
                     />
                   </div>
                 </div>
                 <div className="col-lg-12 col-md-12 col-sm-12">
                   <button type="submit" className="btn btn-primary me-1">Submit</button>
-                  <button type="button" className="btn btn-light">Cancel</button>
+                  <button type="button" className="btn btn-light" onClick={handleCancel}>Cancel</button>
                 </div>
               </div>
             </form>
@@ -171,55 +214,3 @@ const Editlead = () => {
 };
 
 export default Editlead;
-
-
-
-
-// <div className="lead-detail">
-    //   <h2>Lead Details</h2>
-    //   <form>
-    //     <div>
-    //       <label htmlFor="applicantName"><strong>Name:</strong></label>
-    //       <input
-    //         type="text"
-    //         id="applicantName"
-    //         // value={lead.applicantName || ""}
-    //       />
-    //     </div>
-    //     <div>
-    //       <label htmlFor="course"><strong>Course:</strong></label>
-    //       <input
-    //         type="text"
-    //         id="course"
-    //         // value={lead.course || ""}
-    //       />
-    //     </div>
-    //     <div>
-    //       <label htmlFor="email"><strong>Email:</strong></label>
-    //       <input
-    //         type="email"
-    //         id="email"
-    //         // value={lead.email || ""}
-    //       />
-    //     </div>
-    //     <div>
-    //       <label htmlFor="phoneNumber"><strong>Phone:</strong></label>
-    //       <input
-    //         type="text"
-    //         id="phoneNumber"
-    //         // value={lead.phoneNumber || ""}
-    //       />
-    //     </div>
-    //     <div>
-    //       <label htmlFor="status"><strong>Status:</strong></label>
-    //       <input
-    //         type="text"
-    //         id="status"
-    //         // value={lead.status || ""}
-    //       />
-    //     </div>
-    //     <div>
-    //       <button type="submit">Save</button>
-    //     </div>
-    //   </form>
-    // </div>
