@@ -58,14 +58,14 @@ function Resetpassword(props) {
             const data = await response.data;
 
             if (response.status === 200) {
-                // Use SweetAlert2 for success message
+               
                 Swal.fire({
                     icon: 'success',
                     title: 'Password Reset Successfully',
                     text: 'You can now log in with your new password.',
                     confirmButtonText: 'Go to Login',
                 }).then(() => {
-                    navigate('/login'); // Redirect to login after success
+                    navigate('/login'); 
                 });
             } else {
                 setError(data.message || 'An error occurred. Please try again.');

@@ -23430,4 +23430,17 @@ span#counter {
   background-color: red;
   color: red;
 }
+.file{
+  background-color: white;
+  border-radius: 8px ;
+  outline: 1px solid #e6e6e6;
+}
+.file::-webkit-file-upload-button{
+  background-color: #6A73FA;
+  color:white;
+  outline:none;
+  border: none;
+  padding:10px 30px 10px 30px;
+  border-radius:8px 0px 0px 8px ;
+}
 /*# sourceMappingURL=style.css.map */
