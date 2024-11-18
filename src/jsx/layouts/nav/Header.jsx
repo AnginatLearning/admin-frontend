@@ -49,7 +49,7 @@ const Header = ({ onNote }) => {
                         <i id="icon-dark" className="fas fa-moon"></i>									
                       </Link>
                   </li>			
-                  <Dropdown as="li" className="nav-item dropdown notification_dropdown">
+                  {/* <Dropdown as="li" className="nav-item dropdown notification_dropdown">
                     <Dropdown.Toggle variant="" as="a" className="nav-link bell bell-link i-false c-pointer"
                       onClick={() => onNote()}
                     >
@@ -229,7 +229,7 @@ const Header = ({ onNote }) => {
                       
                     </div>
                   </Dropdown.Menu>
-                </Dropdown>
+                </Dropdown> */}
                 <Dropdown as="li" className="nav-item header-profile">              
                   <Dropdown.Toggle to={"#"} className="nav-link i-false" as="div">
                     <img src={profile} width="20" alt=""/>
