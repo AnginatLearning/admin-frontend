@@ -1,6 +1,5 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
-
+import { Link, useNavigate } from 'react-router-dom';  // Import useNavigate
 import PageTitle from '../../layouts/PageTitle';
 import { Card, Col, Row } from 'react-bootstrap';
 import { IMAGES } from '../../constant/theme';
@@ -15,23 +14,31 @@ const coursesData = [
     {image: IMAGES.course6, title:'Education Courses: A Guide to Unlocking Your Potential', like:'120',  Instructor:'Jimmy Morris'  },
     {image: IMAGES.course7, title:'A Comprehensive Guide to Taking an Education Course', like:'250',  Instructor:'Konne Backfield'  },
     {image: IMAGES.course8, title:'Why Should You Consider Taking an Education Course?', like:'302',  Instructor:'Nashid Martines' },
-    
 ];
 
 const AllCourses = () => {
+    const navigate = useNavigate();  // Declare the navigate function
+
+    const handleEditcourse = () => {
+        navigate(`/edit-courses`);
+    };
+    const handleReadmore = () => {
+        navigate(`/about-courses`);
+    };
+
     return (
         <>
             <PageTitle activeMenu={"All Courses"} motherMenu={"Courses"} />
             <Row>
-                {coursesData.map((data, ind)=>(
+                {coursesData.map((data, ind) => (
                     <Col xl={3} xxl={4} lg={4} md={6} sm={6} key={ind}>
                         <Card>
                             <img className="img-fluid rounded-top" src={data.image} alt="" />
                             <div className="card-body">
                                 <h4>{data.title}</h4>
                                 <ul className="list-group mb-3 list-group-flush">
-                                    <li  className="list-group-item px-0 border-top-0 d-flex justify-content-between">
-                                        <span  style={{fontSize:"14px"}} className="mb-0 text-[16px]">April 23</span>
+                                    <li className="list-group-item px-0 border-top-0 d-flex justify-content-between">
+                                        <span style={{fontSize:"14px"}} className="mb-0 text-[16px]">April 23</span>
                                         <Link to={"#"} className="add-wishlist-btn">
                                             <i className="la la-heart-o outline"></i>
                                             <i className="la la-heart fill" />
@@ -39,17 +46,16 @@ const AllCourses = () => {
                                         </Link>
                                     </li>
                                     <li className="list-group-item px-0 d-flex justify-content-between">
-                                        <span style={{fontSize:"14px"}} className="mb-0 ">Duration :</span><strong style={{fontSize:"14px"}}>12 Months</strong>
+                                        <span style={{fontSize:"14px"}} className="mb-0">Duration :</span><strong style={{fontSize:"14px"}}>12 Months</strong>
                                     </li>
-                                    <li style={{borderBottom:"1px solid #e6e6e6"}} className="list-group-item px-0 d-flex  justify-content-between">
+                                    <li style={{borderBottom:"1px solid #e6e6e6"}} className="list-group-item px-0 d-flex justify-content-between">
                                         <span style={{fontSize:"14px"}} className="mb-0">Instructor :</span><strong style={{fontSize:"14px"}}>{data.Instructor}</strong></li>
-                                   
                                 </ul>
                                 <div style={{display:"flex", alignItems:"center", justifyContent:"space-between"}}>
-                                  <Link to={"/about-courses"} className="btn btn-primary">Read More</Link>
-                                  <PencilLine size={21} />
-                                </div>
                                 
+                                  <button onClick={handleReadmore}  className="btn btn-primary">Read More</button>
+                                  <PencilLine onClick={handleEditcourse} size={21} />
+                                </div>
                             </div>
                         </Card>                
                     </Col>
