@@ -53,7 +53,7 @@ const AllCourses = () => {
                                 </ul>
                                 <div style={{display:"flex", alignItems:"center", justifyContent:"space-between"}}>
                                 
-                                  <button onClick={handleReadmore}  className="btn btn-primary">Read More</button>
+                                  <button onClick={handleReadmore}  className="btn btn-primary All-btn">Read More</button>
                                   <PencilLine onClick={handleEditcourse} size={21} />
                                 </div>
                             </div>

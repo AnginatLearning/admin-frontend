@@ -15693,7 +15693,7 @@ svg text {
   background: var(--card);
   border-color: var(--border);
   color: var(--text-dark);
-  height: 3.2rem;
+  height: 3.5rem;
   padding: 0.3125rem .95rem; }
   .form-control:hover, .form-control:focus, .form-control.active {
     box-shadow: none; }
@@ -22617,7 +22617,7 @@ span#counter {
       color: #000; }
 
 .custom-react-select > div:nth-child(3) {
-  height: 2.5rem;
+  height: 3.5rem;
   background-color: #fff;
   border-radius: 0.375rem;
   border-color: var(--border) !important; }
@@ -22646,9 +22646,10 @@ span#counter {
 .input-hasicon .picker-suit {
   display: unset; }
   .input-hasicon .picker-suit .rs-input-group {
-    height: 2.7rem; }
+    height: 2.7rem;  }
     .input-hasicon .picker-suit .rs-input-group .rs-input::placeholder {
-      color: var(--text-dark); }
+      color: var(--text-dark);
+     font-size: 12px; }
     .input-hasicon .picker-suit .rs-input-group:hover {
       border-color: var(--rgba-primary-5); }
     .input-hasicon .picker-suit .rs-input-group:focus {
@@ -23431,15 +23432,40 @@ span#counter {
   color: red;
 }
 .file{
+  height: 3.5rem;
   background-color: white;
   border-radius: 8px ;
   outline: 1px solid #e6e6e6;
 }
+.datepicker{
+  width: 137px;
+  height:33px;
+  padding: 0px;
+  font-size: 12px;
+}
+
+.Both-btn{
+  width: 70px;
+  height: 25px;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.All-btn{
+  width: 120px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .file::-webkit-file-upload-button{
   background-color: #6A73FA;
   color:white;
   outline:none;
   border: none;
+  height: 3.5rem;
   padding:10px 30px 10px 30px;
   border-radius:8px 0px 0px 8px ;
 }

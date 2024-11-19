@@ -4,8 +4,12 @@ import PageTitle from '../../layouts/PageTitle';
 import Select from 'react-select';
 import InputField from './InputField';
 import ButtonComponent from './ButtonComponent';
+import Batch from './Batch';
+import Rowbutton from './Rowbutton';
+import { useNavigate } from 'react-router-dom';
 
 const EditCourses = () => {
+  const [iconMoved, setIconMoved] = useState(false);
   const [formData, setFormData] = useState({
     courseName: '',
     courseCode: '',
@@ -16,7 +20,10 @@ const EditCourses = () => {
     language: '',
     courseThumbnail: '',
   });
-
+  const navigate = useNavigate()
+  const handlefaq = ()=>{
+    navigate('/Faq-courses')
+  }
   const options1 = [
     { value: '1', label: 'English' },
     { value: '2', label: 'French' },
@@ -122,9 +129,9 @@ const EditCourses = () => {
                           required
                         />
                       </div>
-                      <div className="col-sm-6">
+                      <div  style={{marginTop:"7px"}} className="col-sm-6">
                         <InputField
-                          label="Standard Price"
+                        
                           id="standardPrice"
                           placeholder="Standard Price"
                           value={formData.standardPrice} 
@@ -161,19 +168,33 @@ const EditCourses = () => {
                       />
                     </div>
                   </div>
-                  <div className="col-lg-12 col-md-12 col-sm-12">
+
+                  <div style={{marginBottom:"10px"}} className="col-sm-6">
+                    <Batch iconMoved={iconMoved} setIconMoved={setIconMoved} />
+                  </div>
+
+                  {iconMoved && (
+                    <div style={{ marginTop: "20px" }}>
+                      <Rowbutton />
+                    </div>
+                  )}
+
+                  
+                  <div style={{display:"flex", gap:"10px", marginTop:"30px", marginBottom:"80px"}} className="col-lg-12 col-md-12 col-sm-12">
                     <ButtonComponent
-                      label="Submit"
+                      label="Update"
                       type="submit"
-                      className="btn btn-primary me-1"
+                      className="btn btn-primary me-1 All-btn"
                     />
                     <ButtonComponent
                       label="Cancel"
                       type="button"
-                      className="btn btn-danger light"
+                      className="btn btn-danger light All-btn"
                       onClick={handleCancel}
                     />
                   </div>
+
+                  
                 </div>
               </form>
             </div>

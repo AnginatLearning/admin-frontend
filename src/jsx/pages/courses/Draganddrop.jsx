@@ -116,20 +116,17 @@ const Upload = () => {
                                         </div>
 
                                         {/* Submit and Cancel Buttons */}
-                                        <div
-                                            style={{ marginTop: "20px" }}
-                                            className="col-lg-12 col-md-12 col-sm-12"
-                                        >
+                                        <div style={{ display: "flex", gap: "10px", marginTop: "30px", marginBottom: "80px" }} className="col-lg-12 col-md-12 col-sm-12">
                                             <ButtonComponent
                                                 label="Submit"
                                                 type="submit"
-                                                className="btn btn-primary me-1"
+                                                className="btn btn-primary me-1 All-btn"
                                             />
                                             <ButtonComponent
                                                 label="Cancel"
                                                 type="button"
-                                                className="btn btn-danger light"
-                                                onClick={handleCancel} // Hide the upload section
+                                                className="btn btn-danger light All-btn"
+                                                onClick={handleCancel}
                                             />
                                         </div>
                                     </>
