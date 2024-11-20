@@ -154,7 +154,7 @@ const LeadManagement = () => {
                 if (lead) {
                     console.log("Lead Information to delete:", lead);
     
-                    const response = await api.patch('/lead/lead/status', {
+                    const response = await api.patch('auth/lead/lead/status', {
                         leadId: id,
                         status: 'Trashed', 
                     });
