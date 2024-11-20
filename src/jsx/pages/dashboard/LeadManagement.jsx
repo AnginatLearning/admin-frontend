@@ -37,7 +37,7 @@ const LeadManagement = () => {
                 return;
             }
             try {
-                const res = await api.get('lead/leads');
+                const res = await api.get('auth/lead/leads');
                 // console.log(res.data.data.leads)
                 const allLeads = res.data.data.leads;
                 const activeLeads = allLeads.filter(lead => lead.status !== 'Deleted' && lead.status !== 'Trashed' );
@@ -154,7 +154,7 @@ const LeadManagement = () => {
                 if (lead) {
                     console.log("Lead Information to delete:", lead);
     
-                    const response = await api.patch('/lead/lead/status', {
+                    const response = await api.patch('auth/lead/lead/status', {
                         leadId: id,
                         status: 'Trashed', 
                     });

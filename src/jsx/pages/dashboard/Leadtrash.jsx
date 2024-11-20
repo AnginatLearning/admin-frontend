@@ -37,7 +37,7 @@ const Leadtrash = () => {
                 return;
             }
             try {
-                const res = await api.get('lead/leads')
+                const res = await api.get('auth/lead/leads')
                 setFeeData(res.data.data.leads);
                 setFilteredFeeData(res.data.data.leads);
             } catch (error) {
@@ -96,7 +96,7 @@ const Leadtrash = () => {
             return;
         }
         try {
-            const res = await api.get('lead/leads');
+            const res = await api.get('auth/lead/leads');
            
             const activeLeads = res.data.data.leads.filter(lead => lead.status == 'Trashed' , lead => lead.status !== '');
             setFeeData(activeLeads);
@@ -191,7 +191,7 @@ const Leadtrash = () => {
                         console.log("Lead Information to delete:", lead);
                         
                        
-                        const response = await api.patch('/lead/lead/status', {
+                        const response = await api.patch('auth/lead/lead/status', {
                             leadId: id,
                             status: 'Deleted', 
                         });
@@ -249,7 +249,7 @@ const Leadtrash = () => {
                     console.log("Lead Information to restore:", lead);
     
                    
-                    const response = await api.patch('/lead/lead/status', {
+                    const response = await api.patch('auth/lead/lead/status', {
                         leadId: id,
                         status: 'Pending', 
                     });

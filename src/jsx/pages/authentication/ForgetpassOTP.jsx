@@ -21,10 +21,10 @@ function SignUpOTP(props) {
 
     let typingTimeout;
 
-    // Store email in session storage on component mount
+  
     useEffect(() => {
         if (email) {
-            sessionStorage.setItem('email', email); // Store the email in sessionStorage
+            sessionStorage.setItem('email', email); 
         }
     }, [email]);
 
@@ -64,7 +64,7 @@ function SignUpOTP(props) {
         console.log("OTP Submitted: ", otpString);
 
         try {
-            const response = await api.post('otp/verify', {
+            const response = await api.post('auth/otp/verify', {
                 otp: otpString,
                 otpType: 'email',
                 receiverId: email,  
@@ -125,7 +125,7 @@ function SignUpOTP(props) {
 
     useEffect(() => {
         if (timer === 0) {
-            setIsResendDisabled(false); // Enable "Resend OTP" link when timer finishes
+            setIsResendDisabled(false); 
             return;
         }
 

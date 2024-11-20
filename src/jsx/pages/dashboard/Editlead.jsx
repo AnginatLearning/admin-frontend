@@ -26,7 +26,7 @@ const Editlead = () => {
     const fetchLeadDetails = async () => {
       try {
         setLoading(true);
-        const response = await api.get('lead/leads');
+        const response = await api.get('auth/lead/leads');
         const fetchedLeads = response.data.data.leads;
         console.log(fetchedLeads);
 
@@ -72,7 +72,7 @@ const Editlead = () => {
     e.preventDefault();
     try {
       console.log(updates);
-      const res = await api.patch('/lead/lead/status', {
+      const res = await api.patch('auth/lead/lead/status', {
         leadId: lead._id,
         ...updates,
       });

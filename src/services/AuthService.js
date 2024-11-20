@@ -60,7 +60,7 @@ export function formatError(errorResponse) {
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'An unexpected error occurred',
+                text: 'Invalid credentials',
             });
             break;
     }
