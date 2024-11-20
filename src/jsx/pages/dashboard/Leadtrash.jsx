@@ -328,13 +328,7 @@ const Leadtrash = () => {
                                                         </div>
 
                                                        
-                                                       <div className='hover-pointer' style={{border:"solid 01px #E6E6E6",padding:"7px",borderRadius:'5px'}}>
-                                                             <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:"4px"}}>
-                                                                 <FunnelSimple size={16} />
-                                                                  <label htmlFor="">Filter</label>
-                                                             </div>
-                                                       </div>
-
+                                                      
                                                        <div  className='hover-pointer' style={{border:"solid 01px #E6E6E6",padding:"7px",borderRadius:'5px'}}>
                                                              <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:"4px"}}>
                                                                  <Export size={16} />

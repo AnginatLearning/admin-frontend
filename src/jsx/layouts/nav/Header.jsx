@@ -49,7 +49,7 @@ const Header = ({ onNote }) => {
                         <i id="icon-dark" className="fas fa-moon"></i>									
                       </Link>
                   </li>			
-                  <Dropdown as="li" className="nav-item dropdown notification_dropdown">
+                  {/* <Dropdown as="li" className="nav-item dropdown notification_dropdown">
                     <Dropdown.Toggle variant="" as="a" className="nav-link bell bell-link i-false c-pointer"
                       onClick={() => onNote()}
                     >
@@ -62,8 +62,8 @@ const Header = ({ onNote }) => {
                       </svg>
                       <span className="badge light text-white bg-primary rounded-circle">26</span>
                     </Dropdown.Toggle>
-                  </Dropdown>	
-                <Dropdown as="li" className="nav-item dropdown notification_dropdown">
+                  </Dropdown>	 */}
+                {/* <Dropdown as="li" className="nav-item dropdown notification_dropdown">
                   <Dropdown.Toggle className="nav-link i-false c-pointer icon-bell-effect" variant="" as="a">
                     <svg id="icon-user" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-bell">
                       <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
@@ -126,8 +126,8 @@ const Header = ({ onNote }) => {
                         See all notifications <i className="ti-arrow-right" />
                       </Link>
                   </Dropdown.Menu>
-                </Dropdown>
-                <Dropdown as="li" className="nav-item  notification_dropdown">
+                </Dropdown> */}
+                {/* <Dropdown as="li" className="nav-item  notification_dropdown">
                     <Dropdown.Toggle
                       variant=""
                       as="a"
@@ -229,7 +229,7 @@ const Header = ({ onNote }) => {
                       
                     </div>
                   </Dropdown.Menu>
-                </Dropdown>
+                </Dropdown> */}
                 <Dropdown as="li" className="nav-item header-profile">              
                   <Dropdown.Toggle to={"#"} className="nav-link i-false" as="div">
                     <img src={profile} width="20" alt=""/>

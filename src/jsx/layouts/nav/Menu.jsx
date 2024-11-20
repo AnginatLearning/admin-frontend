@@ -76,27 +76,27 @@ export const MenuList = [
     // },
 
     //Courses    
-    {
-        title: 'Courses',	
-        classsChange: 'mm-collapse',		
-        iconStyle: <i className="la la-graduation-cap" />,
-        content: [
-            {
-                title: 'All Courses',
-                to: 'all-courses',					
-            },
-            {
-                title: 'Add Courses',
-                to: 'add-courses',
-            },
+    // {
+    //     title: 'Courses',	
+    //     classsChange: 'mm-collapse',		
+    //     iconStyle: <i className="la la-graduation-cap" />,
+    //     content: [
+    //         {
+    //             title: 'All Courses',
+    //             to: 'all-courses',					
+    //         },
+    //         {
+    //             title: 'Add Courses',
+    //             to: 'add-courses',
+    //         },
            
-            {
-                title: 'Upload',
-                to: 'Upload-courses',
-            },
+    //         {
+    //             title: 'Upload',
+    //             to: 'Upload-courses',
+    //         },
            
-        ],
-    },
+    //     ],
+    // },
     //Library    
     // {
     //     title: 'Library',	

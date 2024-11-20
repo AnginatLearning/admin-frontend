@@ -23459,7 +23459,10 @@ span#counter {
   align-items: center;
   justify-content: center;
 }
-
+.active-trash-btn {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: box-shadow 0.3s ease-in-out;
+}
 .file::-webkit-file-upload-button{
   background-color: #6A73FA;
   color:white;
