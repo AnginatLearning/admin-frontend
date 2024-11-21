@@ -90,10 +90,7 @@ export const MenuList = [
                 to: 'add-courses',
             },
            
-            {
-                title: 'Upload',
-                to: 'Upload-courses',
-            },
+           
            
         ],
     },
