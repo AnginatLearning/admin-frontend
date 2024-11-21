@@ -23463,6 +23463,17 @@ span#counter {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     transition: box-shadow 0.3s ease-in-out;
 }
+.Download-filebtn{
+  background-color: #ED0B4C;
+  height: 35px;
+  font-size: 14px;
+  display: flex ;
+  align-items: center;justify-content: center;
+}
+
+.upload{
+  padding: 10px 20px;
+}
 .file::-webkit-file-upload-button{
   background-color: #6A73FA;
   color:white;

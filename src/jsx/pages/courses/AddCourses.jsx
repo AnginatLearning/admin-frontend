@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { DatePicker } from 'rsuite';
 import PageTitle from '../../layouts/PageTitle';
 import Select from 'react-select';
-import InputField from './InputField';
-import ButtonComponent from './ButtonComponent';
-import Batch from './Batch';
-import Rowbutton from './Rowbutton';
+import InputField from './Components/InputField';
+import ButtonComponent from './Components/ButtonComponent';
+import Batch from './Components/Batch';
+import Rowbutton from './Components/Rowbutton';
+import Uploadfile from './Components/Uploadfile';
+import { DownloadSimple } from '@phosphor-icons/react';
 
 const AddCourses = () => {
   const [formData, setFormData] = useState({
@@ -63,13 +65,32 @@ const AddCourses = () => {
     <>
       <PageTitle activeMenu={"Add Course"} motherMenu={"Courses"} />
       <div className="row">
+        
         <div className="col-lg-12">
           <div className="card">
-            <div className="card-header">
+            <div style={{display:"flex", flexWrap:"wrap", gap:"10px"}} className="card-header">
               <h4 className="card-title">Courses Details</h4>
+              <div style={{display:"flex", alignItems:"center", justifyContent:"center"}}>
+                  
+                   <div> 
+                   <ButtonComponent
+                    label="Download Sample CSV File"
+                    type="submit"
+                    className="btn btn-primary me-1 Download-filebtn"
+                    icon={DownloadSimple}
+                  />
+                   </div>
+                    
             </div>
+            </div>
+            
             <div className="card-body">
               <form action="#" method="post" onSubmit={handleSubmit}>
+              <div style={{marginBottom:"30px", marginTop:"-10px", padding:"10px"}}>
+               <Uploadfile
+                padding="30px 20px"
+                text="You can upload CSV file to add multiple course at once" />
+              </div> 
                 <div className="row">
                   <div className="col-sm-6">
                     <InputField

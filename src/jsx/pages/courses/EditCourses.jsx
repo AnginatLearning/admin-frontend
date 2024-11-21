@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 import { DatePicker } from 'rsuite';
 import PageTitle from '../../layouts/PageTitle';
 import Select from 'react-select';
-import InputField from './InputField';
-import ButtonComponent from './ButtonComponent';
-import Batch from './Batch';
-import Rowbutton from './Rowbutton';
-import { useNavigate } from 'react-router-dom';
+import InputField from './Components/InputField';
+import ButtonComponent from './Components/ButtonComponent';
+import Batch from './Components/Batch';
+import Rowbutton from './Components/Rowbutton';
+import Uploadfile from './Components/Uploadfile';
+import { DownloadSimple } from '@phosphor-icons/react';
+import Schedule from './Components/Schedule';
+
 
 const EditCourses = () => {
   const [iconMoved, setIconMoved] = useState(false);
@@ -20,10 +23,12 @@ const EditCourses = () => {
     language: '',
     courseThumbnail: '',
   });
-  const navigate = useNavigate()
-  const handlefaq = ()=>{
-    navigate('/Faq-courses')
-  }
+  
+  const price = [
+    { value: '1', label: 'One Price' },
+    { value: '2', label: 'Batch Price' },
+   
+  ];
   const options1 = [
     { value: '1', label: 'English' },
     { value: '2', label: 'French' },
@@ -71,9 +76,22 @@ const EditCourses = () => {
           <div className="card">
             <div className="card-header">
               <h4 className="card-title">Courses Details</h4>
+              <div style={{display:"flex", alignItems:"center", justifyContent:"center"}}>
+                  
+                   <div> 
+                   <ButtonComponent
+                    label="Download Sample CSV File"
+                    type="submit"
+                    className="btn btn-primary me-1 Download-filebtn"
+                    icon={DownloadSimple}
+                  />
+                   </div>
+                    
+            </div>
             </div>
             <div className="card-body">
               <form action="#" method="post" onSubmit={handleSubmit}>
+             
                 <div className="row">
                   <div className="col-sm-6">
                     <InputField
@@ -116,12 +134,31 @@ const EditCourses = () => {
                       required
                     />
                   </div>
-                  {/* Course Price Section */}
-                  <div className="col-sm-6">
-                    <div style={{ display: "flex", gap: "4px" }}>
+
+                   {/* Course Price Section */}
+                   <div className="col-sm-6">
+                   <div className="form-group">
+                      <label className="form-label">Course Price</label>
+                      <Select
+                        isSearchable={false}
+                        options={price}
+                        className="custom-react-select"
+                      
+                        onChange={handleSelectChange}
+                      />
+                    </div>
+                    <div style={{display:"flex", flexWrap:"wrap", gap:'10px'}}>
+                        <Schedule />
+                        <Schedule />
+                        <Schedule />
+
+                       
+
+                    </div>
+                    <div style={{ display: "flex", gap: "4px" , }}>
                       <div className="col-sm-6">
                         <InputField
-                          label="Course Price"
+                       
                           id="coursePrice"
                           placeholder="Offer Price"
                           value={formData.coursePrice}
@@ -129,7 +166,7 @@ const EditCourses = () => {
                           required
                         />
                       </div>
-                      <div  style={{marginTop:"7px"}} className="col-sm-6">
+                      <div  style={{marginTop:"0px"}} className="col-sm-6">
                         <InputField
                         
                           id="standardPrice"
@@ -141,6 +178,9 @@ const EditCourses = () => {
                       </div>
                     </div>
                   </div>
+
+                  
+                 
                   <div className="col-sm-6">
                     <div className="form-group">
                       <label className="form-label">Select Language</label>
@@ -148,7 +188,7 @@ const EditCourses = () => {
                         isSearchable={false}
                         options={options1}
                         className="custom-react-select"
-                        value={formData.language}
+                       
                         onChange={handleSelectChange}
                       />
                     </div>

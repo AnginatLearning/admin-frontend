@@ -3,7 +3,7 @@ import { DatePicker } from 'rsuite';
 
 import PageTitle from '../../layouts/PageTitle';
 import { PlusCircle } from '@phosphor-icons/react';
-import ButtonComponent from './ButtonComponent';
+import ButtonComponent from './Components/ButtonComponent';
 
 const Faq = () => {
     const handleCancel = () => {

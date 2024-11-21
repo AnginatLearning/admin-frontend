@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import PageTitle from '../../layouts/PageTitle';
 import { PiBoxArrowUpFill } from "react-icons/pi";
-import ButtonComponent from './ButtonComponent';
+import ButtonComponent from './Components/ButtonComponent';
+import Uploadfile from './Components/Uploadfile';
 
 const Upload = () => {
     const [showUploadSection, setShowUploadSection] = useState(false);
@@ -56,64 +57,7 @@ const Upload = () => {
                                 {/* Upload Section */}
                                 {showUploadSection && (
                                     <>
-                                        <div style={{ marginTop: "20px" }}>
-                                            <div
-                                                style={{
-                                                    display: "flex",
-                                                    alignItems: "center",
-                                                    justifyContent: "center",
-                                                    border: "2px dashed #ccc",
-                                                    padding: "80px 100px",
-                                                    borderRadius: "8px",
-                                                    cursor: "pointer",
-                                                }}
-                                                onClick={() => document.getElementById("Course_Photo").click()}
-                                            >
-                                                <div
-                                                    style={{
-                                                        display: "flex",
-                                                        flexDirection: "column",
-                                                        gap: "10px",
-                                                    }}
-                                                >
-                                                    <div
-                                                        style={{
-                                                            display: "flex",
-                                                            justifyContent: "center",
-                                                        }}
-                                                    >
-                                                        <PiBoxArrowUpFill size={60} />
-                                                    </div>
-                                                    <div>
-                                                        <p
-                                                            style={{
-                                                                margin: 0,
-                                                                fontSize: "20px",
-                                                                color: "#666",
-                                                            }}
-                                                        >
-                                                            Drag & Drop or{" "}
-                                                            <span
-                                                                style={{
-                                                                    color: "#007bff",
-                                                                    textDecoration: "underline",
-                                                                }}
-                                                            >
-                                                                Click to Upload
-                                                            </span>
-                                                        </p>
-                                                        <input
-                                                            id="Course_Photo"
-                                                            type="file"
-                                                            className="file"
-                                                            onChange={handleFileChange}
-                                                            required
-                                                            style={{ display: "none" }}
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <Uploadfile />
 
                                         {/* Submit and Cancel Buttons */}
                                         <div style={{ display: "flex", gap: "10px", marginTop: "30px", marginBottom: "80px" }} className="col-lg-12 col-md-12 col-sm-12">
@@ -129,12 +73,17 @@ const Upload = () => {
                                                 onClick={handleCancel}
                                             />
                                         </div>
+
+
+                                        
                                     </>
                                 )}
                             </form>
                         </div>
                     </div>
                 </div>
+
+                
             </div>
         </>
     );
