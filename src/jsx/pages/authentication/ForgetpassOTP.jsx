@@ -64,7 +64,7 @@ function SignUpOTP(props) {
         console.log("OTP Submitted: ", otpString);
 
         try {
-            const response = await api.post('otp/verify', {
+            const response = await api.post('auth/otp/verify', {
                 otp: otpString,
                 otpType: 'email',
                 receiverId: email,  
