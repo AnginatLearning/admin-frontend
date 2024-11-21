@@ -162,7 +162,7 @@ import Leadtrash from "../pages/dashboard/Leadtrash";
 
 import Editlead from "../pages/dashboard/Editlead";
 import Faq from "../pages/courses/Faq";
-import Draganddrop from "../pages/courses/Draganddrop";
+
 
 
 const Markup = () => {
@@ -196,7 +196,7 @@ const Markup = () => {
     { url: "edit-courses", component: <EditCourses /> },
     { url: "about-courses", component: <AboutCourses /> },
     { url: "Faq-courses", component: <Faq /> },
-    { url: "Upload-courses", component: <Draganddrop /> },
+  
 
     //Library
     { url: "all-library", component: <AllLibrary /> },
