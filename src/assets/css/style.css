@@ -23474,6 +23474,11 @@ span#counter {
 .upload{
   padding: 10px 20px;
 }
+
+.Course-details{
+  height: 6rem;
+}
+
 .file::-webkit-file-upload-button{
   background-color: #6A73FA;
   color:white;

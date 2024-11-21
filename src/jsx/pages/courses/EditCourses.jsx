@@ -17,7 +17,7 @@ const EditCourses = () => {
     courseName: '',
     courseCode: '',
     courseDetails: '',
-    instructorNames: '',
+    instructorName: '',
     coursePrice: '',
     standardPrice: '', 
     language: '',
@@ -113,23 +113,20 @@ const EditCourses = () => {
                       required
                     />
                   </div>
-                  <div className="col-lg-12 col-md-12 col-sm-12">
-                    <InputField
-                      label="Course Details"
-                      id="courseDetails"
-                      type="textarea"
-                      placeholder="Course Details"
-                      value={formData.courseDetails}
+                  <div style={{marginBottom:"20px"}} className="col-lg-12 col-md-12 col-sm-12">
+                   <label className="form-label" htmlFor="Answer">Course Details</label>
+                    <textarea  label="Course Details"   id="courseDetails"  placeholder="Course Details" className="form-control" value={formData.courseDetails}
                       onChange={handleInputChange}
-                      required
-                    />
+                      required rows="5" />
+                  
                   </div>
                   <div className="col-sm-6">
+                   
                     <InputField
-                      label="Instructor Names"
+                      label="Instructor Name"
                       id="instructorNames"
-                      placeholder="Instructor Names"
-                      value={formData.instructorNames}
+                      placeholder="Instructor Name"
+                      value={formData.instructorName}
                       onChange={handleInputChange}
                       required
                     />
