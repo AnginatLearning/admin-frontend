@@ -12,7 +12,6 @@ import "./assets/css/style.css";
 import Forgotpassword from './jsx/pages/authentication/Forgetpassword';
 import Resetpassword from './jsx/pages/authentication/Resetpassword';
 import Selectone from './jsx/pages/authentication/Selectone';
-import School from './jsx/pages/authentication/School';
 import Institute from './jsx/pages/authentication/Institute';
 import SignUpOTP from './jsx/pages/authentication/SignUpOTP';
 import ForgetpassOTP from './jsx/pages/authentication/ForgetpassOTP';
@@ -59,7 +58,7 @@ function App(props) {
             <Route path='/login' element={<Login />} />
             <Route path='/forgot-password' element={<Forgotpassword />} />
             <Route path='/reset-password' element={<Resetpassword />} />
-            <Route path='/school' element={<School />} />
+            <Route path='/school' element={<Institute />} />
             <Route path='/select-one' element={<Selectone/>} />
          
             <Route path='/institute' element={<Institute/>} />
