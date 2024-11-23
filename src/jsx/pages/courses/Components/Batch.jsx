@@ -3,7 +3,7 @@ import { DatePicker } from 'rsuite';
 import ButtonComponent from './ButtonComponent';
 import { PencilLine, Plus } from '@phosphor-icons/react';
 
-const Batch = ({ onAddBatch }) => {
+const Batch = ({ onAddBatch, pricingType }) => {
   const [batchDetails, setBatchDetails] = useState({
     batchName: '',
     startDate: null,
@@ -165,7 +165,7 @@ const Batch = ({ onAddBatch }) => {
               </div>
             </div>
 
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
+            {pricingType === "batch" && <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
               <div>
                 <input
                   id="offerPrice"
@@ -185,7 +185,7 @@ const Batch = ({ onAddBatch }) => {
                   onChange={handleInputChange}
                 />
               </div>
-            </div>
+            </div>}
             <p style={{ fontSize: '10px', marginTop: '0px', marginBottom: '0px' }}>
               Course will be private before publishing
             </p>

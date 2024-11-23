@@ -28,7 +28,7 @@ const AddCourses = () => {
   ];
 
   const pricingOptions = [
-    { value: 'one', label: 'One Price' },
+    { value: 'one-time', label: 'One-time Price' },
     { value: 'batch', label: 'Batch Price' },
   ];
 
@@ -175,7 +175,7 @@ const AddCourses = () => {
                     />
                   </div>
 
-                  <div className="col-sm-6">
+                  {formData.pricingType === "one-time" && <div className="col-sm-6">
                     <div style={{ display: "flex", gap: "4px" }}>
                       <div style={{marginTop:"7px"}} className="col-sm-6">
                         <InputField
@@ -197,7 +197,7 @@ const AddCourses = () => {
                         />
                       </div>
                     </div>
-                  </div>
+                  </div>}
 
                   <div className="col-sm-6">
                     <div className="form-group">
@@ -235,7 +235,7 @@ const AddCourses = () => {
                   </div>
                
                   <div className="col-sm-6">
-                  <Batch onAddBatch={addBatch} />
+                  <Batch onAddBatch={addBatch} pricingType={formData.pricingType} />
                   </div>
                   <div
                     style={{
