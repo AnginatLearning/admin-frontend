@@ -175,7 +175,7 @@ const AddCourses = () => {
                     />
                   </div>
 
-                  <div className="col-sm-6">
+                  {formData.pricingType === "one" && <div className="col-sm-6">
                     <div style={{ display: "flex", gap: "4px" }}>
                       <div style={{marginTop:"7px"}} className="col-sm-6">
                         <InputField
@@ -197,7 +197,7 @@ const AddCourses = () => {
                         />
                       </div>
                     </div>
-                  </div>
+                  </div>}
 
                   <div className="col-sm-6">
                     <div className="form-group">
