@@ -2,150 +2,195 @@ import React, { useState } from 'react';
 import { DatePicker } from 'rsuite';
 import PageTitle from '../../layouts/PageTitle';
 import Select from 'react-select';
-import InputField from './Components/InputField';
-import ButtonComponent from './Components/ButtonComponent';
-import Batch from './Components/Batch';
-import Rowbutton from './Components/Rowbutton';
-import Uploadfile from './Components/Uploadfile';
 import { DownloadSimple } from '@phosphor-icons/react';
+import ButtonComponent from '../courses/Components/ButtonComponent';
+import InputField from '../courses/Components/InputField';
+import Batch from './Components/Batch';
+import api from '../../../services/AxiosInstance';
 
 const AddCourses = () => {
+  const [imagePreview, setImagePreview] = useState('/public/Course image.jpg'); // Default image path
+
   const [formData, setFormData] = useState({
     courseName: '',
-    courseCode: '',
-    courseDetails: '',
-    instructorName: '',
-    coursePrice: '',
+    description: '',
+    pricingType: '',
+    offerPrice: '',
     standardPrice: '',
-    language: '',
-    courseThumbnail: '',
+    languages: [],
   });
 
-  const [iconMoved, setIconMoved] = useState(false);
+  const [batches, setBatches] = useState([]);
 
-  const options1 = [
-    { value: '1', label: 'English' },
-    { value: '2', label: 'French' },
-    { value: '3', label: 'Korean' },
-    { value: '4', label: 'German' },
+  const languageOptions = [
+    { value: 'English', label: 'English' },
+    { value: 'Spanish', label: 'Spanish' },
+  ];
+
+  const pricingOptions = [
+    { value: 'one', label: 'One Price' },
+    { value: 'batch', label: 'Batch Price' },
   ];
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
+    setFormData((prev) => ({ ...prev, [id]: value }));
+  };
+
+  const handleSelectChange = (selectedOptions) => {
     setFormData((prev) => ({
       ...prev,
-      [id]: value,
+      languages: selectedOptions.map((option) => option.label),
     }));
   };
 
-  const handleSelectChange = (selectedOption) => {
-    setFormData((prev) => ({
-      ...prev,
-      language: selectedOption,
-    }));
+  const handlePricingTypeChange = (selectedOption) => {
+    setFormData((prev) => ({ ...prev, pricingType: selectedOption.value }));
   };
 
-  const handleFileChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      courseThumbnail: e.target.files[0],
-    }));
+  const addBatch = (batch) => {
+    setBatches((prev) => [...prev, batch]);
+  };
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImagePreview(reader.result); // Preview the selected image
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setImagePreview(); // Reset to default image if no file is selected
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
+
+    if (!formData.courseName || !formData.description || !formData.pricingType || !formData.standardPrice || batches.length === 0) {
+      alert('Please fill out all course fields and add at least one batch.');
+      return;
+    }
+
+    const payload = {
+      institutionCode: 'AL_24_0001',
+      institution: '673f4bfa1c208ed487d658b0',
+      courseName: formData.courseName,
+      description: formData.description,
+      pricingType: formData.pricingType,
+      price: {
+        offerPrice: formData.offerPrice,
+        standardPrice: formData.standardPrice,
+      },
+      instructor: '64b8c9ede7891c001edc78ac',
+      languages: formData.languages,
+      batches: batches.map(batch => ({
+        ...batch, // Add all batch details
+        price: {
+          offerPrice: formData.offerPrice,
+          standardPrice: formData.standardPrice,
+        },
+      })),
+      status: 'active',
+    };
+
+    try {
+      const response = await api.post('course/courses/create-course', payload);
+      alert('Course created successfully!');
+      console.log(response.data);
+    } catch (error) {
+      alert('Failed to create course. Check the console for more details.');
+      console.error('Error creating course:', error);
+    }
   };
 
-  const handleCancel = () => {
-    console.log('Form canceled');
+  const customStyles = {
+    valueContainer: (provided) => ({
+      ...provided,
+      height:"3.4rem",
+   
+    }),
   };
 
   return (
     <>
       <PageTitle activeMenu={"Add Course"} motherMenu={"Courses"} />
       <div className="row">
-        
         <div className="col-lg-12">
           <div className="card">
-            <div style={{display:"flex", flexWrap:"wrap", gap:"10px"}} className="card-header">
+            <div
+              style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}
+              className="card-header"
+            >
               <h4 className="card-title">Courses Details</h4>
-              <div style={{display:"flex", alignItems:"center", justifyContent:"center"}}>
-                  
-                   <div> 
-                   <ButtonComponent
-                    label="Download Sample CSV File"
-                    type="submit"
-                    className="btn btn-primary me-1 Download-filebtn"
-                    icon={DownloadSimple}
-                  />
-                   </div>
-                    
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <ButtonComponent
+                  label="Download Sample CSV File"
+                  type="submit"
+                  className="btn btn-primary me-1 Download-filebtn"
+                  icon={DownloadSimple}
+                />
+              </div>
             </div>
-            </div>
-            
+
             <div className="card-body">
-              <form action="#" method="post" onSubmit={handleSubmit}>
-              <div style={{marginBottom:"30px", marginTop:"-10px", padding:"10px"}}>
-               <Uploadfile
-                padding="30px 20px"
-                text="You can upload CSV file to add multiple course at once" />
-              </div> 
+              <form onSubmit={handleSubmit}>
+                <div style={{ marginBottom: "30px", marginTop: "-10px", padding: "10px" }}>
+                </div>
                 <div className="row">
                   <div className="col-sm-6">
                     <InputField
                       label="Course Name"
                       id="courseName"
-                      placeholder="Course Name"
+                      placeholder="Enter course name"
                       value={formData.courseName}
                       onChange={handleInputChange}
                       required
                     />
                   </div>
-                  <div className="col-sm-6">
-                    <InputField
-                      label="Course Code"
-                      id="courseCode"
-                      placeholder="Course Code"
-                      value={formData.courseCode}
+
+                  <div style={{ marginBottom: "20px" }} className="col-lg-12 col-md-12 col-sm-12">
+                    <label className="form-label" htmlFor="Answer">Course Details</label>
+                    <textarea
+                      id="description"
+                      className="form-control"
+                      placeholder="Enter course description"
+                      value={formData.description}
                       onChange={handleInputChange}
                       required
+                      rows={5}
                     />
                   </div>
-                  <div style={{marginBottom:"20px"}} className="col-lg-12 col-md-12 col-sm-12">
-                   <label className="form-label" htmlFor="Answer">Course Details</label>
-                    <textarea  label="Course Details"   id="courseDetails"  placeholder="Course Details" className="form-control" value={formData.courseDetails}
-                      onChange={handleInputChange}
-                      required rows="5" />
-                  
-                  </div>
+
                   <div className="col-sm-6">
-                    <InputField
-                      label="Instructor Name"
-                      id="instructorNames"
-                      placeholder="Instructor Name"
-                      value={formData.instructorName}
-                      onChange={handleInputChange}
-                      required
+                    <label className="form-label">Pricing Type</label>
+                    <Select
+                     
+                      className="custom-react-select"
+                      options={pricingOptions}
+                      onChange={handlePricingTypeChange}
+                      placeholder="Select Pricing Type"
+                      value={pricingOptions.find((option) => option.value === formData.pricingType)}
+                      styles={customStyles}
                     />
                   </div>
-                 
+
                   <div className="col-sm-6">
                     <div style={{ display: "flex", gap: "4px" }}>
-                      <div className="col-sm-6">
+                      <div style={{marginTop:"7px"}} className="col-sm-6">
                         <InputField
-                          label="Course Price"
-                          id="coursePrice"
-                          placeholder="Offer Price"
-                          value={formData.coursePrice}
+                        
+                          id="offerPrice"
+                          placeholder="Enter offer price"
+                          value={formData.offerPrice}
                           onChange={handleInputChange}
-                          required
                         />
                       </div>
                       <div style={{ marginTop: "7px" }} className="col-sm-6">
                         <InputField
+                          src={imagePreview}
                           id="standardPrice"
-                          placeholder="Standard Price"
+                          placeholder="Enter standard price"
                           value={formData.standardPrice}
                           onChange={handleInputChange}
                           required
@@ -153,15 +198,21 @@ const AddCourses = () => {
                       </div>
                     </div>
                   </div>
+
                   <div className="col-sm-6">
                     <div className="form-group">
                       <label className="form-label">Select Language</label>
                       <Select
-                        isSearchable={false}
-                        options={options1}
+                        styles={customStyles}
+                        options={languageOptions}
+                        isMulti
                         className="custom-react-select"
-                        value={formData.language}
                         onChange={handleSelectChange}
+                        placeholder="Select Languages"
+                        value={formData.languages.map((language) => ({
+                          label: language,
+                          value: language,
+                        }))}
                       />
                     </div>
                   </div>
@@ -171,29 +222,30 @@ const AddCourses = () => {
                       Course Thumbnail
                     </label>
                     <div className="form-group fallback">
+                      
                       <input
                         id="Course_Photo"
-                        type="file"
-                        className="file "
                         onChange={handleFileChange}
+                        type="file"
+                        className="file"
                         required
                         style={{ width: "100%" }}
                       />
                     </div>
                   </div>
-
-              
+               
                   <div className="col-sm-6">
-                    <Batch iconMoved={iconMoved} setIconMoved={setIconMoved} />
+                  <Batch onAddBatch={addBatch} />
                   </div>
-
-                  {iconMoved && (
-                    <div style={{ marginTop: "20px" }}>
-                      <Rowbutton />
-                    </div>
-                  )}
-
-                  <div style={{display:"flex", gap:"10px", marginTop:"30px", marginBottom:"80px"}} className="col-lg-12 col-md-12 col-sm-12">
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "10px",
+                      marginTop: "30px",
+                      marginBottom: "80px",
+                    }}
+                    className="col-lg-12 col-md-12 col-sm-12"
+                  >
                     <ButtonComponent
                       label="Add Course"
                       type="submit"
@@ -203,7 +255,6 @@ const AddCourses = () => {
                       label="Cancel"
                       type="button"
                       className="btn btn-danger light All-btn"
-                      onClick={handleCancel}
                     />
                   </div>
                 </div>
@@ -217,3 +268,4 @@ const AddCourses = () => {
 };
 
 export default AddCourses;
+ 

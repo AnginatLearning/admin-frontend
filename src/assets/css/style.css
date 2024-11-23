@@ -23478,6 +23478,15 @@ span#counter {
 .Course-details{
   height: 6rem;
 }
+.Inputfield-copy{
+  height: 2.5rem;
+}
+.datepicker{
+  width: 150px;
+}
+.selector{
+  height: 3.5rem;
+}
 
 .file::-webkit-file-upload-button{
   background-color: #6A73FA;

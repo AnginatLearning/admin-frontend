@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import PageTitle from '../../layouts/PageTitle';
 import { Card, Col, Row } from 'react-bootstrap';
 import { IMAGES } from '../../constant/theme';
+import Banner from '/public/Course image.jpg';
 import { PencilLine } from '@phosphor-icons/react';
 import api from '../../../services/AxiosInstance';
 
@@ -44,7 +45,7 @@ const AllCourses = () => {
                 {filteredFeeData.map((data, ind) => (
                     <Col xl={3} xxl={4} lg={4} md={6} sm={6} key={ind}>
                         <Card>
-                            <img className="img-fluid rounded-top" src={data.image} alt="" />
+                            <img className="img-fluid rounded-top" src={Banner} alt="" />
                             <div className="card-body">
                                 <h4>{data.description}</h4>
                                 <ul className="list-group mb-3 list-group-flush">

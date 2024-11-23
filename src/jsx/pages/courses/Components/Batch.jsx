@@ -1,261 +1,221 @@
-import { PencilLine, Plus } from '@phosphor-icons/react';
 import React, { useState } from 'react';
 import { DatePicker } from 'rsuite';
 import ButtonComponent from './ButtonComponent';
+import { PencilLine, Plus } from '@phosphor-icons/react';
 
-const Batch = ({ iconMoved, setIconMoved }) => {
-   
+const Batch = ({ onAddBatch }) => {
+  const [batchDetails, setBatchDetails] = useState({
+    batchName: '',
+    startDate: null,
+    endDate: null,
+    timeZone: '',
+    seats: '',
+    offerPrice: '',
+    standardPrice: '',
+  });
 
-    
-    const handlePlusClick = () => {
-        setIconMoved(!iconMoved);
-    };
+  const [iconMoved, setIconMoved] = useState(false);
 
-    return (
-        <div>
-           
-            <div
-                style={{
-                    display: "flex",
-                    justifyContent: iconMoved ? "space-between" : "flex-start",
-                    alignItems: "center",
-                    paddingBottom: "5px",
-                    paddingTop: "5px",
-                }}
-            >
-                <p
-                    style={{
-                        fontSize: "14px",
-                        color: "black",
-                        display: "flex",
-                        alignItems: "center",
-                        marginTop: "0",
-                        marginBottom: "0px",
-                    }}
-                >
-                    Add Batch
-                </p>
-                {iconMoved && (
-                    <Plus
-                        size={21}
-                        color="black"
-                        style={{ marginLeft: "10px", cursor: "pointer" }}
-                        onClick={handlePlusClick}
-                    />
-                )}
+  const handleInputChange = (e) => {
+    const { id, value } = e.target;
+    setBatchDetails((prev) => ({ ...prev, [id]: value }));
+  };
+
+  const handleDateChange = (id, value) => {
+    setBatchDetails((prev) => ({ ...prev, [id]: value }));
+  };
+
+  const addBatch = () => {
+    const { batchName, startDate, endDate, timeZone, seats, offerPrice, standardPrice } = batchDetails;
+
+    if (!batchName || !startDate || !endDate || !timeZone || !seats) {
+      alert('Please fill out all batch fields');
+      return;
+    }
+
+    onAddBatch(batchDetails);
+    setBatchDetails({
+      batchName: '',
+      startDate: null,
+      endDate: null,
+      timeZone: '',
+      seats: '',
+      offerPrice: '',
+      standardPrice: '',
+    });
+  };
+
+  const toggleVisibility = () => {
+    setIconMoved(!iconMoved);
+  };
+
+  return (
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}>
+        <h5 style={{ color: '#312A2A', fontSize: '14px', fontWeight: '500' }}>Add Batch</h5>
+        <Plus color="black" size={21} style={{ cursor: 'pointer' }} onClick={toggleVisibility} />
+      </div>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: iconMoved ? 'space-between' : 'space-between',
+          alignItems: 'center',
+          marginBottom: '10px',
+        }}
+      >
+        {!iconMoved && (
+          <p style={{ fontSize: '10px', marginTop: '0px', marginBottom: '0px' }}>Select date and time</p>
+        )}
+
+      </div>
+
+      {iconMoved && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', cursor: 'pointer' }}>
+          <div
+            style={{
+              background: '#6A73FA',
+              borderRadius: '4px',
+              display: 'flex',
+              alignItems: 'center',
+              padding: '12px',
+              justifyContent: 'space-between',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+              <p style={{ color: 'white', fontSize: '12px', marginTop: '0px', marginBottom: '0px', cursor: 'pointer' }}>
+                {batchDetails.startDate
+                  ? new Date(batchDetails.startDate).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                  })
+                  : 'Dec 2, 2024'}
+              </p>
+              <p style={{ color: 'white', fontSize: '12px', marginTop: '0px', marginBottom: '0px' }}>|</p>
+              <p style={{ color: 'white', fontSize: '12px', marginTop: '0px', marginBottom: '0px' }}>
+                {batchDetails.timeZone ? batchDetails.timeZone : 'Select a time zone'}
+              </p>
+            </div>
+            <div>
+              <PencilLine size={18} color="white" />
+            </div>
+          </div>
+
+          <div
+            style={{
+              outline: '1px solid #888888',
+              padding: '12px',
+              borderRadius: '8px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '10px',
+            }}
+          >
+            <p style={{ fontSize: '14px', color: 'black', marginTop: '0px', marginBottom: '5px' }}>
+              Select date and time
+            </p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px', alignItems: 'center' }}>
+              <div style={{ marginTop: '2px' }}>
+                <input
+                  id="batchName"
+                  className="form-control Inputfield-copy"
+                  placeholder="Enter batch name"
+                  value={batchDetails.batchName}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div>
+                <input
+                  id="seats"
+                  className="form-control Inputfield-copy"
+                  placeholder="Enter number of seats"
+                  value={batchDetails.seats}
+                  onChange={handleInputChange}
+                />
+              </div>
             </div>
 
-        
-            {!iconMoved && (
-                <div
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        marginTop: "5px",
-                    }}
-                >
-                    <p
-                        style={{
-                            fontSize: "11px",
-                            color: "#9E989F",
-                            margin: "0 5px 0 0",
-                        }}
-                    >
-                        Select date and time
-                    </p>
-                    <Plus
-                        size={21}
-                        color="black"
-                        style={{ cursor: "pointer" }}
-                        onClick={handlePlusClick}
-                    />
-                </div>
-            )}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
+              <div>
+                <DatePicker
+                  className="datepicker"
+                  placeholder="Start Date"
+                  value={batchDetails.startDate}
+                  onChange={(value) => handleDateChange('startDate', value)}
+                />
+              </div>
 
-            {iconMoved && (
-                <div
-                    style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "20px",
-                    }}
-                    className="Select-date"
-                >
-                    <div
-                        style={{
-                            height: "44px",
-                            backgroundColor: "#6A73FA",
-                            padding: "12px",
-                            borderRadius: "5px",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                        }}
-                    >
-                        <div
-                            style={{
-                                display: "flex",
-                                alignItems: "center",
-                                color: "white",
-                                gap: "10px",
-                                paddingLeft: "10px",
-                                paddingRight: "10px",
-                                marginTop: "0px",
-                                marginBottom: "0px",
-                            }}
-                        >
-                            <p
-                                style={{
-                                    marginTop: "0px",
-                                    marginBottom: "0px",
-                                    fontSize: "12px",
-                                    fontWeight: "300",
-                                }}
-                            >
-                                Nov 3, 2024
-                            </p>
-                            <p
-                                style={{
-                                    marginTop: "0px",
-                                    marginBottom: "0px",
-                                    fontSize: "12px",
-                                    fontWeight: "300",
-                                }}
-                            >
-                                |
-                            </p>
-                            <p
-                                style={{
-                                    marginTop: "0px",
-                                    marginBottom: "0px",
-                                    fontSize: "12px",
-                                    fontWeight: "300",
-                                }}
-                            >
-                                10:00AM - 08:00 PM
-                            </p>
-                        </div>
-                        <div>
-                            <PencilLine size={18} color="white" />
-                        </div>
-                    </div>
+              <div>
+                <DatePicker
+                  className="datepicker"
+                  placeholder="End Date"
+                  value={batchDetails.endDate}
+                  onChange={(value) => handleDateChange('endDate', value)}
+                />
+              </div>
 
-                    <div
-                        style={{
-                            display: "flex",
-                            gap: "10px",
-                            flexDirection: "column",
-                            padding: "12px",
-                            outline: "1px solid #888888",
-                            borderRadius: "5px",
-                        }}
-                    >
-                        <p
-                            style={{
-                                fontSize: "14px",
-                                fontWeight: "400",
-                                color: "black",
-                                marginTop: "0px",
-                                marginBottom: "0px",
-                            }}
-                        >
-                            Select date and time
-                        </p>
-                        <div
-                            style={{
-                                display: "flex",
-                                flexWrap: "wrap",
-                                gap: "10px",
-                            }}
-                        >
-                            <div>
-                                <DatePicker
-                                    placeholder="Date of Birth"
-                                    className="picker-suit datepicker"
-                                />
-                            </div>
+              <div>
+                <input
+                  id="timeZone"
+                  className="form-control Inputfield-copy"
+                  placeholder="Enter time zone"
+                  value={batchDetails.timeZone}
+                  onChange={handleInputChange}
+                />
+              </div>
+            </div>
 
-                            <div
-                                style={{
-                                    outline: "1px #E0E0E0 solid",
-                                    width: "156px",
-                                    height: "33px",
-                                    borderRadius: "5px",
-                                }}
-                            >
-                                <p
-                                    style={{
-                                        fontSize: "12px",
-                                        marginTop: "0px",
-                                        marginBottom: "0px",
-                                        color: "black",
-                                        padding: "8px 20px 8px 20px",
-                                    }}
-                                >
-                                    02:00 PM - 10:00 PM
-                                </p>
-                            </div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
+              <div>
+                <input
+                  id="offerPrice"
+                  className="form-control Inputfield-copy"
+                  placeholder="Enter offer price"
+                  value={batchDetails.offerPrice}
+                  onChange={handleInputChange}
+                />
+              </div>
 
-                            <div
-                                style={{
-                                    outline: "1px #E0E0E0 solid",
-                                    width: "100px",
-                                    height: "33px",
-                                    borderRadius: "50px",
-                                    backgroundColor: "#E0E0E0",
-                                }}
-                            >
-                                <p
-                                    style={{
-                                        fontSize: "12px",
-                                        marginTop: "0px",
-                                        marginBottom: "0px",
-                                        color: "black",
-                                        padding: "8px 20px 8px 20px",
-                                    }}
-                                >
-                                    TimeZone
-                                </p>
-                            </div>
-                        </div>
+              <div>
+                <input
+                  id="standardPrice"
+                  className="form-control Inputfield-copy"
+                  placeholder="Enter standard price"
+                  value={batchDetails.standardPrice}
+                  onChange={handleInputChange}
+                />
+              </div>
+            </div>
+            <p style={{ fontSize: '10px', marginTop: '0px', marginBottom: '0px' }}>
+              Course will be private before publishing
+            </p>
 
-                        <p
-                            style={{
-                                fontSize: "10px",
-                                fontWeight: "400",
-                                color: "#888888",
-                                marginTop: "0px",
-                                marginBottom: "0px",
-                            }}
-                        >
-                            Course will be private before publishing
-                        </p>
-
-                        <div
-                            style={{
-                                display: "flex",
-                                gap: "10px",
-                                justifyContent: "end",
-                            }}
-                        >
-                            <ButtonComponent
-                                label="Apply"
-                                type="submit"
-                                className="btn btn-primary Both-btn"
-                            />
-                            <ButtonComponent
-                                label="Cancel"
-                                type="submit"
-                                className="btn btn-danger light Both-btn"
-                            />
-                        </div>
-                    </div>
-                </div>
-                
-            )}
+            <div
+              style={{
+                marginTop: '12px',
+                marginBottom: '10px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'end',
+                gap: '5px',
+              }}
+            >
+              <ButtonComponent
+                className="All-btn btn  btn-primary"
+                label="Add Batch"
+                onClick={addBatch}
+              />
+              <ButtonComponent
+                className="btn btn-danger light All-btn"
+                label="Cancel"
+                onClick={addBatch}
+              />
+            </div>
+          </div>
         </div>
-    );
+      )}
+    </div>
+  );
 };
 
 export default Batch;
