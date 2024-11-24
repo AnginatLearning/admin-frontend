@@ -177,12 +177,14 @@ const Batch = ({ onAddBatch, pricingType }) => {
             </div>
 
             <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <label className="form-label">Start Time</label>
               <input
                 type="time"
                 className="form-control Inputfield-copy"
                 value={startTime}
                 onChange={(e) => setStartTime(e.target.value)}
               />
+              <label className="form-label">End Time</label>
               <input
                 type="time"
                 className="form-control Inputfield-copy"
