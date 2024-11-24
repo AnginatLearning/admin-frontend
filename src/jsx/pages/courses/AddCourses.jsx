@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DatePicker } from 'rsuite';
 import PageTitle from '../../layouts/PageTitle';
 import Select from 'react-select';
@@ -10,17 +10,29 @@ import api from '../../../services/AxiosInstance';
 
 const AddCourses = () => {
   const [imagePreview, setImagePreview] = useState('/public/Course image.jpg'); // Default image path
+  const [thumbnail, setThumbnail] = useState()
 
   const [formData, setFormData] = useState({
     courseName: '',
     description: '',
     pricingType: '',
-    offerPrice: '',
-    standardPrice: '',
+    price:{
+      offerPrice: '',
+      standardPrice: ''
+    },
     languages: [],
   });
 
   const [batches, setBatches] = useState([]);
+  const [instituteDetails, setInstituteDetails] = useState(null);
+
+  useEffect(() => {
+    const details = JSON.parse(localStorage.getItem('InstitutionDetails'));
+    setInstituteDetails(details);
+  }, []);
+  console.log(instituteDetails)
+
+  
 
   const languageOptions = [
     { value: 'English', label: 'English' },
@@ -34,6 +46,20 @@ const AddCourses = () => {
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
+
+    if (id.startsWith('price.')) {
+      const field = id.split('.')[1]; // Extract 'offerPrice' or 'standardPrice'
+      setFormData((prev) => ({
+        ...prev,
+        price: {
+          ...prev.price,
+          [field]: value,
+        },
+      }));
+    } else {
+      setFormData((prev) => ({ ...prev, [id]: value }));
+    }
+
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
 
@@ -54,48 +80,62 @@ const AddCourses = () => {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
+      if (!file.type.startsWith('image/')) {
+        alert('Please upload a valid image file.');
+        return;
+      }
+      setThumbnail(file);
       const reader = new FileReader();
       reader.onload = () => {
         setImagePreview(reader.result); // Preview the selected image
       };
       reader.readAsDataURL(file);
     } else {
-      setImagePreview(); // Reset to default image if no file is selected
+      setImagePreview('/public/Course image.jpg'); // Reset to default image if no file is selected
     }
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!formData.courseName || !formData.description || !formData.pricingType || !formData.standardPrice || batches.length === 0) {
+  
+    if (!formData.courseName || !formData.description || !formData.pricingType || batches.length === 0) {
       alert('Please fill out all course fields and add at least one batch.');
       return;
     }
-
+  
+    // Prepare the payload object
     const payload = {
-      institutionCode: 'AL_24_0001',
-      institution: '673f4bfa1c208ed487d658b0',
+      institutionCode: instituteDetails.institutionCode,
+      institution: instituteDetails._id,
       courseName: formData.courseName,
       description: formData.description,
       pricingType: formData.pricingType,
       price: {
-        offerPrice: formData.offerPrice,
-        standardPrice: formData.standardPrice,
+        offerPrice: formData.price.offerPrice,
+        standardPrice: formData.price.standardPrice,
       },
-      instructor: '64b8c9ede7891c001edc78ac',
+      // instructor: '64b8c9ede7891c001edc78ac',
       languages: formData.languages,
-      batches: batches.map(batch => ({
-        ...batch, // Add all batch details
-        price: {
-          offerPrice: formData.offerPrice,
-          standardPrice: formData.standardPrice,
-        },
+      batches: batches.map((batch) => ({
+        ...batch,
       })),
       status: 'active',
     };
-
+  
     try {
-      const response = await api.post('course/courses/create-course', payload);
+      // Use FormData for multipart/form-data request
+      const formDataToSend = new FormData();
+      formDataToSend.append('thumbnail', thumbnail); // Add thumbnail file
+      formDataToSend.append('payload', JSON.stringify(payload)); // Add payload as JSON string
+  
+      // Send the request
+      const response = await api.post('course/courses/create-course', formDataToSend, {
+        headers: {
+          'Content-Type': 'multipart/form-data', // Ensure the right content type
+        },
+      });
+  
       alert('Course created successfully!');
       console.log(response.data);
     } catch (error) {
@@ -103,6 +143,7 @@ const AddCourses = () => {
       console.error('Error creating course:', error);
     }
   };
+  
 
   const customStyles = {
     valueContainer: (provided) => ({
@@ -180,7 +221,7 @@ const AddCourses = () => {
                       <div style={{marginTop:"7px"}} className="col-sm-6">
                         <InputField
                         
-                          id="offerPrice"
+                          id="price.offerPrice"
                           placeholder="Enter offer price"
                           value={formData.offerPrice}
                           onChange={handleInputChange}
@@ -189,7 +230,7 @@ const AddCourses = () => {
                       <div style={{ marginTop: "7px" }} className="col-sm-6">
                         <InputField
                           src={imagePreview}
-                          id="standardPrice"
+                          id="price.offerPrice"
                           placeholder="Enter standard price"
                           value={formData.standardPrice}
                           onChange={handleInputChange}
