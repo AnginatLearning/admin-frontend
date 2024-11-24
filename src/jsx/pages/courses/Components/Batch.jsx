@@ -197,14 +197,14 @@ const Batch = ({ onAddBatch, pricingType }) => {
                   id="price.offerPrice"
                   className="form-control Inputfield-copy"
                   placeholder="Enter offer price"
-                  value={batchDetails.price.offerPrice}
+                  value={ batchDetails.price.offerPrice != 0 ? batchDetails.price.offerPrice : "" }
                   onChange={handleInputChange}
                 />
                 <input
                   id="price.standardPrice"
                   className="form-control Inputfield-copy"
                   placeholder="Enter standard price"
-                  value={batchDetails.price.standardPrice}
+                  value={ batchDetails.price.standardPrice != 0 ? batchDetails.price.standardPrice : "" }
                   onChange={handleInputChange}
                 />
               </div>
