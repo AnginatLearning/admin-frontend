@@ -76,38 +76,24 @@ export const MenuList = [
     // },
 
     //Courses    
-    // {
-    //     title: 'Courses',	
-    //     classsChange: 'mm-collapse',		
-    //     iconStyle: <i className="la la-graduation-cap" />,
-    //     content: [
-    //         {
-    //             title: 'All Courses',
-    //             to: 'all-courses',					
-    //         },
-    //         {
-    //             title: 'Add Courses',
-    //             to: 'add-courses',
-    //         },
-    //         {
-    //             title: 'Edit Courses',
-    //             to: 'edit-courses',
-    //         },
-    //         {
-    //             title: 'About Courses',
-    //             to: 'about-courses',
-    //         },
-    //         {
-    //             title: 'Faq',
-    //             to: 'Faq-courses',
-    //         },
-    //         {
-    //             title: 'Upload',
-    //             to: 'Upload-courses',
-    //         },
+    {
+        title: 'Courses',	
+        classsChange: 'mm-collapse',		
+        iconStyle: <i className="la la-graduation-cap" />,
+        content: [
+            {
+                title: 'All Courses',
+                to: 'all-courses',					
+            },
+            {
+                title: 'Add Courses',
+                to: 'add-courses',
+            },
            
-    //     ],
-    // },
+           
+           
+        ],
+    },
     //Library    
     // {
     //     title: 'Library',	

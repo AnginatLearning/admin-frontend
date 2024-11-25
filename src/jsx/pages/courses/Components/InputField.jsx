@@ -1,6 +1,6 @@
 import React from 'react';
 
-const InputField = ({ label, id, placeholder, value, onChange, disabled, type = "text", required }) => {
+const InputField = ({ label, id, placeholder, value, onChange, disabled, type = "text", required  }) => {
   return (
     <div className="form-group">
       {/* Conditionally apply 'disabled-label' class */}

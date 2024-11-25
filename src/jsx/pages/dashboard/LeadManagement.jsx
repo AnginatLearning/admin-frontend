@@ -22,6 +22,7 @@ const theadData = [
 
 
 const LeadManagement = () => {
+    const [loading, setLoading] = useState(true);
     const [sort, setSortata] = useState(10);
     const [feeData, setFeeData] = useState([]);
     const [data, setData] = useState(
@@ -43,8 +44,12 @@ const LeadManagement = () => {
                 const activeLeads = allLeads.filter(lead => lead.status !== 'Deleted' && lead.status !== 'Trashed' );
                 setFeeData(activeLeads);
                 setFilteredFeeData(activeLeads);
+                setTimeout(() => {
+                    setLoading(false);
+                }, 1000);
             } catch (error) {
                 console.error('Error fetching leads:', error.response ? error.response.data : error.message);
+                setLoading(false)
             }
         };
         fetchLeads();
@@ -228,12 +233,7 @@ const LeadManagement = () => {
                                                         </div>
 
                                                        
-                                                       <div className='hover-pointer' style={{border:"solid 01px #E6E6E6",padding:"7px",borderRadius:'5px'}}>
-                                                             <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:"4px"}}>
-                                                                 <FunnelSimple size={16} />
-                                                                  <label htmlFor="">Filter</label>
-                                                             </div>
-                                                       </div>
+                                                     
 
                                                        <div  className='hover-pointer' style={{border:"solid 01px #E6E6E6",padding:"7px",borderRadius:'5px'}}>
                                                              <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:"4px"}}>
@@ -293,47 +293,65 @@ const LeadManagement = () => {
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                    {filteredFeeData.length > 0 ? (
-                                                        filteredFeeData.map((data, ind) => (
-                                                            <tr key={ind}>
-                                                                <td>
-                                                                    <input style={{ height: "15px", width: "15px" }} type="checkbox" />
-                                                                </td>
-                                                                <td>{data.applicantName}</td>
-                                                                <td>{data.course}</td>
-                                                                <td>
-                                                                    <Link to="#">
-                                                                        {data.phoneNumber}
-                                                                    </Link>
-                                                                </td>
-                                                                <td>
-                                                                    <Link to="#">
-                                                                        {data.email}
-                                                                    </Link>
-                                                                </td>
-                                                                <td>{formatDate(data.date)}</td> 
-                                                                <td>
-                                                                    {data.status}
-                                                                </td>
-                                                                <td>
-                                                                    <button style={{ outline: "none", border: "none" }}  onClick={() => Editlead(data._id)}>
-                                                                        <Link to="#" className="btn btn-xs sharp btn-primary me-1">
-                                                                            <i className="fa fa-pencil" />
-                                                                        </Link>
-                                                                    </button>
-                                                                    <Link onClick={() => handleDelete(data._id)} to="#" className="btn btn-xs sharp btn-danger">
-                                                                        <i className="fa fa-trash" />
-                                                                    </Link>
+                                                         {loading ? (
+                                                            
+                                                            <tr>
+                                                                <td colSpan={8} style={{ textAlign: 'center' }}>
+                                                                    <div className="spinner-container">
+                                                                        <div className="spinner-border text-primary" role="status">
+                                                                            <span className="visually-hidden">Loading...</span>
+                                                                        </div>
+                                                                    </div>
                                                                 </td>
                                                             </tr>
-                                                        ))
-                                                    ) : (
-                                                        <tr>
-                                                            <td colSpan={8} style={{ textAlign: 'center' }}>No leads yet</td>
-                                                        </tr>
-                                                    )}
-                                                </tbody>
-
+                                                        ) : filteredFeeData.length > 0 ? (
+                                                           
+                                                            filteredFeeData.map((data, ind) => (
+                                                                <tr key={ind}>
+                                                                    <td>
+                                                                        <input
+                                                                            style={{ height: "15px", width: "15px" }}
+                                                                            type="checkbox"
+                                                                        />
+                                                                    </td>
+                                                                    <td>{data.applicantName}</td>
+                                                                    <td>{data.course}</td>
+                                                                    <td>
+                                                                        <a href="#">{data.phoneNumber}</a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="#">{data.email}</a>
+                                                                    </td>
+                                                                    <td>{formatDate(data.date)}</td>
+                                                                    <td>{data.status}</td>
+                                                                    <td>
+                                                                        <button
+                                                                            style={{ outline: "none", border: "none" }}
+                                                                            onClick={() => Editlead(data._id)}
+                                                                        >
+                                                                            <a href="#" className="btn btn-xs sharp btn-primary me-1">
+                                                                                <i className="fa fa-pencil" />
+                                                                            </a>
+                                                                        </button>
+                                                                        <a
+                                                                            onClick={() => handleDelete(data._id)}
+                                                                            href="#"
+                                                                            className="btn btn-xs sharp btn-danger"
+                                                                        >
+                                                                            <i className="fa fa-trash" />
+                                                                        </a>
+                                                                    </td>
+                                                                </tr>
+                                                            ))
+                                                        ) : (
+                                                           
+                                                            <tr>
+                                                                <td colSpan={8} style={{ textAlign: "center" }}>
+                                                                    No leads yet
+                                                                </td>
+                                                            </tr>
+                                                        )}
+                                                    </tbody>
                                                 </table>
                                                 <div className='d-sm-flex text-center justify-content-between align-items-center mt-3'>
                                                     <div className='dataTables_info'>
@@ -396,3 +414,7 @@ const LeadManagement = () => {
 };
 
 export default LeadManagement;
+
+
+
+

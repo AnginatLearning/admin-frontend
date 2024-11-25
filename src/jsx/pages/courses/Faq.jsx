@@ -3,13 +3,13 @@ import { DatePicker } from 'rsuite';
 
 import PageTitle from '../../layouts/PageTitle';
 import { PlusCircle } from '@phosphor-icons/react';
-import ButtonComponent from './ButtonComponent';
+import ButtonComponent from './Components/ButtonComponent';
 
 const Faq = () => {
     const handleCancel = () => {
-        
+
         console.log('Form canceled');
-      };
+    };
     return (
         <>
             <PageTitle activeMenu={"FAQs"} motherMenu={"Courses"} />
@@ -54,16 +54,16 @@ const Faq = () => {
                                 </div>
 
 
-                                <div className="col-lg-12 col-md-12 col-sm-12">
+                                <div style={{ display: "flex", gap: "10px", marginTop: "30px", marginBottom: "80px" }} className="col-lg-12 col-md-12 col-sm-12">
                                     <ButtonComponent
                                         label="Submit"
                                         type="submit"
-                                        className="btn btn-primary me-1"
+                                        className="btn btn-primary me-1 All-btn"
                                     />
                                     <ButtonComponent
                                         label="Cancel"
                                         type="button"
-                                        className="btn btn-danger light"
+                                        className="btn btn-danger light All-btn"
                                         onClick={handleCancel}
                                     />
                                 </div>
