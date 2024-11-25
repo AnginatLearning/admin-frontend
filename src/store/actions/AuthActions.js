@@ -2,6 +2,7 @@
 import { useNavigate } from 'react-router-dom';
 import {
     formatError,
+    getInstitutionDetails,
     login,
     runLogoutTimer,
     saveTokenInLocalStorage,
@@ -64,7 +65,8 @@ export function loginAction(email, password, navigate) {
                     logoutTime,
                     navigate,
                 );
-               dispatch(loginConfirmedAction(response.data));			              
+               dispatch(loginConfirmedAction(response.data));	
+                getInstitutionDetails();
 				navigate('/dashboard');                
             })
             .catch((error) => {	

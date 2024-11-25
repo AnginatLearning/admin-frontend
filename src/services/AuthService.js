@@ -25,6 +25,11 @@ export function login(email, password) {
     };
     return api.post('auth/login', postData);
 }
+export async  function getInstitutionDetails(){
+    const response = await api.get('auth/get-institution');
+    console.log(response.data.data)
+    localStorage.setItem('InstitutionDetails', JSON.stringify(response.data.data) )
+}
 
 export function formatError(errorResponse) {
     switch (errorResponse.message) {

@@ -75,6 +75,7 @@ const EditCourses = () => {
       try {
         const response = await api.get('course/courses/');
         const course = response.data.data;
+        console.log(course)
 
         const selectedCourse = course.find((course) => course._id === id);
         if (selectedCourse) {
