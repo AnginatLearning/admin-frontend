@@ -58,8 +58,12 @@ api.interceptors.response.use(
         // Handle token refresh failure (e.g., logout user)
         console.error('Token refresh failed:', refreshError);
         // Optionally, you could redirect to login page here
-        const navigate = useNavigate();
-        Logout(navigate)
+        // const navigate = useNavigate();
+        // Logout()
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('loginTimestamp');
+        localStorage.removeItem('InstitutionDetails');
+        window.location.href = '/login';
         return Promise.reject(refreshError);
       }
     }
