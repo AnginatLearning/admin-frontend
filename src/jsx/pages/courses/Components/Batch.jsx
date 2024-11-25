@@ -214,7 +214,7 @@ const Batch = ({ onAddBatch, pricingType }) => {
                 <label className="form-label">Start Time</label>
                 <input
                   type="time"
-                  className="form-control Inputfield-copy"
+                  className="form-control Inputfield-copy Inputfield-copys"
                   value={startTime}
                   onChange={(e) => setStartTime(e.target.value)}
                 />
