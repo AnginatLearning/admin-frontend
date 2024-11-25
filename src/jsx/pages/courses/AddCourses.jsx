@@ -7,6 +7,7 @@ import ButtonComponent from '../courses/Components/ButtonComponent';
 import InputField from '../courses/Components/InputField';
 import Batch from './Components/Batch';
 import api from '../../../services/AxiosInstance';
+import Swal from 'sweetalert2';
 
 const AddCourses = () => {
   const [imagePreview, setImagePreview] = useState('/public/Course image.jpg'); // Default image path
@@ -91,7 +92,7 @@ const AddCourses = () => {
       };
       reader.readAsDataURL(file);
     } else {
-      setImagePreview('/public/Course image.jpg'); // Reset to default image if no file is selected
+      setImagePreview('/public/Course image.jpg'); 
     }
   };
   
@@ -100,7 +101,13 @@ const AddCourses = () => {
     e.preventDefault();
   
     if (!formData.courseName || !formData.description || !formData.pricingType || batches.length === 0) {
-      alert('Please fill out all course fields and add at least one batch.');
+      Swal.fire({
+        title: 'Error!',
+        text: 'Please fill out all course fields and add at least one batch.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
+     
       return;
     }
   
@@ -135,11 +142,22 @@ const AddCourses = () => {
           'Content-Type': 'multipart/form-data', // Ensure the right content type
         },
       });
-  
-      alert('Course created successfully!');
+      Swal.fire({
+        title: 'Success!',
+        text: 'Course created successfully!',
+        icon: 'success',
+        confirmButtonText: 'OK',
+      });
+    
       console.log(response.data);
     } catch (error) {
-      alert('Failed to create course. Check the console for more details.');
+      Swal.fire({
+        title: 'Error!',
+        text: 'Failed to create course.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
+     
       console.error('Error creating course:', error);
     }
   };
@@ -182,6 +200,7 @@ const AddCourses = () => {
                   <div className="col-sm-6">
                     <InputField
                       label="Course Name"
+                      type='text'
                       id="courseName"
                       placeholder="Enter course name"
                       value={formData.courseName}
@@ -222,6 +241,7 @@ const AddCourses = () => {
                         <InputField
                         
                           id="price.offerPrice"
+                           type="number"
                           placeholder="Enter offer price"
                           value={formData.offerPrice}
                           onChange={handleInputChange}
@@ -231,6 +251,7 @@ const AddCourses = () => {
                         <InputField
                           src={imagePreview}
                           id="price.offerPrice"
+                           type="number"
                           placeholder="Enter standard price"
                           value={formData.standardPrice}
                           onChange={handleInputChange}

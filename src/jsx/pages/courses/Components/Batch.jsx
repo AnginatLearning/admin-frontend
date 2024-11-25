@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { DatePicker } from 'rsuite';
 import ButtonComponent from './ButtonComponent';
 import { PencilLine, Plus } from '@phosphor-icons/react';
+import Swal from 'sweetalert2';
 
 // Utility function to convert 24-hour time to 12-hour format
 const formatTimeTo12Hour = (time) => {
@@ -55,12 +56,22 @@ const Batch = ({ onAddBatch, pricingType }) => {
     const { batchName, startDate, endDate, seats, price } = batchDetails;
 
     if (!batchName || !startDate || !endDate || !seats || !startTime || !endTime) {
-      alert('Please fill out all batch fields');
+      Swal.fire({
+        title: 'Error!',
+        text: 'Please fill out all batch fields',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
       return;
     }
 
-    if((pricingType === 'batch') && (!batchName || !startDate || !endDate || !seats || !startTime || !endTime || price.offerPrice == 0 || price.standardPrice == 0 )) {
-      alert('Please fill out all batch fields');
+    if ((pricingType === 'batch') && (!batchName || !startDate || !endDate || !seats || !startTime || !endTime || price.offerPrice == 0 || price.standardPrice == 0)) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Please fill out all batch fields',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
       return;
     }
 
@@ -86,6 +97,12 @@ const Batch = ({ onAddBatch, pricingType }) => {
     });
     setStartTime('');
     setEndTime('');
+    Swal.fire({
+      title: 'Success!',
+      text: 'Batch has been successfully added.',
+      icon: 'success',
+      confirmButtonText: 'OK',
+    });
   };
 
   const toggleVisibility = () => {
@@ -116,10 +133,10 @@ const Batch = ({ onAddBatch, pricingType }) => {
               <p style={{ color: 'white', fontSize: '12px', margin: '0' }}>
                 {batch.startDate
                   ? new Date(batch.startDate).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'short',
-                      day: 'numeric',
-                    })
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                  })
                   : 'N/A'}
               </p>
               <p style={{ color: 'white', fontSize: '12px', margin: '0' }}>|</p>
@@ -144,75 +161,107 @@ const Batch = ({ onAddBatch, pricingType }) => {
           >
             <p style={{ fontSize: '14px', color: 'black', margin: '0 0 5px' }}>Select date and time</p>
 
-            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-              <input
-                id="batchName"
-                className="form-control Inputfield-copy"
-                placeholder="Enter batch name"
-                value={batchDetails.batchName}
-                onChange={handleInputChange}
-              />
-              <input
-                id="seats"
-                className="form-control Inputfield-copy"
-                placeholder="Enter number of seats"
-                value={batchDetails.seats}
-                onChange={handleInputChange}
-              />
-            </div>
 
             <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-              <DatePicker
-                className="datepicker"
-                placeholder="Start Date"
-                value={batchDetails.startDate}
-                onChange={(value) => handleDateChange('startDate', value)}
-              />
-              <DatePicker
-                className="datepicker"
-                placeholder="End Date"
-                value={batchDetails.endDate}
-                onChange={(value) => handleDateChange('endDate', value)}
-              />
-            </div>
-
-            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-            <label className="form-label">Start Time</label>
-              <input
-                type="time"
-                className="form-control Inputfield-copy"
-                value={startTime}
-                onChange={(e) => setStartTime(e.target.value)}
-              />
-              <label className="form-label">End Time</label>
-              <input
-                type="time"
-                className="form-control Inputfield-copy"
-                value={endTime}
-                onChange={(e) => setEndTime(e.target.value)}
-              />
-            </div>
-
-            {pricingType === 'batch' && (
-              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <label className="form-label">Batch Name</label>
                 <input
-                  id="price.offerPrice"
+                  id="batchName"
                   className="form-control Inputfield-copy"
-                  placeholder="Enter offer price"
-                  value={ batchDetails.price.offerPrice != 0 ? batchDetails.price.offerPrice : "" }
-                  onChange={handleInputChange}
-                />
-                <input
-                  id="price.standardPrice"
-                  className="form-control Inputfield-copy"
-                  placeholder="Enter standard price"
-                  value={ batchDetails.price.standardPrice != 0 ? batchDetails.price.standardPrice : "" }
+                  placeholder="Enter batch name"
+                  value={batchDetails.batchName}
                   onChange={handleInputChange}
                 />
               </div>
+
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <label className="form-label">Batch Seat</label>
+                <input
+                  id="seats" 
+                  type='number'
+                  className="form-control Inputfield-copy"
+                  placeholder="Enter number of seats"
+                  value={batchDetails.seats}
+                  onChange={handleInputChange}
+                />
+              </div>
+
+
+            </div>
+
+            <div style={{ display: 'flex',flexWrap:"wrap", gap: '10px', alignItems: 'center' }}>
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <label className="form-label">Start Date</label>
+                <DatePicker
+                  className="datepicker"
+                  placeholder="Start Date"
+                  value={batchDetails.startDate}
+                  onChange={(value) => handleDateChange('startDate', value)}
+                />
+              </div>
+
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <label className="form-label">End Date</label>
+                <DatePicker
+                  className="datepicker"
+                  placeholder="End Date"
+                  value={batchDetails.endDate}
+                  onChange={(value) => handleDateChange('endDate', value)}
+                />
+              </div>
+
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <label className="form-label">Start Time</label>
+                <input
+                  type="time"
+                  className="form-control Inputfield-copy"
+                  value={startTime}
+                  onChange={(e) => setStartTime(e.target.value)}
+                />
+              </div>
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <label className="form-label">End Time</label>
+                <input
+                  type="time"
+                  className="form-control Inputfield-copy Inputfield-copys"
+                  value={endTime}
+                  onChange={(e) => setEndTime(e.target.value)}
+                />
+              </div>
+            </div>
+
+
+            {pricingType === 'batch' && (
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                  <label className="form-label">Enter Offer Price</label>
+                  <input
+                    id="price.offerPrice"
+                    className="form-control Inputfield-copy"
+                     type="number"
+                    placeholder="Enter offer price"
+                    value={batchDetails.price.offerPrice != 0 ? batchDetails.price.offerPrice : ""}
+                    onChange={handleInputChange}
+                  />
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                  <label className="form-label">Enter Offer Price</label>
+                  <input
+                    id="price.standardPrice"
+                     type="number"
+                    className="form-control Inputfield-copy"
+                    placeholder="Enter standard price"
+                    value={batchDetails.price.standardPrice != 0 ? batchDetails.price.standardPrice : ""}
+                    onChange={handleInputChange}
+                  />
+                </div>
+
+
+              </div>
             )}
 
-            <div style={{ display: 'flex', justifyContent: 'end', gap: '5px' }}>
+            <div style={{ display: 'flex', justifyContent: 'end', gap: '5px',marginTop:"15px" }}>
               <ButtonComponent
                 className="All-btn btn btn-primary"
                 label="Add Batch"

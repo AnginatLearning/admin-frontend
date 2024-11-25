@@ -47,7 +47,7 @@ const AllCourses = () => {
             <PageTitle activeMenu={"All Courses"} motherMenu={"Courses"} />
             <Row>
                 {loading ? (
-                    // Loading Spinner
+                    
                     <Col xs={12} style={{ textAlign: "center" }}>
                         <div className="spinner-container">
                             <div className="spinner-border text-primary" role="status">
