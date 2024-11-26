@@ -294,7 +294,11 @@ const AddCourses = () => {
                         style={{ width: "100%" }}
                       />
                     </div>
+                    <p style={{ fontSize: '14px', color: 'red',marginTop:"-5px" }}>
+                      Please ensure the image file is less than 400KB.
+                    </p>
                   </div>
+                   
                
                   <div className="col-sm-6">
                   <Batch onAddBatch={addBatch} pricingType={formData.pricingType} />
@@ -330,4 +334,3 @@ const AddCourses = () => {
 };
 
 export default AddCourses;
- 
