@@ -45,6 +45,7 @@ const AllCourses = () => {
             try {
                 const res = await api.get('course/courses/');
                 const AllCourses = res.data.data;
+                console.log(AllCourses)
                 setFilteredFeeData(AllCourses);
                 setLoading(false);
             } catch (error) {
@@ -128,10 +129,10 @@ const AllCourses = () => {
                                             </li>
                                         )}
 
-                                        <li style={{ borderBottom: "1px solid #e6e6e6" }} className="list-group-item px-0 d-flex justify-content-between">
+                                        {/* <li style={{ borderBottom: "1px solid #e6e6e6" }} className="list-group-item px-0 d-flex justify-content-between">
                                             <span style={{ fontSize: "14px" }} className="mb-0">Instructor:</span>
                                             <strong style={{ fontSize: "14px" }}></strong>
-                                        </li>
+                                        </li> */}
                                     </ul>
                                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                                         <button onClick={() => handleReadmore(data._id)}    disabled={true} className="btn btn-primary All-btn">Read More</button>
