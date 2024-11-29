@@ -44,7 +44,7 @@ const Editlead = () => {
     
     fetchLeadDetails();
   }, [id]);
-
+  
   const handleChange = (e) => {
     const { id, value } = e.target;
     setUpdates((prevUpdates) => ({
@@ -69,37 +69,45 @@ const Editlead = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      console.log(updates);
-      const res = await api.patch('auth/lead/lead/status', {
-        leadId: lead._id,
-        ...updates,
-      });
-      console.log('Update response:', res);
-      
-      Swal.fire({
-        title: 'Success!',
-        text: 'Lead updated successfully.',
-        icon: 'success',
-        confirmButtonText: 'Ok',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          navigate(-1);
-        }
-      });
-    } catch (error) {
-      console.error("Error updating lead:", error);
-      
-      Swal.fire({
-        title: 'Error!',
-        text: 'Failed to update lead.',
-        icon: 'error',
-        confirmButtonText: 'Ok',
-      });
-    }
-  };
+  e.preventDefault();
+  try {
+   
+    const updateData = {
+      status: updates.status || lead.status,      
+      course: updates.course || lead.course,
+      applicantName: updates.applicantName || lead.applicantName,
+      phoneNumber: updates.phoneNumber || lead.phoneNumber,
+      email: updates.email || lead.email,
+    };
 
+    const res = await api.patch('auth/lead/lead/status', {
+      leadId: lead._id,   
+      updateData,         
+    });
+
+    console.log('Update response:', res);
+
+    Swal.fire({
+      title: 'Success!',
+      text: 'Lead updated successfully.',
+      icon: 'success',
+      confirmButtonText: 'Ok',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        navigate(-1);  // Navigate back to the previous page on success
+      }
+    });
+  } catch (error) {
+    console.error('Error updating lead:', error);
+
+    Swal.fire({
+      title: 'Error!',
+      text: 'Failed to update lead.',
+      icon: 'error',
+      confirmButtonText: 'Ok',
+    });
+  }
+};
   const handleCancel = () => {
     navigate(-1);
   };

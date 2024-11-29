@@ -192,12 +192,20 @@ const Leadtrash = () => {
 
                     if (lead) {
                         console.log("Lead Information to delete:", lead);
+                      
 
-
-                        const response = await api.patch('auth/lead/lead/status', {
+                        const payload = {
                             leadId: id,
-                            status: 'Deleted',
-                        });
+                            updateData: {
+                                status: 'Deleted', 
+                                course: lead.course,  
+                                applicantName: lead.applicantName,  
+                                phoneNumber: lead.phoneNumber,  
+                                email: lead.email,  
+                            }
+                        };
+
+                        const response = await api.patch('auth/lead/lead/status', payload);
 
                         if (response.status === 200) {
                             Swal.fire('Deleted!', 'Lead status has been moved to Trash', 'success');
@@ -247,15 +255,26 @@ const Leadtrash = () => {
         if (firstResult.isConfirmed) {
             try {
                 const lead = feeData.find(lead => lead._id === id);
+                
+               
 
                 if (lead) {
                     console.log("Lead Information to restore:", lead);
 
 
-                    const response = await api.patch('auth/lead/lead/status', {
+                    const payload = {
                         leadId: id,
-                        status: 'Pending',
-                    });
+                        updateData: {
+                            status: 'Restored', 
+                            course: lead.course,  
+                            applicantName: lead.applicantName,  
+                            phoneNumber: lead.phoneNumber,  
+                            email: lead.email,  
+                        }
+                    };
+
+
+                    const response = await api.patch('auth/lead/lead/status', payload);
 
                     if (response.status === 200) {
 
