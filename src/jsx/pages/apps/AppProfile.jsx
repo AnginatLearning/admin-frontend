@@ -50,12 +50,24 @@ const reducer = (state, action) =>{
 
 const AppProfile = () => {
 	const [email, setEmail] = useState('');
+	const [name, setName] = useState('');
 	useEffect(() => {
   
-		const storedEmail = sessionStorage.getItem('institutionEmail');
+		const storedEmail = localStorage.getItem('institutionEmail');
 		
 		if (storedEmail) {
 		  setEmail(storedEmail); 
+		}
+	  }, []);
+
+
+	  
+	useEffect(() => {
+  
+		const storedName = localStorage.getItem('institutionName');
+		
+		if (storedName) {
+		  setName(storedName); 
 		}
 	  }, []);
 	const onInit = () => {
@@ -83,7 +95,7 @@ const AppProfile = () => {
 					</div>
 					<div className="profile-details">
 					  <div className="profile-name px-3 pt-2">
-						<h4 className="text-primary mb-0">Mitchell C. Shay</h4>
+						<h4 className="text-primary mb-0">{name}</h4>
 						<p>UX / UI Designer</p>
 					  </div>
 					  <div className="profile-email px-2 pt-2">

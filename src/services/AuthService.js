@@ -31,7 +31,15 @@ export async  function getInstitutionDetails(){
     localStorage.setItem('InstitutionDetails', JSON.stringify(response.data.data) )
     const email = response.data.data.email; 
     if (email) {
-        sessionStorage.setItem('institutionEmail', email); 
+        localStorage.setItem('institutionEmail', email); 
+        console.log(email)
+    }
+
+
+    const name = response.data.data.name; 
+    if (name) {
+        localStorage.setItem('institutionName', name); 
+        console.log(name)
     }
 }
 
