@@ -1,4 +1,4 @@
-import React, { Fragment, useReducer } from "react";
+import React, { Fragment, useEffect, useReducer, useState } from "react";
 import { Button, Dropdown, Modal, Tab, Nav } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import LightGallery from 'lightgallery/react';
@@ -29,6 +29,7 @@ const galleryBlog = [
 	{image: profile02}, {image: profile04},
 	{image: profile03}, {image: profile02},
 ];
+
 const initialState = false;
 const reducer = (state, action) =>{
 	switch (action.type){
@@ -48,6 +49,15 @@ const reducer = (state, action) =>{
 }
 
 const AppProfile = () => {
+	const [email, setEmail] = useState('');
+	useEffect(() => {
+  
+		const storedEmail = sessionStorage.getItem('institutionEmail');
+		
+		if (storedEmail) {
+		  setEmail(storedEmail); 
+		}
+	  }, []);
 	const onInit = () => {
 		//console.log('lightGallery has been initialized');
 	};
@@ -77,7 +87,7 @@ const AppProfile = () => {
 						<p>UX / UI Designer</p>
 					  </div>
 					  <div className="profile-email px-2 pt-2">
-						<h4 className="text-muted mb-0">hello@email.com</h4>
+						<h4 className="text-muted mb-0">{email}</h4>
 						<p>Email</p>
 					  </div>
 					  <Dropdown className="dropdown ms-auto">

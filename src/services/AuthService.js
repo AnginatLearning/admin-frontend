@@ -29,6 +29,10 @@ export async  function getInstitutionDetails(){
     const response = await api.get('auth/get-institution');
     console.log(response.data.data)
     localStorage.setItem('InstitutionDetails', JSON.stringify(response.data.data) )
+    const email = response.data.data.email; 
+    if (email) {
+        sessionStorage.setItem('institutionEmail', email); 
+    }
 }
 
 export function formatError(errorResponse) {
