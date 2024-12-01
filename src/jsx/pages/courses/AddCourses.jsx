@@ -265,7 +265,7 @@ const AddCourses = () => {
                       <div style={{ marginTop: "7px" }} className="col-sm-6">
                         <InputField
                           src={imagePreview}
-                          id="price.offerPrice"
+                          id="price.standardPrice"
                            type="number"
                           placeholder="Enter standard price"
                           value={formData.standardPrice}
