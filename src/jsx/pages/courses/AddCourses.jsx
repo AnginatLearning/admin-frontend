@@ -126,7 +126,7 @@ const AddCourses = () => {
       return;
     }
 
-    if ((pricingType === 'one-time') && (!formData.courseName || !formData.description || !formData.pricingType || batches.length === 0 || formData.price.offerPrice == '' || formData.price.standardPrice == '' || formData.languages == [] )) {
+    if ((formData.pricingType === 'one-time') && (!formData.courseName || !formData.description || !formData.pricingType || batches.length === 0 || formData.price.offerPrice == '' || formData.price.standardPrice == '' || formData.languages == [] )) {
       Swal.fire({
         title: 'Error!',
         text: 'Please fill out all course fields and add at least one batch.',
