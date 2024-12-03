@@ -14,6 +14,7 @@ import api from '../../../services/AxiosInstance';
 import Swal from 'sweetalert2';
 
 const EditCourses = () => {
+   const [batches, setBatches] = useState([]);
   const [imagePreview, setImagePreview] = useState('/public/Course image.jpg');
   const { id } = useParams();
 
@@ -80,7 +81,7 @@ const EditCourses = () => {
       const selectedLanguages = selectedOption.map((option) => option.value);
       setFormData((prev) => ({
         ...prev,
-        [field]: selectedLanguages, 
+        [field]: selectedLanguages,
       }));
     } else {
       setFormData((prev) => ({
@@ -90,12 +91,37 @@ const EditCourses = () => {
     }
   };
 
-  const handleFileChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      courseThumbnail: e.target.files[0],
-    }));
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+
+    if (file) {
+      // Check if the file is an image
+      if (!file.type.startsWith('image/')) {
+        setWarningMessage('Please upload a valid image file.');
+        return;
+      }
+
+    
+      const maxFileSize = 500 * 1024; // 500 KB
+      if (file.size > maxFileSize) {
+        setWarningMessage('File size exceeds 500 KB. Please upload a smaller image.');
+        return;
+      }
+
+      // If valid, set the file and preview
+      setThumbnail(file);
+      setWarningMessage('');
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImagePreview(reader.result); 
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setImagePreview('/public/Course image.jpg'); 
+      setWarningMessage(''); 
+    }
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -105,11 +131,58 @@ const EditCourses = () => {
       console.error('Error updating course:', error);
     }
   };
-
-  const handleCancel = () => {
-    console.log('Form canceled');
+  const deleteCourse = async (courseId) => {
+    try {
+      const response = await api.delete(`course/courses/${courseId}`);
+      if (response.status === 200) {
+        console.log('Course deleted successfully');
+        Swal.fire({
+          title: 'Deleted!',
+          text: 'Course has been deleted successfully.',
+          icon: 'success',
+          confirmButtonText: 'OK',
+        }).then(() => {
+          // Redirect or reload the page after successful deletion
+          window.location.href = '/all-courses'; // Replace with your desired redirect route
+        });
+      } else {
+        console.error('Error deleting course:', response);
+        Swal.fire({
+          title: 'Error!',
+          text: 'There was an issue deleting the course.',
+          icon: 'error',
+          confirmButtonText: 'OK',
+        });
+      }
+    } catch (error) {
+      console.error('Error deleting course:', error);
+      Swal.fire({
+        title: 'Error!',
+        text: 'There was an issue deleting the course.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
+    }
+  };
+  const handleDelete = () => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You won’t be able to revert this!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteCourse(id); // Pass the course ID to the delete method
+      }
+    });
   };
 
+  const handleCancel = () => {
+    console.log("form-Cancel")
+  }
 
   const updateCourse = async (courseId) => {
     const courseData = {
@@ -287,10 +360,10 @@ const EditCourses = () => {
                         placeholder="Select Languages"
                         styles={customStyles}
                       />
-                      
+
                     </div>
                   </div>
-                   <div className="col-lg-6 col-md-12">
+                  <div className="col-lg-6 col-md-12">
                     <label className="form-label" htmlFor="Course_Photo">
                       Course Thumbnail
                     </label>
@@ -308,7 +381,7 @@ const EditCourses = () => {
                   </div> 
 
                   <div style={{ marginBottom: "10px" }} className="col-sm-6">
-                    <Batch onAddBatch={addBatch} pricingType={formData.pricingType} />
+                    <Batch  onAddBatch={addBatch} pricingType={formData.pricingType} />
                   </div>
 
                   {iconMoved && (
@@ -317,18 +390,34 @@ const EditCourses = () => {
                     </div>
                   )}
 
-                  <div style={{ display: "flex", gap: "10px", marginTop: "30px", marginBottom: "80px" }} className="col-lg-12 col-md-12 col-sm-12">
-                    <ButtonComponent
-                      label="Update"
-                      type="submit"
-                      className="btn btn-primary me-1 All-btn"
-                    />
-                    <ButtonComponent
-                      label="Cancel"
-                      type="button"
-                      className="btn btn-danger light All-btn"
-                      onClick={handleCancel}
-                    />
+                  <div style={{ display: "flex", flexDirection: "row", flexWrap:"wrap", gap: "10px", marginTop: "30px", marginBottom: "80px" ,justifyContent:"space-between"}} className="col-lg-12 col-md-12 col-sm-12">
+
+                    <div style={{display:"flex"}}>
+
+                      <ButtonComponent
+                        label="Update"
+                        type="submit"
+                        className="btn btn-primary me-1 All-btn"
+                      />
+
+                      <ButtonComponent
+                        label="Cancel"
+                        type="button"
+                        className="btn btn-danger light All-btn"
+                        onClick={handleCancel}
+                      />
+
+                    </div>
+
+
+                    <div>
+                      <ButtonComponent
+                        label="Delete"
+                        type="button"
+                        className="btn btn-danger  All-btn"
+                        onClick={handleDelete}
+                      />
+                    </div>
                   </div>
                 </div>
               </form>
