@@ -306,7 +306,8 @@ const EditCourses = () => {
                       placeholder="Course Code"
                       value={formData.courseCode}
                       onChange={handleInputChange}
-                      required
+                      // required
+                      disabled='true'
                     />
                   </div>
                   <div style={{ marginBottom: "20px" }} className="col-lg-12 col-md-12 col-sm-12">
