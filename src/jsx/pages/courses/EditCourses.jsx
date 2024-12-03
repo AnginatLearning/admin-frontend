@@ -16,6 +16,8 @@ import Swal from 'sweetalert2';
 const EditCourses = () => {
    const [batches, setBatches] = useState([]);
   const [imagePreview, setImagePreview] = useState('/public/Course image.jpg');
+  const [thumbnail, setThumbnail] = useState(null);
+  const [warningMessage, setWarningMessage] = useState('');
   const { id } = useParams();
 
   const [iconMoved, setIconMoved] = useState(false);
@@ -27,6 +29,7 @@ const EditCourses = () => {
       offerPrice: '',
       standardPrice: ''
     },
+    // thumbnail:'',
     languages: [],
   });
 
@@ -110,6 +113,7 @@ const EditCourses = () => {
 
       // If valid, set the file and preview
       setThumbnail(file);
+      console.log(file)
       setWarningMessage('');
       const reader = new FileReader();
       reader.onload = () => {
@@ -198,7 +202,15 @@ const EditCourses = () => {
     };
 
     try {
-      const response = await api.put(`course/courses/${courseId}`, courseData);
+      const formDataToSend = new FormData();
+      formDataToSend.append('thumbnail', thumbnail); // Add thumbnail file
+      formDataToSend.append('payload', JSON.stringify(courseData)); // Add payload as JSON string
+      console.log(formDataToSend.thumbnail)
+      const response = await api.put(`course/courses/${courseId}`, formDataToSend, {
+        headers: {
+          'Content-Type': 'multipart/form-data', // Ensure the right content type
+        },
+      });
       if (response.status === 200) {
         console.log('Course updated successfully');
         Swal.fire({
@@ -245,6 +257,7 @@ const EditCourses = () => {
               offerPrice: selectedCourse.price?.offerPrice || '',
               standardPrice: selectedCourse.price?.standardPrice || '',
             },
+            thumbnail: selectedCourse.thumbnail || '',
             languages: selectedCourse.languages || [],
           });
         }
@@ -312,6 +325,7 @@ const EditCourses = () => {
                   <div className="col-sm-6">
                     <label className="form-label">Pricing Type</label>
                     <Select
+                     isDisabled='true'
                       className="custom-react-select"
                       options={pricingOptions}
                       onChange={handlePricingTypeChange}
@@ -327,6 +341,7 @@ const EditCourses = () => {
                         <div style={{ marginTop: "7px" }} className="col-sm-6">
                           <InputField
                             id="price.offerPrice"
+                            required
                             type="number"
                             placeholder="Enter offer price"
                             value={formData.price.offerPrice}
@@ -358,6 +373,7 @@ const EditCourses = () => {
                         }))}
                         onChange={(selectedOption) => handleSelectChange(selectedOption, 'languages')}
                         placeholder="Select Languages"
+                        required
                         styles={customStyles}
                       />
 
@@ -372,9 +388,9 @@ const EditCourses = () => {
                         id="Course_Photo"
                         type="file"
                         className="file"
-                        value={formData.courseThumbnail}
+                        // value={formData.thumbnail}
                         onChange={handleFileChange}
-                        required
+                        // required
                         style={{ width: "100%" }}
                       />
                     </div>
