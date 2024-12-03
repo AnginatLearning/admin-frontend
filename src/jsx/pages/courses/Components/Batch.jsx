@@ -42,6 +42,7 @@ const Batch = ({ onAddBatch, pricingType }) => {
   
         if (course.batches) {
           setBatches(course.batches);
+          console.log(batches)
         }
       } catch (error) {
         console.error('Error fetching course details:', error);
@@ -50,6 +51,57 @@ const Batch = ({ onAddBatch, pricingType }) => {
   
     fetchCourseAndBatches();
   }, [id]);
+
+  function convertTimeRangeTo24Hour(timeRange) {
+    console.log(timeRange)
+    if (!timeRange || typeof timeRange !== 'string') {
+        return { error: "Invalid time range. Please provide a valid time range string." };
+    }
+
+    // Helper function to convert time to 24-hour format
+    function convertTo24HourFormat(time) {
+        const [timePart, meridian] = time.split(' ');
+        if (!timePart || !meridian || !['AM', 'PM'].includes(meridian)) {
+            throw new Error("Invalid time format");
+        }
+
+        let [hours, minutes] = timePart.split(':').map(Number);
+
+        if (isNaN(hours) || isNaN(minutes)) {
+            throw new Error("Invalid time format");
+        }
+
+        if (meridian === 'PM' && hours !== 12) {
+            hours += 12;
+        } else if (meridian === 'AM' && hours === 12) {
+            hours = 0;
+        }
+
+        // Format with leading zeros
+        hours = hours.toString().padStart(2, '0');
+        minutes = minutes.toString().padStart(2, '0');
+
+        return `${hours}:${minutes}`;
+    }
+
+    try {
+        // Split the time range into start and end times
+        const [startTime, endTime] = timeRange.split(' - ');
+
+        if (!startTime || !endTime) {
+            throw new Error("Time range must include a start and end time separated by ' - '");
+        }
+
+        // Convert both times to 24-hour format
+        const start = convertTo24HourFormat(startTime.trim());
+        const end = convertTo24HourFormat(endTime.trim());
+
+        // Return as a JSON object
+        return { start, end };
+    } catch (error) {
+        return { error: error.message };
+    }
+  }
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -72,7 +124,7 @@ const Batch = ({ onAddBatch, pricingType }) => {
     setBatchDetails((prev) => ({ ...prev, [id]: value ? new Date(value) : null }));
   };
 
-  const addBatch = () => {
+  const addBatch = async () => {
     const { batchName, startDate, endDate, seats, price } = batchDetails;
 
     if (!batchName || !startDate || !endDate || !seats || !startTime || !endTime) {
@@ -99,23 +151,69 @@ const Batch = ({ onAddBatch, pricingType }) => {
       ...batchDetails,
       timeZone: `${formatTimeTo12Hour(startTime)} - ${formatTimeTo12Hour(endTime)}`,
     };
+    const url = window.location.pathname;
 
-    setBatches((prevBatches) => [...prevBatches, newBatch]);
-    onAddBatch(newBatch);
+    if(url.includes('edit-courses')){
+      try {
+        const res = await api.post(`course/courses/${id}/batches`, newBatch)
+
+        if(res.status === 200){
+          Swal.fire({
+            title: 'Success!',
+            text: 'Batch has been updated.',
+            icon: 'success',
+            confirmButtonText: 'OK',
+          });
+          setBatchDetails({
+            batchName: '',
+            startDate: null,
+            endDate: null,
+            timeZone: '',
+            seats: '',
+            price: {
+              offerPrice: 0,
+              standardPrice: 0,
+            },
+          });
+          setStartTime('');
+          setEndTime('');
+          setBatches((prevBatches) => [...prevBatches, newBatch]);
+        }
+      } catch (error) {
+        Swal.fire({
+          title: 'Error!',
+          text: 'Failed to update the batch. Please try again.',
+          icon: 'error',
+          confirmButtonText: 'OK',
+        });
+      }
+    }else{
+      setBatches((prevBatches) => [...prevBatches, newBatch]);
+      onAddBatch(newBatch);
+      Swal.fire({
+        title: 'Success!',
+        text: 'Batch has been updated.',
+        icon: 'success',
+        confirmButtonText: 'OK',
+      });
+      setBatchDetails({
+        batchName: '',
+        startDate: null,
+        endDate: null,
+        timeZone: '',
+        seats: '',
+        price: {
+          offerPrice: 0,
+          standardPrice: 0,
+        },
+      });
+      setStartTime('');
+      setEndTime('');
     
-    setBatchDetails({
-      batchName: '',
-      startDate: null,
-      endDate: null,
-      timeZone: '',
-      seats: '',
-      price: {
-        offerPrice: 0,
-        standardPrice: 0,
-      },
-    });
-    setStartTime('');
-    setEndTime('');
+    }
+
+    
+    
     Swal.fire({
       title: 'Success!',
       text: 'Batch has been successfully added.',
@@ -224,14 +322,28 @@ const Batch = ({ onAddBatch, pricingType }) => {
       seats: batch.seats,
       price: batch.price,
     });
-    setStartTime(batch.startTime);
-    setEndTime(batch.endTime);
+    setStartTime(convertTimeRangeTo24Hour(batch?.timeZone).start);
+    setEndTime(convertTimeRangeTo24Hour(batch?.timeZone).end);
     setEditingBatch(batch); 
     setIconMoved(true); 
   };
 
   const toggleVisibility = () => {
     setIconMoved(!iconMoved);
+    setBatchDetails({
+      batchName: '',
+      startDate: null,
+      endDate: null,
+      timeZone: '',
+      seats: '',
+      price: {
+        offerPrice: 0,
+        standardPrice: 0,
+      },
+    });
+    setStartTime('');
+    setEndTime('');
+    setEditingBatch(null)
   };
 
   return (
@@ -347,7 +459,7 @@ const Batch = ({ onAddBatch, pricingType }) => {
                   type="time"
                   className="form-control Inputfield-copy Inputfield-copys"
                   value={startTime}
-                  onChange={(e) => setStartTime(e.target.value)}
+                  onChange={(e) => {setStartTime(e.target.value); console.log(typeof(startTime))}}
                 />
               </div>
               <div style={{ display: "flex", flexDirection: "column" }}>
@@ -401,7 +513,22 @@ const Batch = ({ onAddBatch, pricingType }) => {
               <ButtonComponent
                 className="btn btn-danger light All-btn"
                 label="Cancel"
-                onClick={() => setIconMoved(false)}
+                onClick={() => {setIconMoved(false);
+                  setBatchDetails({
+                    batchName: '',
+                    startDate: null,
+                    endDate: null,
+                    timeZone: '',
+                    seats: '',
+                    price: {
+                      offerPrice: 0,
+                      standardPrice: 0,
+                    },
+                  });
+                  setStartTime('');
+                  setEndTime('');
+                  setEditingBatch(null)
+                }}
               />
             </div>
             
