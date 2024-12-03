@@ -10,8 +10,9 @@ import api from '../../../services/AxiosInstance';
 import Swal from 'sweetalert2';
 
 const AddCourses = () => {
-  const [imagePreview, setImagePreview] = useState('/public/Course image.jpg'); // Default image path
-  const [thumbnail, setThumbnail] = useState()
+  const [imagePreview, setImagePreview] = useState('/public/Course image.jpg');
+  const [thumbnail, setThumbnail] = useState(null);
+  const [warningMessage, setWarningMessage] = useState('');
 
   const [formData, setFormData] = useState({
     courseName: '',
@@ -80,21 +81,35 @@ const AddCourses = () => {
   };
   const handleFileChange = (event) => {
     const file = event.target.files[0];
+
     if (file) {
+      // Check if the file is an image
       if (!file.type.startsWith('image/')) {
-        alert('Please upload a valid image file.');
+        setWarningMessage('Please upload a valid image file.');
         return;
       }
+
+      // Check if the file size is within the limit (500 KB = 500 * 1024 bytes)
+      const maxFileSize = 500 * 1024; // 500 KB
+      if (file.size > maxFileSize) {
+        setWarningMessage('File size exceeds 500 KB. Please upload a smaller image.');
+        return;
+      }
+
+      // If valid, set the file and preview
       setThumbnail(file);
+      setWarningMessage(''); // Clear any existing warning
       const reader = new FileReader();
       reader.onload = () => {
         setImagePreview(reader.result); // Preview the selected image
       };
       reader.readAsDataURL(file);
     } else {
-      setImagePreview('/public/Course image.jpg'); 
+      setImagePreview('/public/Course image.jpg'); // Default image
+      setWarningMessage(''); // Clear any existing warning
     }
   };
+  
   
 
   const handleSubmit = async (e) => {
@@ -108,6 +123,16 @@ const AddCourses = () => {
         confirmButtonText: 'OK',
       });
      
+      return;
+    }
+
+    if ((formData.pricingType === 'one-time') && (!formData.courseName || !formData.description || !formData.pricingType || batches.length === 0 || formData.price.offerPrice == '' || formData.price.standardPrice == '' || formData.languages == [] )) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Please fill out all course fields and add at least one batch.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
       return;
     }
   
@@ -250,7 +275,7 @@ const AddCourses = () => {
                       <div style={{ marginTop: "7px" }} className="col-sm-6">
                         <InputField
                           src={imagePreview}
-                          id="price.offerPrice"
+                          id="price.standardPrice"
                            type="number"
                           placeholder="Enter standard price"
                           value={formData.standardPrice}
@@ -284,7 +309,6 @@ const AddCourses = () => {
                       Course Thumbnail
                     </label>
                     <div className="form-group fallback">
-                      
                       <input
                         id="Course_Photo"
                         onChange={handleFileChange}
@@ -293,6 +317,11 @@ const AddCourses = () => {
                         required
                         style={{ width: "100%" }}
                       />
+                      {warningMessage && (
+                        <div style={{ color: 'red', marginTop: '10px' }}>
+                          {warningMessage}
+                        </div>
+                      )}
                     </div>
                   </div>
                

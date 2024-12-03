@@ -1,4 +1,4 @@
-import React, { Fragment, useReducer } from "react";
+import React, { Fragment, useEffect, useReducer, useState } from "react";
 import { Button, Dropdown, Modal, Tab, Nav } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import LightGallery from 'lightgallery/react';
@@ -29,6 +29,7 @@ const galleryBlog = [
 	{image: profile02}, {image: profile04},
 	{image: profile03}, {image: profile02},
 ];
+
 const initialState = false;
 const reducer = (state, action) =>{
 	switch (action.type){
@@ -48,6 +49,27 @@ const reducer = (state, action) =>{
 }
 
 const AppProfile = () => {
+	const [email, setEmail] = useState('');
+	const [name, setName] = useState('');
+	useEffect(() => {
+  
+		const storedEmail = localStorage.getItem('institutionEmail');
+		
+		if (storedEmail) {
+		  setEmail(storedEmail); 
+		}
+	  }, []);
+
+
+	  
+	useEffect(() => {
+  
+		const storedName = localStorage.getItem('institutionName');
+		
+		if (storedName) {
+		  setName(storedName); 
+		}
+	  }, []);
 	const onInit = () => {
 		//console.log('lightGallery has been initialized');
 	};
@@ -73,11 +95,11 @@ const AppProfile = () => {
 					</div>
 					<div className="profile-details">
 					  <div className="profile-name px-3 pt-2">
-						<h4 className="text-primary mb-0">Mitchell C. Shay</h4>
+						<h4 className="text-primary mb-0">{name}</h4>
 						<p>UX / UI Designer</p>
 					  </div>
 					  <div className="profile-email px-2 pt-2">
-						<h4 className="text-muted mb-0">hello@email.com</h4>
+						<h4 className="text-muted mb-0">{email}</h4>
 						<p>Email</p>
 					  </div>
 					  <Dropdown className="dropdown ms-auto">

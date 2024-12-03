@@ -158,11 +158,20 @@ const LeadManagement = () => {
     
                 if (lead) {
                     console.log("Lead Information to delete:", lead);
+
+
+                    const payload = {
+                            leadId: id,
+                            updateData: {
+                                status: 'Trashed', 
+                                course: lead.course,  
+                                applicantName: lead.applicantName,  
+                                phoneNumber: lead.phoneNumber,  
+                                email: lead.email,  
+                            }
+                        };
     
-                    const response = await api.patch('auth/lead/lead/status', {
-                        leadId: id,
-                        status: 'Trashed', 
-                    });
+                    const response = await api.patch('auth/lead/lead/status', payload)
     
                     if (response.data.status === 'success') {
                         Swal.fire('Deleted!', 'success');
@@ -179,7 +188,7 @@ const LeadManagement = () => {
                 console.error('Error deleting lead:', error.response ? error.response.data : error.message);
             }
         } else {
-            // If the user canceled, just log or handle accordingly
+            
             console.log("Deletion canceled");
         }
     };
