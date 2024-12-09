@@ -7,15 +7,16 @@ import ButtonComponent from './Components/ButtonComponent';
 import Batch from './Components/Batch';
 import Rowbutton from './Components/Rowbutton';
 import Uploadfile from './Components/Uploadfile';
-import { DownloadSimple } from '@phosphor-icons/react';
+import { DownloadSimple, UploadSimple } from '@phosphor-icons/react';
 import Schedule from './Components/Schedule';
 import { useParams } from 'react-router-dom';
 import api from '../../../services/AxiosInstance';
 import Swal from 'sweetalert2';
+import CsvUploadButton from './CsvUploadButton';
 
 const EditCourses = () => {
    const [batches, setBatches] = useState([]);
-  const [imagePreview, setImagePreview] = useState('/public/Course image.jpg');
+  const [imagePreview, setImagePreview] = useState('/Course image.jpg');
   const [thumbnail, setThumbnail] = useState(null);
   const [warningMessage, setWarningMessage] = useState('');
   const { id } = useParams();
@@ -23,15 +24,19 @@ const EditCourses = () => {
   const [iconMoved, setIconMoved] = useState(false);
   const [formData, setFormData] = useState({
     courseName: '',
+    courseCode: '',
     description: '',
     pricingType: '',
-    price: {
-      offerPrice: '',
-      standardPrice: ''
-    },
-    // thumbnail:'',
+    price: [
+      {
+        currency: 'INR',
+        offerPrice: '',
+        standardPrice: '',
+      },
+    ],
     languages: [],
   });
+  
 
   const pricingOptions = [
     { value: 'one-time', label: 'One-time Price' },
@@ -45,16 +50,14 @@ const EditCourses = () => {
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
-
-
-    if (id.includes('price')) {
-      const priceField = id.split('.')[1];
+  
+    if (id.startsWith('price[0].')) {
+      const priceField = id.split('.')[1]; // Extract 'offerPrice' or 'standardPrice'
       setFormData((prev) => ({
         ...prev,
-        price: {
-          ...prev.price,
-          [priceField]: value,
-        },
+        price: prev.price.map((p, index) =>
+          index === 0 ? { ...p, [priceField]: value } : p
+        ),
       }));
     } else {
       setFormData((prev) => ({
@@ -63,6 +66,7 @@ const EditCourses = () => {
       }));
     }
   };
+  
 
   const handlePricingTypeChange = (selectedOption) => {
     setFormData((prev) => ({ ...prev, pricingType: selectedOption.value }));
@@ -121,7 +125,7 @@ const EditCourses = () => {
       };
       reader.readAsDataURL(file);
     } else {
-      setImagePreview('/public/Course image.jpg'); 
+      setImagePreview('/Course image.jpg'); 
       setWarningMessage(''); 
     }
   };
@@ -193,24 +197,22 @@ const EditCourses = () => {
       courseName: formData.courseName,
       description: formData.description,
       pricingType: formData.pricingType,
-      price: {
-        offerPrice: formData.price.offerPrice,
-        standardPrice: formData.price.standardPrice,
-      },
+      price: formData.price, // Use price as an array
       languages: formData.languages,
-      status: "active",
+      status: 'active',
     };
-
+  
     try {
       const formDataToSend = new FormData();
       formDataToSend.append('thumbnail', thumbnail); // Add thumbnail file
       formDataToSend.append('payload', JSON.stringify(courseData)); // Add payload as JSON string
-      console.log(formDataToSend.thumbnail)
+  
       const response = await api.put(`course/courses/${courseId}`, formDataToSend, {
         headers: {
           'Content-Type': 'multipart/form-data', // Ensure the right content type
         },
       });
+  
       if (response.status === 200) {
         console.log('Course updated successfully');
         Swal.fire({
@@ -238,25 +240,24 @@ const EditCourses = () => {
       });
     }
   };
+  
 
   useEffect(() => {
     const fetchCourseDetails = async () => {
       try {
         const response = await api.get('course/courses/');
-        const course = response.data.data;
-        console.log(course);
-
-        const selectedCourse = course.find((course) => course._id === id);
+        const courses = response.data.data;
+  
+        const selectedCourse = courses.find((course) => course._id === id);
         if (selectedCourse) {
           setFormData({
             courseName: selectedCourse.courseName || '',
             courseCode: selectedCourse.courseCode || '',
             description: selectedCourse.description || '',
             pricingType: selectedCourse.pricingType || '',
-            price: {
-              offerPrice: selectedCourse.price?.offerPrice || '',
-              standardPrice: selectedCourse.price?.standardPrice || '',
-            },
+            price: selectedCourse.price || [
+              { currency: 'INR', offerPrice: '', standardPrice: '' },
+            ], // Ensure price is an array
             thumbnail: selectedCourse.thumbnail || '',
             languages: selectedCourse.languages || [],
           });
@@ -265,9 +266,10 @@ const EditCourses = () => {
         console.error('Error fetching course details:', error);
       }
     };
-
+  
     fetchCourseDetails();
   }, [id]);
+  
 
   return (
     <>
@@ -278,12 +280,7 @@ const EditCourses = () => {
             <div className="card-header">
               <h4 className="card-title">Courses Details</h4>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <ButtonComponent
-                  label="Download Sample CSV File"
-                  type="submit"
-                  className="btn btn-primary me-1 Download-filebtn"
-                  icon={DownloadSimple}
-                />
+                <CsvUploadButton courseId={id} />
               </div>
             </div>
             <div className="card-body">
@@ -341,20 +338,20 @@ const EditCourses = () => {
                       <div style={{ display: "flex", gap: "4px" }}>
                         <div style={{ marginTop: "7px" }} className="col-sm-6">
                           <InputField
-                            id="price.offerPrice"
+                            id="price[0].offerPrice"
                             required
                             type="number"
                             placeholder="Enter offer price"
-                            value={formData.price.offerPrice}
+                            value={formData.price[0]?.offerPrice}
                             onChange={handleInputChange}
                           />
                         </div>
                         <div style={{ marginTop: "7px" }} className="col-sm-6">
                           <InputField
-                            id="price.standardPrice"
+                            id="price[0].standardPrice"
                             type="number"
                             placeholder="Enter standard price"
-                            value={formData.price.standardPrice}
+                            value={formData.price[0]?.standardPrice}
                             onChange={handleInputChange}
                             required
                           />

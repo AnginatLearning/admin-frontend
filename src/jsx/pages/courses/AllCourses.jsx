@@ -107,7 +107,12 @@ const AllCourses = () => {
                     filteredFeeData.map((data, ind) => (
                         <Col xl={3} xxl={4} lg={4} md={6} sm={6} key={ind}>
                             <Card>
-                                <img className="img-fluid rounded-top" src={data.thumbnail} alt="Banner" />
+                                {/* <img className="img-fluid rounded-top" src={data.thumbnail} alt="Banner" /> */}
+                                <img 
+                                  className="img-fluid rounded-top" 
+                                  src={data.thumbnail || "/Course image.jpg"} 
+                                  alt="Course Banner" 
+                                />
                                 <div className="card-body">
                                     <h4>{data.courseName}</h4>
                                     <ul className="list-group mb-3 list-group-flush">
