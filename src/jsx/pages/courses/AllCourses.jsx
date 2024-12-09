@@ -94,9 +94,10 @@ const AllCourses = () => {
                     filteredFeeData.map((data, ind) => (
                         <Col xl={3} xxl={4} lg={4} md={6} sm={6} key={ind}>
                             <Card>
+                                
                                 <img 
                                   className="img-fluid rounded-top" 
-                                  src={data.thumbnail || "/public/Course image.jpg"} 
+                                  src={data.thumbnail || "/Course image.jpg"} 
                                   alt="Course Banner" 
                                 />
                                 <div className="card-body">

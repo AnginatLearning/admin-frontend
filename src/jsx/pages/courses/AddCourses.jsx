@@ -10,7 +10,7 @@ import api from '../../../services/AxiosInstance';
 import Swal from 'sweetalert2';
 
 const AddCourses = () => {
-  const [imagePreview, setImagePreview] = useState('/public/Course image.jpg');
+  const [imagePreview, setImagePreview] = useState('/Course image.jpg');
   const [thumbnail, setThumbnail] = useState(null);
   const [warningMessage, setWarningMessage] = useState('');
 
@@ -18,10 +18,11 @@ const AddCourses = () => {
     courseName: '',
     description: '',
     pricingType: '',
-    price:{
+    price:[{
+      currency: 'INR',
       offerPrice: '',
       standardPrice: ''
-    },
+    }],
     languages: [],
   });
 
@@ -48,22 +49,20 @@ const AddCourses = () => {
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
-
-    if (id.startsWith('price.')) {
+  
+    if (id.startsWith('price[0].')) {
       const field = id.split('.')[1]; // Extract 'offerPrice' or 'standardPrice'
       setFormData((prev) => ({
         ...prev,
-        price: {
-          ...prev.price,
-          [field]: value,
-        },
+        price: prev.price.map((p, index) =>
+          index === 0 ? { ...p, [field]: value } : p
+        ),
       }));
     } else {
       setFormData((prev) => ({ ...prev, [id]: value }));
     }
-
-    setFormData((prev) => ({ ...prev, [id]: value }));
   };
+  
 
   const handleSelectChange = (selectedOptions) => {
     setFormData((prev) => ({
@@ -105,7 +104,7 @@ const AddCourses = () => {
       };
       reader.readAsDataURL(file);
     } else {
-      setImagePreview('/public/Course image.jpg'); // Default image
+      setImagePreview('/Course image.jpg'); // Default image
       setWarningMessage(''); // Clear any existing warning
     }
   };
@@ -115,18 +114,27 @@ const AddCourses = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
   
-    if (!formData.courseName || !formData.description || !formData.pricingType || batches.length === 0) {
+    if (
+      !formData.courseName ||
+      !formData.description ||
+      !formData.pricingType ||
+      batches.length === 0
+    ) {
       Swal.fire({
         title: 'Error!',
         text: 'Please fill out all course fields and add at least one batch.',
         icon: 'error',
         confirmButtonText: 'OK',
       });
-     
       return;
     }
-
-    if ((formData.pricingType === 'one-time') && (!formData.courseName || !formData.description || !formData.pricingType || batches.length === 0 || formData.price.offerPrice == '' || formData.price.standardPrice == '' || formData.languages == [] )) {
+  
+    if (
+      formData.pricingType === 'one-time' &&
+      (!formData.price[0].offerPrice ||
+        !formData.price[0].standardPrice ||
+        formData.languages.length === 0)
+    ) {
       Swal.fire({
         title: 'Error!',
         text: 'Please fill out all course fields and add at least one batch.',
@@ -143,11 +151,7 @@ const AddCourses = () => {
       courseName: formData.courseName,
       description: formData.description,
       pricingType: formData.pricingType,
-      price: {
-        offerPrice: formData.price.offerPrice,
-        standardPrice: formData.price.standardPrice,
-      },
-      // instructor: '64b8c9ede7891c001edc78ac',
+      price: formData.price, // Use the updated price array
       languages: formData.languages,
       batches: batches.map((batch) => ({
         ...batch,
@@ -162,6 +166,7 @@ const AddCourses = () => {
       formDataToSend.append('payload', JSON.stringify(payload)); // Add payload as JSON string
   
       // Send the request
+      console.log(formDataToSend)
       const response = await api.post('course/courses/create-course', formDataToSend, {
         headers: {
           'Content-Type': 'multipart/form-data', // Ensure the right content type
@@ -173,7 +178,7 @@ const AddCourses = () => {
         icon: 'success',
         confirmButtonText: 'OK',
       });
-    
+  
       console.log(response.data);
     } catch (error) {
       Swal.fire({
@@ -182,10 +187,11 @@ const AddCourses = () => {
         icon: 'error',
         confirmButtonText: 'OK',
       });
-     
+  
       console.error('Error creating course:', error);
     }
   };
+  
   
 
   const customStyles = {
@@ -265,20 +271,20 @@ const AddCourses = () => {
                       <div style={{marginTop:"7px"}} className="col-sm-6">
                         <InputField
                         
-                          id="price.offerPrice"
+                          id="price[0].offerPrice"
                            type="number"
                           placeholder="Enter offer price"
-                          value={formData.offerPrice}
+                          value={formData.price[0].offerPrice}
                           onChange={handleInputChange}
                         />
                       </div>
                       <div style={{ marginTop: "7px" }} className="col-sm-6">
                         <InputField
                           src={imagePreview}
-                          id="price.standardPrice"
+                          id="price[0].standardPrice"
                            type="number"
                           placeholder="Enter standard price"
-                          value={formData.standardPrice}
+                          value={formData.price[0].standardPrice}
                           onChange={handleInputChange}
                           required
                         />
