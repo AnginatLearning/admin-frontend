@@ -1,28 +1,30 @@
-import React, { useEffect, useState } from 'react';
-import { DatePicker } from 'rsuite';
-import PageTitle from '../../layouts/PageTitle';
-import Select from 'react-select';
-import { DownloadSimple } from '@phosphor-icons/react';
-import ButtonComponent from '../courses/Components/ButtonComponent';
-import InputField from '../courses/Components/InputField';
-import Batch from './Components/Batch';
-import api from '../../../services/AxiosInstance';
-import Swal from 'sweetalert2';
+import React, { useEffect, useState } from "react";
+import { DatePicker } from "rsuite";
+import PageTitle from "../../layouts/PageTitle";
+import Select from "react-select";
+import { DownloadSimple } from "@phosphor-icons/react";
+import ButtonComponent from "../courses/Components/ButtonComponent";
+import InputField from "../courses/Components/InputField";
+import Batch from "./Components/Batch";
+import api from "../../../services/AxiosInstance";
+import Swal from "sweetalert2";
 
 const AddCourses = () => {
-  const [imagePreview, setImagePreview] = useState('/Course image.jpg');
+  const [imagePreview, setImagePreview] = useState("/Course image.jpg");
   const [thumbnail, setThumbnail] = useState(null);
-  const [warningMessage, setWarningMessage] = useState('');
+  const [warningMessage, setWarningMessage] = useState("");
 
   const [formData, setFormData] = useState({
-    courseName: '',
-    description: '',
-    pricingType: '',
-    price:[{
-      currency: 'INR',
-      offerPrice: '',
-      standardPrice: ''
-    }],
+    courseName: "",
+    description: "",
+    pricingType: "",
+    price: [
+      {
+        currency: "INR",
+        offerPrice: "",
+        standardPrice: "",
+      },
+    ],
     languages: [],
   });
 
@@ -30,28 +32,26 @@ const AddCourses = () => {
   const [instituteDetails, setInstituteDetails] = useState(null);
 
   useEffect(() => {
-    const details = JSON.parse(localStorage.getItem('InstitutionDetails'));
+    const details = JSON.parse(localStorage.getItem("InstitutionDetails"));
     setInstituteDetails(details);
   }, []);
-  console.log(instituteDetails)
-
-  
+  console.log(instituteDetails);
 
   const languageOptions = [
-    { value: 'English', label: 'English' },
-    { value: 'Spanish', label: 'Spanish' },
+    { value: "English", label: "English" },
+    { value: "Spanish", label: "Spanish" },
   ];
 
   const pricingOptions = [
-    { value: 'one-time', label: 'One-time Price' },
-    { value: 'batch', label: 'Batch Price' },
+    { value: "one-time", label: "One-time Price" },
+    { value: "batch", label: "Batch Price" },
   ];
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
-  
-    if (id.startsWith('price[0].')) {
-      const field = id.split('.')[1]; // Extract 'offerPrice' or 'standardPrice'
+
+    if (id.startsWith("price[0].")) {
+      const field = id.split(".")[1]; // Extract 'offerPrice' or 'standardPrice'
       setFormData((prev) => ({
         ...prev,
         price: prev.price.map((p, index) =>
@@ -62,7 +62,6 @@ const AddCourses = () => {
       setFormData((prev) => ({ ...prev, [id]: value }));
     }
   };
-  
 
   const handleSelectChange = (selectedOptions) => {
     setFormData((prev) => ({
@@ -83,37 +82,37 @@ const AddCourses = () => {
 
     if (file) {
       // Check if the file is an image
-      if (!file.type.startsWith('image/')) {
-        setWarningMessage('Please upload a valid image file.');
+      if (!file.type.startsWith("image/")) {
+        setWarningMessage("Please upload a valid image file.");
         return;
       }
 
       // Check if the file size is within the limit (500 KB = 500 * 1024 bytes)
       const maxFileSize = 500 * 1024; // 500 KB
       if (file.size > maxFileSize) {
-        setWarningMessage('File size exceeds 500 KB. Please upload a smaller image.');
+        setWarningMessage(
+          "File size exceeds 500 KB. Please upload a smaller image."
+        );
         return;
       }
 
       // If valid, set the file and preview
       setThumbnail(file);
-      setWarningMessage(''); // Clear any existing warning
+      setWarningMessage(""); // Clear any existing warning
       const reader = new FileReader();
       reader.onload = () => {
         setImagePreview(reader.result); // Preview the selected image
       };
       reader.readAsDataURL(file);
     } else {
-      setImagePreview('/Course image.jpg'); // Default image
-      setWarningMessage(''); // Clear any existing warning
+      setImagePreview("/Course image.jpg"); // Default image
+      setWarningMessage(""); // Clear any existing warning
     }
   };
-  
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (
       !formData.courseName ||
       !formData.description ||
@@ -121,29 +120,29 @@ const AddCourses = () => {
       batches.length === 0
     ) {
       Swal.fire({
-        title: 'Error!',
-        text: 'Please fill out all course fields and add at least one batch.',
-        icon: 'error',
-        confirmButtonText: 'OK',
+        title: "Error!",
+        text: "Please fill out all course fields and add at least one batch.",
+        icon: "error",
+        confirmButtonText: "OK",
       });
       return;
     }
-  
+
     if (
-      formData.pricingType === 'one-time' &&
+      formData.pricingType === "one-time" &&
       (!formData.price[0].offerPrice ||
         !formData.price[0].standardPrice ||
         formData.languages.length === 0)
     ) {
       Swal.fire({
-        title: 'Error!',
-        text: 'Please fill out all course fields and add at least one batch.',
-        icon: 'error',
-        confirmButtonText: 'OK',
+        title: "Error!",
+        text: "Please fill out all course fields and add at least one batch.",
+        icon: "error",
+        confirmButtonText: "OK",
       });
       return;
     }
-  
+
     // Prepare the payload object
     const payload = {
       institutionCode: instituteDetails.institutionCode,
@@ -156,49 +155,50 @@ const AddCourses = () => {
       batches: batches.map((batch) => ({
         ...batch,
       })),
-      status: 'active',
+      status: "active",
     };
-  
+
     try {
       // Use FormData for multipart/form-data request
       const formDataToSend = new FormData();
-      formDataToSend.append('thumbnail', thumbnail); // Add thumbnail file
-      formDataToSend.append('payload', JSON.stringify(payload)); // Add payload as JSON string
-  
+      formDataToSend.append("thumbnail", thumbnail); // Add thumbnail file
+      formDataToSend.append("payload", JSON.stringify(payload)); // Add payload as JSON string
+
       // Send the request
-      console.log(formDataToSend)
-      const response = await api.post('course/courses/create-course', formDataToSend, {
-        headers: {
-          'Content-Type': 'multipart/form-data', // Ensure the right content type
-        },
-      });
+      console.log(formDataToSend);
+      const response = await api.post(
+        "course/courses/create-course",
+        formDataToSend,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data", // Ensure the right content type
+          },
+        }
+      );
       Swal.fire({
-        title: 'Success!',
-        text: 'Course created successfully!',
-        icon: 'success',
-        confirmButtonText: 'OK',
+        title: "Success!",
+        text: "Course created successfully!",
+        icon: "success",
+        confirmButtonText: "OK",
       });
-  
+
       console.log(response.data);
     } catch (error) {
       Swal.fire({
-        title: 'Error!',
-        text: 'Failed to create course.',
-        icon: 'error',
-        confirmButtonText: 'OK',
+        title: "Error!",
+        text: "Failed to create course.",
+        icon: "error",
+        confirmButtonText: "OK",
       });
-  
-      console.error('Error creating course:', error);
+
+      console.error("Error creating course:", error);
     }
   };
-  
-  
 
   const customStyles = {
     valueContainer: (provided) => ({
       ...provided,
-      height:"3.4rem",
-   
+      height: "3.4rem",
     }),
   };
 
@@ -213,7 +213,13 @@ const AddCourses = () => {
               className="card-header"
             >
               <h4 className="card-title">Courses Details</h4>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
                 <ButtonComponent
                   label="Download Sample CSV File"
                   type="submit"
@@ -225,13 +231,18 @@ const AddCourses = () => {
 
             <div className="card-body">
               <form onSubmit={handleSubmit}>
-                <div style={{ marginBottom: "30px", marginTop: "-10px", padding: "10px" }}>
-                </div>
+                <div
+                  style={{
+                    marginBottom: "30px",
+                    marginTop: "-10px",
+                    padding: "10px",
+                  }}
+                ></div>
                 <div className="row">
                   <div className="col-sm-6">
                     <InputField
                       label="Course Name"
-                      type='text'
+                      type="text"
                       id="courseName"
                       placeholder="Enter course name"
                       value={formData.courseName}
@@ -240,8 +251,13 @@ const AddCourses = () => {
                     />
                   </div>
 
-                  <div style={{ marginBottom: "20px" }} className="col-lg-12 col-md-12 col-sm-12">
-                    <label className="form-label" htmlFor="Answer">Course Details</label>
+                  <div
+                    style={{ marginBottom: "20px" }}
+                    className="col-lg-12 col-md-12 col-sm-12"
+                  >
+                    <label className="form-label" htmlFor="Answer">
+                      Course Details
+                    </label>
                     <textarea
                       id="description"
                       className="form-control"
@@ -256,41 +272,43 @@ const AddCourses = () => {
                   <div className="col-sm-6">
                     <label className="form-label">Pricing Type</label>
                     <Select
-                     
                       className="custom-react-select"
                       options={pricingOptions}
                       onChange={handlePricingTypeChange}
                       placeholder="Select Pricing Type"
-                      value={pricingOptions.find((option) => option.value === formData.pricingType)}
+                      value={pricingOptions.find(
+                        (option) => option.value === formData.pricingType
+                      )}
                       styles={customStyles}
                     />
                   </div>
 
-                  {formData.pricingType === "one-time" && <div className="col-sm-6">
-                    <div style={{ display: "flex", gap: "4px" }}>
-                      <div style={{marginTop:"7px"}} className="col-sm-6">
-                        <InputField
-                        
-                          id="price[0].offerPrice"
-                           type="number"
-                          placeholder="Enter offer price"
-                          value={formData.price[0].offerPrice}
-                          onChange={handleInputChange}
-                        />
-                      </div>
-                      <div style={{ marginTop: "7px" }} className="col-sm-6">
-                        <InputField
-                          src={imagePreview}
-                          id="price[0].standardPrice"
-                           type="number"
-                          placeholder="Enter standard price"
-                          value={formData.price[0].standardPrice}
-                          onChange={handleInputChange}
-                          required
-                        />
+                  {formData.pricingType === "one-time" && (
+                    <div className="col-sm-6">
+                      <div style={{ display: "flex", gap: "4px" }}>
+                        <div style={{ marginTop: "7px" }} className="col-sm-6">
+                          <InputField
+                            id="price[0].offerPrice"
+                            type="number"
+                            placeholder="Enter offer price"
+                            value={formData.price[0].offerPrice}
+                            onChange={handleInputChange}
+                          />
+                        </div>
+                        <div style={{ marginTop: "7px" }} className="col-sm-6">
+                          <InputField
+                            src={imagePreview}
+                            id="price[0].standardPrice"
+                            type="number"
+                            placeholder="Enter standard price"
+                            value={formData.price[0].standardPrice}
+                            onChange={handleInputChange}
+                            required
+                          />
+                        </div>
                       </div>
                     </div>
-                  </div>}
+                  )}
 
                   <div className="col-sm-6">
                     <div className="form-group">
@@ -324,15 +342,18 @@ const AddCourses = () => {
                         style={{ width: "100%" }}
                       />
                       {warningMessage && (
-                        <div style={{ color: 'red', marginTop: '10px' }}>
+                        <div style={{ color: "red", marginTop: "10px" }}>
                           {warningMessage}
                         </div>
                       )}
                     </div>
                   </div>
-               
+
                   <div className="col-sm-6">
-                  <Batch onAddBatch={addBatch} pricingType={formData.pricingType} />
+                    <Batch
+                      onAddBatch={addBatch}
+                      pricingType={formData.pricingType}
+                    />
                   </div>
                   <div
                     style={{
@@ -365,4 +386,3 @@ const AddCourses = () => {
 };
 
 export default AddCourses;
- 
