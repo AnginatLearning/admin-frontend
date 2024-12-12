@@ -36,7 +36,12 @@ const CsvUploadButton = ({ courseId }) => {
     try {
       const response = await api.post(
         `course/courses/${courseId}/pricing/upload`,
-        formData
+        formData,
+        {
+            headers: {
+              "Content-Type": "multipart/form-data", // Ensure the right content type
+            },
+        }
       );
       Swal.fire("Success", "File uploaded successfully.", "success");
       console.log(response.data);
