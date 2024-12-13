@@ -38,9 +38,9 @@ const CsvUploadButton = ({ courseId }) => {
         `course/courses/${courseId}/pricing/upload`,
         formData,
         {
-            headers: {
-              "Content-Type": "multipart/form-data", // Ensure the right content type
-            },
+          headers: {
+            "Content-Type": "multipart/form-data", // Ensure the right content type
+          },
         }
       );
       Swal.fire("Success", "File uploaded successfully.", "success");
@@ -122,7 +122,8 @@ const CsvUploadButton = ({ courseId }) => {
                       height: "40px",
                       marginLeft: "auto",
                     }}
-                    href="#"
+                    href="/mycsv.csv"
+                    download={"sampleprice.csv"}
                     className="btn btn-outline-primary w-50 fs-6 mb-3 d-flex align-items-center justify-content-center gap-2"
                   >
                     <UploadSimple size={20} />
