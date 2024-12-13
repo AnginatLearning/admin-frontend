@@ -43,7 +43,7 @@ const Batch = ({ onAddBatch, pricingType }) => {
         if (course.batches) {
           setBatches(course.batches);
 
-          console.log("All Batches", course.batches);
+          console.log("course data", course);
         }
       } catch (error) {
         console.error("Error fetching course details:", error);
