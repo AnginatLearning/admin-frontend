@@ -26,18 +26,15 @@ const Batch = ({ onAddBatch, pricingType }) => {
     endDate: null,
     timeZone: "",
     seats: "",
-<<<<<<< Updated upstream
     // price: {
     //   offerPrice: 0,
     //   standardPrice: 0,
     // },
-=======
     price: {
       offerPrice: 0,
       standardPrice: 0,
     },
     batchType: "",
->>>>>>> Stashed changes
   });
   const [editingBatch, setEditingBatch] = useState(null); // Track the batch being edited
   const [iconMoved, setIconMoved] = useState(false);
@@ -258,18 +255,15 @@ const Batch = ({ onAddBatch, pricingType }) => {
             endDate: null,
             timeZone: "",
             seats: "",
-<<<<<<< Updated upstream
             // price: {
             //   offerPrice: 0,
             //   standardPrice: 0,
             // },
-=======
             price: {
               offerPrice: 0,
               standardPrice: 0,
             },
             batchType: "",
->>>>>>> Stashed changes
           });
           setStartTime("");
           setEndTime("");
@@ -298,18 +292,11 @@ const Batch = ({ onAddBatch, pricingType }) => {
         endDate: null,
         timeZone: "",
         seats: "",
-<<<<<<< Updated upstream
-        // price: {
-        //   offerPrice: 0,
-        //   standardPrice: 0,
-        // },
-=======
         price: {
           offerPrice: 0,
           standardPrice: 0,
         },
         batchType: "",
->>>>>>> Stashed changes
       });
       setStartTime("");
       setEndTime("");
@@ -394,18 +381,17 @@ const Batch = ({ onAddBatch, pricingType }) => {
           endDate: null,
           timeZone: "",
           seats: "",
-<<<<<<< Updated upstream
+
           // price: {
           //   offerPrice: 0,
           //   standardPrice: 0,
           // },
-=======
+
           price: {
             offerPrice: 0,
             standardPrice: 0,
           },
           batchType: "",
->>>>>>> Stashed changes
         });
         setStartTime("");
         setEndTime("");
@@ -474,18 +460,17 @@ const Batch = ({ onAddBatch, pricingType }) => {
       endDate: null,
       timeZone: "",
       seats: "",
-<<<<<<< Updated upstream
+
       // price: {
       //   offerPrice: 0,
       //   standardPrice: 0,
       // },
-=======
+
       price: {
         offerPrice: 0,
         standardPrice: 0,
       },
       batchType: "",
->>>>>>> Stashed changes
     });
     setStartTime("");
     setEndTime("");

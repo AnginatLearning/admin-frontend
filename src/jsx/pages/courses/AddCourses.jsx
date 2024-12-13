@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { DatePicker } from "rsuite";
 import PageTitle from "../../layouts/PageTitle";
 import Select from "react-select";
-import { DownloadSimple, UploadSimple } from "@phosphor-icons/react";
+import { DownloadSimple } from "@phosphor-icons/react";
 import ButtonComponent from "../courses/Components/ButtonComponent";
 import InputField from "../courses/Components/InputField";
 import Batch from "./Components/Batch";
@@ -220,7 +220,6 @@ const AddCourses = () => {
                   justifyContent: "center",
                 }}
               >
-<<<<<<< Updated upstream
                 <ButtonComponent
                   label="Download Sample CSV File"
                   type="submit"
@@ -228,21 +227,6 @@ const AddCourses = () => {
                   icon={DownloadSimple}
                 />
               </div> */}
-=======
-                <a
-                  style={{
-                    height: "40px",
-                    marginLeft: "auto",
-                  }}
-                  href="/mycsv.csv"
-                  download={"sampleprice.csv"}
-                  className="btn btn-outline-primary w-100 fs-6 mb-3 d-flex align-items-center justify-content-center gap-2"
-                >
-                  <DownloadSimple size={20} />
-                  Download Sample CSV File
-                </a>
-              </div>
->>>>>>> Stashed changes
             </div>
 
             <div className="card-body">
