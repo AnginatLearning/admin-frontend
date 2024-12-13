@@ -1,3 +1,4 @@
+import batchReducer from './batchReducer';
 import todoReducers from './Reducers';
 import {combineReducers} from 'redux';
 

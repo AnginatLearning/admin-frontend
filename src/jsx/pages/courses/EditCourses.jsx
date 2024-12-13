@@ -1,58 +1,58 @@
-import React, { useEffect, useState } from 'react';
-import { DatePicker } from 'rsuite';
-import PageTitle from '../../layouts/PageTitle';
-import Select from 'react-select';
-import InputField from './Components/InputField';
-import ButtonComponent from './Components/ButtonComponent';
-import Batch from './Components/Batch';
-import Rowbutton from './Components/Rowbutton';
-import Uploadfile from './Components/Uploadfile';
-import { DownloadSimple, UploadSimple } from '@phosphor-icons/react';
-import Schedule from './Components/Schedule';
-import { useParams } from 'react-router-dom';
-import api from '../../../services/AxiosInstance';
-import Swal from 'sweetalert2';
-import CsvUploadButton from './CsvUploadButton';
+import React, { useEffect, useState } from "react";
+import { DatePicker } from "rsuite";
+import PageTitle from "../../layouts/PageTitle";
+import Select from "react-select";
+import InputField from "./Components/InputField";
+import ButtonComponent from "./Components/ButtonComponent";
+import Batch from "./Components/Batch";
+import Rowbutton from "./Components/Rowbutton";
+import Uploadfile from "./Components/Uploadfile";
+import { DownloadSimple, UploadSimple } from "@phosphor-icons/react";
+import Schedule from "./Components/Schedule";
+import { useParams } from "react-router-dom";
+import api from "../../../services/AxiosInstance";
+import Swal from "sweetalert2";
+import CsvUploadButton from "./CsvUploadButton";
+import PricingTable from "./PricingTable";
 
 const EditCourses = () => {
-   const [batches, setBatches] = useState([]);
-  const [imagePreview, setImagePreview] = useState('/Course image.jpg');
+  const [batches, setBatches] = useState([]);
+  const [imagePreview, setImagePreview] = useState("/Course image.jpg");
   const [thumbnail, setThumbnail] = useState(null);
-  const [warningMessage, setWarningMessage] = useState('');
+  const [warningMessage, setWarningMessage] = useState("");
   const { id } = useParams();
 
   const [iconMoved, setIconMoved] = useState(false);
   const [formData, setFormData] = useState({
-    courseName: '',
-    courseCode: '',
-    description: '',
-    pricingType: '',
+    courseName: "",
+    courseCode: "",
+    description: "",
+    pricingType: "",
     price: [
       {
-        currency: 'INR',
-        offerPrice: '',
-        standardPrice: '',
+        currency: "INR",
+        offerPrice: "",
+        standardPrice: "",
       },
     ],
     languages: [],
   });
-  
 
   const pricingOptions = [
-    { value: 'one-time', label: 'One-time Price' },
-    { value: 'batch', label: 'Batch Price' },
+    { value: "one-time", label: "One-time Price" },
+    { value: "batch", label: "Batch Price" },
   ];
 
   const languageOptions = [
-    { value: 'English', label: 'English' },
-    { value: 'Spanish', label: 'Spanish' },
+    { value: "English", label: "English" },
+    { value: "Spanish", label: "Spanish" },
   ];
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
-  
-    if (id.startsWith('price[0].')) {
-      const priceField = id.split('.')[1]; // Extract 'offerPrice' or 'standardPrice'
+
+    if (id.startsWith("price[0].")) {
+      const priceField = id.split(".")[1]; // Extract 'offerPrice' or 'standardPrice'
       setFormData((prev) => ({
         ...prev,
         price: prev.price.map((p, index) =>
@@ -66,7 +66,6 @@ const EditCourses = () => {
       }));
     }
   };
-  
 
   const handlePricingTypeChange = (selectedOption) => {
     setFormData((prev) => ({ ...prev, pricingType: selectedOption.value }));
@@ -84,7 +83,7 @@ const EditCourses = () => {
   };
 
   const handleSelectChange = (selectedOption, field) => {
-    if (field === 'languages') {
+    if (field === "languages") {
       const selectedLanguages = selectedOption.map((option) => option.value);
       setFormData((prev) => ({
         ...prev,
@@ -103,84 +102,84 @@ const EditCourses = () => {
 
     if (file) {
       // Check if the file is an image
-      if (!file.type.startsWith('image/')) {
-        setWarningMessage('Please upload a valid image file.');
+      if (!file.type.startsWith("image/")) {
+        setWarningMessage("Please upload a valid image file.");
         return;
       }
 
-    
       const maxFileSize = 500 * 1024; // 500 KB
       if (file.size > maxFileSize) {
-        setWarningMessage('File size exceeds 500 KB. Please upload a smaller image.');
+        setWarningMessage(
+          "File size exceeds 500 KB. Please upload a smaller image."
+        );
         return;
       }
 
       // If valid, set the file and preview
       setThumbnail(file);
-      console.log(file)
-      setWarningMessage('');
+      console.log(file);
+      setWarningMessage("");
       const reader = new FileReader();
       reader.onload = () => {
-        setImagePreview(reader.result); 
+        setImagePreview(reader.result);
       };
       reader.readAsDataURL(file);
     } else {
-      setImagePreview('/Course image.jpg'); 
-      setWarningMessage(''); 
+      setImagePreview("/Course image.jpg");
+      setWarningMessage("");
     }
   };
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await updateCourse(id);
     } catch (error) {
-      console.error('Error updating course:', error);
+      console.error("Error updating course:", error);
     }
   };
   const deleteCourse = async (courseId) => {
     try {
       const response = await api.delete(`course/courses/${courseId}`);
       if (response.status === 200) {
-        console.log('Course deleted successfully');
+        console.log("Course deleted successfully");
         Swal.fire({
-          title: 'Deleted!',
-          text: 'Course has been deleted successfully.',
-          icon: 'success',
-          confirmButtonText: 'OK',
+          title: "Deleted!",
+          text: "Course has been deleted successfully.",
+          icon: "success",
+          confirmButtonText: "OK",
         }).then(() => {
           // Redirect or reload the page after successful deletion
-          window.location.href = '/all-courses'; // Replace with your desired redirect route
+          window.location.href = "/all-courses"; // Replace with your desired redirect route
         });
       } else {
-        console.error('Error deleting course:', response);
+        console.error("Error deleting course:", response);
         Swal.fire({
-          title: 'Error!',
-          text: 'There was an issue deleting the course.',
-          icon: 'error',
-          confirmButtonText: 'OK',
+          title: "Error!",
+          text: "There was an issue deleting the course.",
+          icon: "error",
+          confirmButtonText: "OK",
         });
       }
     } catch (error) {
-      console.error('Error deleting course:', error);
+      console.error("Error deleting course:", error);
       Swal.fire({
-        title: 'Error!',
-        text: 'There was an issue deleting the course.',
-        icon: 'error',
-        confirmButtonText: 'OK',
+        title: "Error!",
+        text: "There was an issue deleting the course.",
+        icon: "error",
+        confirmButtonText: "OK",
       });
     }
   };
   const handleDelete = () => {
     Swal.fire({
-      title: 'Are you sure?',
-      text: 'You won’t be able to revert this!',
-      icon: 'warning',
+      title: "Are you sure?",
+      text: "You won’t be able to revert this!",
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
         deleteCourse(id); // Pass the course ID to the delete method
@@ -189,8 +188,8 @@ const EditCourses = () => {
   };
 
   const handleCancel = () => {
-    console.log("form-Cancel")
-  }
+    console.log("form-Cancel");
+  };
 
   const updateCourse = async (courseId) => {
     const courseData = {
@@ -199,87 +198,99 @@ const EditCourses = () => {
       pricingType: formData.pricingType,
       price: formData.price, // Use price as an array
       languages: formData.languages,
-      status: 'active',
+      status: "active",
     };
-  
+
     try {
       const formDataToSend = new FormData();
-      formDataToSend.append('thumbnail', thumbnail); // Add thumbnail file
-      formDataToSend.append('payload', JSON.stringify(courseData)); // Add payload as JSON string
-  
-      const response = await api.put(`course/courses/${courseId}`, formDataToSend, {
-        headers: {
-          'Content-Type': 'multipart/form-data', // Ensure the right content type
-        },
-      });
-  
+      formDataToSend.append("thumbnail", thumbnail); // Add thumbnail file
+      formDataToSend.append("payload", JSON.stringify(courseData)); // Add payload as JSON string
+
+      const response = await api.put(
+        `course/courses/${courseId}`,
+        formDataToSend,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data", // Ensure the right content type
+          },
+        }
+      );
+
       if (response.status === 200) {
-        console.log('Course updated successfully');
+        console.log("Course updated successfully");
         Swal.fire({
-          title: 'Success!',
-          text: 'Course has been updated successfully.',
-          icon: 'success',
-          confirmButtonText: 'OK',
+          title: "Success!",
+          text: "Course has been updated successfully.",
+          icon: "success",
+          confirmButtonText: "OK",
         });
       } else {
-        console.error('Error updating course:', response);
+        console.error("Error updating course:", response);
         Swal.fire({
-          title: 'Error!',
-          text: 'There was an issue updating the course.',
-          icon: 'error',
-          confirmButtonText: 'OK',
+          title: "Error!",
+          text: "There was an issue updating the course.",
+          icon: "error",
+          confirmButtonText: "OK",
         });
       }
     } catch (error) {
-      console.error('Error updating course:', error);
+      console.error("Error updating course:", error);
       Swal.fire({
-        title: 'Error!',
-        text: 'There was an issue updating the course.',
-        icon: 'error',
-        confirmButtonText: 'OK',
+        title: "Error!",
+        text: "There was an issue updating the course.",
+        icon: "error",
+        confirmButtonText: "OK",
       });
     }
   };
-  
 
   useEffect(() => {
     const fetchCourseDetails = async () => {
       try {
-        const response = await api.get('course/courses/');
+        const response = await api.get("course/courses/");
         const courses = response.data.data;
-  
+
         const selectedCourse = courses.find((course) => course._id === id);
         if (selectedCourse) {
           setFormData({
-            courseName: selectedCourse.courseName || '',
-            courseCode: selectedCourse.courseCode || '',
-            description: selectedCourse.description || '',
-            pricingType: selectedCourse.pricingType || '',
+            courseName: selectedCourse.courseName || "",
+            courseCode: selectedCourse.courseCode || "",
+            description: selectedCourse.description || "",
+            pricingType: selectedCourse.pricingType || "",
             price: selectedCourse.price || [
-              { currency: 'INR', offerPrice: '', standardPrice: '' },
+              { currency: "INR", offerPrice: "", standardPrice: "" },
             ], // Ensure price is an array
-            thumbnail: selectedCourse.thumbnail || '',
+            thumbnail: selectedCourse.thumbnail || "",
             languages: selectedCourse.languages || [],
           });
         }
       } catch (error) {
-        console.error('Error fetching course details:', error);
+        console.error("Error fetching course details:", error);
       }
     };
-  
+
     fetchCourseDetails();
   }, [id]);
-  
 
   return (
     <>
-      <PageTitle activeMenu={"Edit Course"} motherMenu={"Courses"} />
+      <PageTitle
+        activeMenu={"Edit Course"}
+        middleMenu={"All Courses"}
+        motherMenu={"Courses"}
+      />
       <div className="row">
         <div className="col-lg-12">
           <div className="card">
             <div className="card-header">
               <h4 className="card-title">Courses Details</h4>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
                 <CsvUploadButton courseId={id} />
               </div>
             </div>
@@ -304,11 +315,16 @@ const EditCourses = () => {
                       value={formData.courseCode}
                       onChange={handleInputChange}
                       // required
-                      disabled='true'
+                      disabled="true"
                     />
                   </div>
-                  <div style={{ marginBottom: "20px" }} className="col-lg-12 col-md-12 col-sm-12">
-                    <label className="form-label" htmlFor="description">Course Details</label>
+                  <div
+                    style={{ marginBottom: "20px" }}
+                    className="col-lg-12 col-md-12 col-sm-12"
+                  >
+                    <label className="form-label" htmlFor="description">
+                      Course Details
+                    </label>
                     <textarea
                       id="description"
                       placeholder="Course Details"
@@ -323,12 +339,14 @@ const EditCourses = () => {
                   <div className="col-sm-6">
                     <label className="form-label">Pricing Type</label>
                     <Select
-                     isDisabled='true'
+                      isDisabled="true"
                       className="custom-react-select"
                       options={pricingOptions}
                       onChange={handlePricingTypeChange}
                       placeholder="Select Pricing Type"
-                      value={pricingOptions.find((option) => option.value === formData.pricingType)}
+                      value={pricingOptions.find(
+                        (option) => option.value === formData.pricingType
+                      )}
                       styles={customStyles}
                     />
                   </div>
@@ -369,12 +387,13 @@ const EditCourses = () => {
                           label: language,
                           value: language,
                         }))}
-                        onChange={(selectedOption) => handleSelectChange(selectedOption, 'languages')}
+                        onChange={(selectedOption) =>
+                          handleSelectChange(selectedOption, "languages")
+                        }
                         placeholder="Select Languages"
                         required
                         styles={customStyles}
                       />
-
                     </div>
                   </div>
                   <div className="col-lg-6 col-md-12">
@@ -392,10 +411,15 @@ const EditCourses = () => {
                         style={{ width: "100%" }}
                       />
                     </div>
-                  </div> 
-
+                  </div>
+                  <div className="col-sm-6">
+                    <PricingTable prices={formData.price} />
+                  </div>
                   <div style={{ marginBottom: "10px" }} className="col-sm-6">
-                    <Batch  onAddBatch={addBatch} pricingType={formData.pricingType} />
+                    <Batch
+                      onAddBatch={addBatch}
+                      pricingType={formData.pricingType}
+                    />
                   </div>
 
                   {iconMoved && (
@@ -404,10 +428,19 @@ const EditCourses = () => {
                     </div>
                   )}
 
-                  <div style={{ display: "flex", flexDirection: "row", flexWrap:"wrap", gap: "10px", marginTop: "30px", marginBottom: "80px" ,justifyContent:"space-between"}} className="col-lg-12 col-md-12 col-sm-12">
-
-                    <div style={{display:"flex"}}>
-
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      flexWrap: "wrap",
+                      gap: "10px",
+                      marginTop: "30px",
+                      marginBottom: "80px",
+                      justifyContent: "space-between",
+                    }}
+                    className="col-lg-12 col-md-12 col-sm-12"
+                  >
+                    <div style={{ display: "flex" }}>
                       <ButtonComponent
                         label="Update"
                         type="submit"
@@ -420,9 +453,7 @@ const EditCourses = () => {
                         className="btn btn-danger light All-btn"
                         onClick={handleCancel}
                       />
-
                     </div>
-
 
                     <div>
                       <ButtonComponent
@@ -444,6 +475,3 @@ const EditCourses = () => {
 };
 
 export default EditCourses;
-
-
-

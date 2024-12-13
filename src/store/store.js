@@ -12,7 +12,6 @@ const reducers = combineReducers({
     posts: PostsReducer,
     auth: AuthReducer,
     todoReducers,
-
 });
 
 export const store = createStore(reducers, composeEnhancers(middleware));
