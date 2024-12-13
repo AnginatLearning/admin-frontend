@@ -13,6 +13,7 @@ import { useParams } from "react-router-dom";
 import api from "../../../services/AxiosInstance";
 import Swal from "sweetalert2";
 import CsvUploadButton from "./CsvUploadButton";
+import PricingTable from "./PricingTable";
 
 const EditCourses = () => {
   const [batches, setBatches] = useState([]);
@@ -411,7 +412,9 @@ const EditCourses = () => {
                       />
                     </div>
                   </div>
-
+                  <div className="col-sm-6">
+                    <PricingTable prices={formData.price} />
+                  </div>
                   <div style={{ marginBottom: "10px" }} className="col-sm-6">
                     <Batch
                       onAddBatch={addBatch}
