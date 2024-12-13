@@ -29,7 +29,7 @@ export default function PricingTable({ prices }) {
             zIndex: "1", // Ensures it stays above table content
           }}
         >
-          <tr>
+          <tr className="" style={{}}>
             <th className="text-white" style={{ width: "10%" }}>
               Srl No.
             </th>
@@ -46,7 +46,7 @@ export default function PricingTable({ prices }) {
         </thead>
         <tbody>
           {prices.map((price, index) => (
-            <tr key={index}>
+            <tr key={index} className="font-w600 fs-5">
               <td>{index + 1}</td>
               <td>{price.currency}</td>
               <td>{price.offerPrice}</td>
