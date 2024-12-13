@@ -602,73 +602,87 @@ const Leadtrash = () => {
     };
 
     const handleDelete = async (id) => {
-        const firstResult = await Swal.fire({
-            title: 'Delete items',
-            text: 'Are you sure you want to permanently delete these items?',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Yes',
-            cancelButtonText: 'No',
-            background: '#e6e6e6',
-            customClass: {
-                confirmButton: 'swal-btn-confirm',
-                cancelButton: 'swal-btn-cancel'
-            },
-        });
 
-        if (firstResult.isConfirmed) {
-            const secondResult = await Swal.fire({
-                title: 'Are You Sure?',
-                text: 'Do you really want to permanently delete this ?',
-                icon: 'error',
-                showCancelButton: true,
-                confirmButtonText: 'Yes',
-                cancelButtonText: 'No',
-                background: '#e6e6e6',
-                customClass: {
-                    confirmButton: 'swal-btn-confirm',
-                    cancelButton: 'swal-btn-cancel'
-                },
-            });
-
-            if (secondResult.isConfirmed) {
-                try {
-                    const lead = feeData.find(lead => lead._id === id);
-                    if (lead) {
-                        const payload = {
-                            leadId: id,
-                            updateData: {
-                                status: 'Deleted',
-                                course: lead.course,
-                                applicantName: lead.applicantName,
-                                phoneNumber: lead.phoneNumber,
-                                email: lead.email,
+                const firstResult = await Swal.fire({
+                    title: 'Delete items',
+                    text: 'Are you sure you want to permanently delete these items? This action cannot be undone.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'No',
+                    background: '#e6e6e6',
+                    customClass: {
+        
+                        confirmButton: 'swal-btn-confirm',
+                        cancelButton: 'swal-btn-cancel'
+                    },
+                });
+        
+        
+                if (firstResult.isConfirmed) {
+        
+                    const secondResult = await Swal.fire({
+                        title: 'Are You Sure?',
+                        text: 'Do you really want to permanently delete this ?',
+                        icon: 'error',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes',
+                        cancelButtonText: 'No',
+                        background: '#e6e6e6',
+                        customClass: {
+                            confirmButton: 'swal-btn-confirm',
+                            cancelButton: 'swal-btn-cancel'
+                        },
+                    });
+        
+        
+                    if (secondResult.isConfirmed) {
+                        try {
+                            const lead = feeData.find(lead => lead._id === id);
+        
+                            if (lead) {
+                                console.log("Lead Information to delete:", lead);
+        
+        
+                                const payload = {
+                                    leadId: id,
+                                    updateData: {
+                                        status: 'Deleted', 
+                                        course: lead.course,  
+                                        applicantName: lead.applicantName,  
+                                        phoneNumber: lead.phoneNumber,  
+                                        email: lead.email,  
+                                    }
+                                };
+        
+                                const response = await api.patch('auth/lead/lead/status', payload);
+        
+                                if (response.status === 200) {
+                                    Swal.fire('Deleted!', 'Lead status has been moved to Trash', 'success');
+        
+        
+                                    setFeeData(feeData.filter(lead => lead._id !== id));
+                                    setFilteredFeeData(filteredFeeData.filter(lead => lead._id !== id));
+                                } else {
+                                    Swal.fire('Error', 'Something went wrong!', 'error');
+                                }
+                            } else {
+                                console.log("Lead not found with ID:", id);
                             }
-                        };
-
-                        const response = await api.patch('auth/lead/lead/status', payload);
-                        if (response.status === 200) {
-                            Swal.fire('Deleted!', 'Lead status has been moved to Trash', 'success');
-                            setFeeData(prevData => prevData.filter(lead => lead._id !== id));
-                            setFilteredFeeData(prevData => prevData.filter(lead => lead._id !== id));
-                        } else {
-                            Swal.fire('Error', 'Something went wrong!', 'error');
+                        } catch (error) {
+                            Swal.fire('Error', 'Failed to update lead status.', 'error');
+                            console.error('Error deleting lead:', error.response ? error.response.data : error.message);
                         }
                     } else {
-                        console.log("Lead not found with ID:", id);
+        
+                        Swal.fire('Cancelled', 'The lead is safe :)', 'info');
                     }
-                } catch (error) {
-                    Swal.fire('Error', 'Failed to update lead status.', 'error');
-                    console.error('Error deleting lead:', error.response ? error.response.data : error.message);
+                } else {
+        
+                    Swal.fire('Cancelled', 'The lead was not deleted.', 'info');
                 }
-            } else {
-                Swal.fire('Cancelled', 'The lead is safe :)');
-            }
-        } else {
-            Swal.fire('Cancelled', 'The lead was not deleted.');
-        }
-    };
-
+            };
+        
     const handleRestore = async (id) => {
         const confirmRestore = await Swal.fire({
             title: 'Restore items',
