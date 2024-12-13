@@ -213,7 +213,7 @@ const AddCourses = () => {
               className="card-header"
             >
               <h4 className="card-title">Courses Details</h4>
-              <div
+              {/* <div
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -226,7 +226,7 @@ const AddCourses = () => {
                   className="btn btn-primary me-1 Download-filebtn"
                   icon={DownloadSimple}
                 />
-              </div>
+              </div> */}
             </div>
 
             <div className="card-body">
