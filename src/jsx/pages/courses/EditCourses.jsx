@@ -19,6 +19,7 @@ const EditCourses = () => {
   const [batches, setBatches] = useState([]);
   const [imagePreview, setImagePreview] = useState("/Course image.jpg");
   const [thumbnail, setThumbnail] = useState(null);
+  const [priceChange, setPriceChange] = useState(false)
   const [warningMessage, setWarningMessage] = useState("");
   const { id } = useParams();
 
@@ -257,9 +258,7 @@ const EditCourses = () => {
             courseCode: selectedCourse.courseCode || "",
             description: selectedCourse.description || "",
             pricingType: selectedCourse.pricingType || "",
-            price: selectedCourse.price || [
-              { currency: "INR", offerPrice: "", standardPrice: "" },
-            ], // Ensure price is an array
+            price: selectedCourse.price, // Ensure price is an array
             thumbnail: selectedCourse.thumbnail || "",
             languages: selectedCourse.languages || [],
           });
@@ -270,7 +269,7 @@ const EditCourses = () => {
     };
 
     fetchCourseDetails();
-  }, [id]);
+  }, [id, priceChange]);
 
   return (
     <>
@@ -291,7 +290,10 @@ const EditCourses = () => {
                   justifyContent: "center",
                 }}
               >
-                <CsvUploadButton courseId={id} />
+                <CsvUploadButton 
+                priceChange = {priceChange}
+                setPriceChange={setPriceChange}
+                courseId={id} />
               </div>
             </div>
             <div className="card-body">
@@ -351,7 +353,7 @@ const EditCourses = () => {
                     />
                   </div>
 
-                  {formData.pricingType === "one-time" && (
+                  {/* {formData.pricingType === "one-time" && (
                     <div className="col-sm-6">
                       <div style={{ display: "flex", gap: "4px" }}>
                         <div style={{ marginTop: "7px" }} className="col-sm-6">
@@ -376,7 +378,7 @@ const EditCourses = () => {
                         </div>
                       </div>
                     </div>
-                  )}
+                  )} */}
                   <div className="col-sm-6">
                     <div className="form-group">
                       <label className="form-label">Select Language</label>

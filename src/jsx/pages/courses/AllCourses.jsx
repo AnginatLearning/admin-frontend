@@ -104,10 +104,6 @@ const AllCourses = () => {
 
     if (!batch) return null;
 
-    console.log("Upcoming Batch", batch);
-    console.log("startDate", batch.startDate);
-    console.log("endDate", batch.endDate);
-
     const duration = calculateBatchDays(
       batch.startDate,
       batch.endDate,
