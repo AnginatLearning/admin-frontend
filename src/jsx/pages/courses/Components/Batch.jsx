@@ -30,10 +30,7 @@ const Batch = ({ onAddBatch, pricingType }) => {
     //   offerPrice: 0,
     //   standardPrice: 0,
     // },
-    price: {
-      offerPrice: 0,
-      standardPrice: 0,
-    },
+    
     batchType: "",
   });
   const [editingBatch, setEditingBatch] = useState(null); // Track the batch being edited
@@ -259,10 +256,6 @@ const Batch = ({ onAddBatch, pricingType }) => {
             //   offerPrice: 0,
             //   standardPrice: 0,
             // },
-            price: {
-              offerPrice: 0,
-              standardPrice: 0,
-            },
             batchType: "",
           });
           setStartTime("");
@@ -292,10 +285,10 @@ const Batch = ({ onAddBatch, pricingType }) => {
         endDate: null,
         timeZone: "",
         seats: "",
-        price: {
-          offerPrice: 0,
-          standardPrice: 0,
-        },
+        // price: {
+        //   offerPrice: 0,
+        //   standardPrice: 0,
+        // },
         batchType: "",
       });
       setStartTime("");
@@ -386,11 +379,6 @@ const Batch = ({ onAddBatch, pricingType }) => {
           //   offerPrice: 0,
           //   standardPrice: 0,
           // },
-
-          price: {
-            offerPrice: 0,
-            standardPrice: 0,
-          },
           batchType: "",
         });
         setStartTime("");
@@ -465,11 +453,6 @@ const Batch = ({ onAddBatch, pricingType }) => {
       //   offerPrice: 0,
       //   standardPrice: 0,
       // },
-
-      price: {
-        offerPrice: 0,
-        standardPrice: 0,
-      },
       batchType: "",
     });
     setStartTime("");
@@ -777,10 +760,10 @@ const Batch = ({ onAddBatch, pricingType }) => {
                         endDate: null,
                         timeZone: "",
                         seats: "",
-                        price: {
-                          offerPrice: 0,
-                          standardPrice: 0,
-                        },
+                        // price: {
+                        //   offerPrice: 0,
+                        //   standardPrice: 0,
+                        // },
                       });
                       setStartTime("");
                       setEndTime("");
@@ -979,10 +962,10 @@ const Batch = ({ onAddBatch, pricingType }) => {
                     endDate: null,
                     timeZone: "",
                     seats: "",
-                    price: {
-                      offerPrice: 0,
-                      standardPrice: 0,
-                    },
+                    // price: {
+                    //   offerPrice: 0,
+                    //   standardPrice: 0,
+                    // },
                   });
                   setStartTime("");
                   setEndTime("");
