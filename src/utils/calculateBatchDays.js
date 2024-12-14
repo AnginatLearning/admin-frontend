@@ -1,6 +1,6 @@
 export const calculateBatchDays = (startDate, endDate, batchType) => {
     if (!startDate || !endDate || !batchType) {
-      throw new Error("Please provide valid startDate, endDate, and batchType.");
+      return "Set Batch Type"
     }
   
     const start = new Date(startDate);
