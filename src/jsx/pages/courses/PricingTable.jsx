@@ -14,8 +14,8 @@ export default function PricingTable({ prices }) {
         className="table text-center"
         style={{
           borderRadius: "8px",
-          borderCollapse: "collapse", // Avoid double borders
-          tableLayout: "fixed", // Ensures even column widths
+          borderCollapse: "collapse",
+          tableLayout: "fixed",
           width: "100%",
           margin: "0",
         }}
@@ -24,9 +24,9 @@ export default function PricingTable({ prices }) {
           style={{
             backgroundColor: "#6A73FA",
             color: "white",
-            position: "sticky", // Keep header visible while scrolling
-            top: "0", // Align it at the top
-            zIndex: "1", // Ensures it stays above table content
+            position: "sticky",
+            top: "0",
+            zIndex: "1",
           }}
         >
           <tr className="" style={{}}>
@@ -46,7 +46,7 @@ export default function PricingTable({ prices }) {
         </thead>
         <tbody>
           {prices.map((price, index) => (
-            <tr key={index} className="font-w600 fs-5">
+            <tr key={index} className="font-w600 fs-5 ">
               <td>{index + 1}</td>
               <td>{price.currency}</td>
               <td>{price.offerPrice}</td>

@@ -5,6 +5,7 @@ import { Card, Col, Row } from "react-bootstrap";
 import Banner from "/public/Course image.jpg";
 import { PencilLine } from "@phosphor-icons/react";
 import api from "../../../services/AxiosInstance";
+import { calculateBatchDays } from "../../../utils/calculateBatchDays";
 
 const AllCourses = () => {
   const [loading, setLoading] = useState(true);
@@ -74,22 +75,42 @@ const AllCourses = () => {
     );
   };
 
-  const renderBatchDuration = (batches) => {
+  // const renderBatchDuration = (batches) => {
+  //   if (!batches || batches.length === 0) return null;
+
+  //   if (batches.length === 1) {
+  //     const batchDuration = calculateDaysBetween(
+  //       batches[0].startDate,
+  //       batches[0].endDate
+  //     );
+  //     return <span>{batchDuration} days</span>;
+  //   }
+
+  //   const totalDuration = batches.reduce((total, batch) => {
+  //     return total + calculateDaysBetween(batch.startDate, batch.endDate);
+  //   }, 0);
+
+  //   return <span>{totalDuration} days</span>;
+  // };
+
+  const upcomingBatchDuration = (batches) => {
     if (!batches || batches.length === 0) return null;
 
-    if (batches.length === 1) {
-      const batchDuration = calculateDaysBetween(
-        batches[0].startDate,
-        batches[0].endDate
-      );
-      return <span>{batchDuration} days</span>;
-    }
+    const currentDate = new Date();
 
-    const totalDuration = batches.reduce((total, batch) => {
-      return total + calculateDaysBetween(batch.startDate, batch.endDate);
-    }, 0);
+    const batch = batches
+      .filter((batch) => new Date(batch.startDate) > currentDate) // Filters future batches
+      .sort((a, b) => new Date(a.startDate) - new Date(b.startDate))[0]; // Sorts batches by startDate
 
-    return <span>{totalDuration} days</span>;
+    if (!batch) return null;
+
+    const duration = calculateBatchDays(
+      batch.startDate,
+      batch.endDate,
+      batch.batchType
+    );
+
+    return <span>{duration} days</span>;
   };
 
   return (
@@ -140,7 +161,7 @@ const AllCourses = () => {
                           Duration:
                         </span>
                         <strong style={{ fontSize: "14px" }}>
-                          {renderBatchDuration(data.batches)}
+                          {upcomingBatchDuration(data.batches)}
                         </strong>
                       </li>
                     )}

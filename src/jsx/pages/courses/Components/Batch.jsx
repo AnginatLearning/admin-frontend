@@ -30,6 +30,8 @@ const Batch = ({ onAddBatch, pricingType }) => {
     //   offerPrice: 0,
     //   standardPrice: 0,
     // },
+    
+    batchType: "",
   });
   const [editingBatch, setEditingBatch] = useState(null); // Track the batch being edited
   const [iconMoved, setIconMoved] = useState(false);
@@ -100,8 +102,7 @@ const Batch = ({ onAddBatch, pricingType }) => {
       // Convert both times to 24-hour format
       const start = convertTo24HourFormat(startTime.trim());
       const end = convertTo24HourFormat(endTime.trim());
-      console.log("start time", start);
-      console.log("end time", end);
+
       // Return as a JSON object
       return { start, end };
     } catch (error) {
@@ -180,9 +181,17 @@ const Batch = ({ onAddBatch, pricingType }) => {
   };
 
   const addBatch = async () => {
-    const { name, startDate, endDate, seats, price } = batchDetails;
+    const { name, startDate, endDate, seats, price, batchType } = batchDetails;
 
-    if (!name || !startDate || !endDate || !seats || !startTime || !endTime) {
+    if (
+      !name ||
+      !startDate ||
+      !endDate ||
+      !seats ||
+      !startTime ||
+      !endTime ||
+      !batchType
+    ) {
       const missingFields = [];
 
       if (!name) missingFields.push("Batch Name");
@@ -191,6 +200,7 @@ const Batch = ({ onAddBatch, pricingType }) => {
       if (!seats) missingFields.push("Seats");
       if (!startTime) missingFields.push("Start Time");
       if (!endTime) missingFields.push("End Time");
+      if (!batchType) missingFields.push("Batch Type");
 
       const errorMessage = `Please fill out the ${missingFields.join(", ")}`;
 
@@ -246,6 +256,7 @@ const Batch = ({ onAddBatch, pricingType }) => {
             //   offerPrice: 0,
             //   standardPrice: 0,
             // },
+            batchType: "",
           });
           setStartTime("");
           setEndTime("");
@@ -278,6 +289,7 @@ const Batch = ({ onAddBatch, pricingType }) => {
         //   offerPrice: 0,
         //   standardPrice: 0,
         // },
+        batchType: "",
       });
       setStartTime("");
       setEndTime("");
@@ -292,9 +304,17 @@ const Batch = ({ onAddBatch, pricingType }) => {
   };
 
   const saveBatch = async () => {
-    const { name, startDate, endDate, seats, price } = batchDetails;
+    const { name, startDate, endDate, seats, price, batchType } = batchDetails;
 
-    if (!name || !startDate || !endDate || !seats || !startTime || !endTime) {
+    if (
+      !name ||
+      !startDate ||
+      !endDate ||
+      !seats ||
+      !startTime ||
+      !endTime ||
+      !batchType
+    ) {
       const missingFields = [];
 
       if (!name) missingFields.push("Batch Name");
@@ -303,6 +323,7 @@ const Batch = ({ onAddBatch, pricingType }) => {
       if (!seats) missingFields.push("Seats");
       if (!startTime) missingFields.push("Start Time");
       if (!endTime) missingFields.push("End Time");
+      if (!endTime) missingFields.push("Batch Type");
 
       const errorMessage = `Please fill out the ${missingFields.join(", ")}`;
 
@@ -324,6 +345,7 @@ const Batch = ({ onAddBatch, pricingType }) => {
         endTime
       )}`,
       price,
+      batchType,
     };
 
     try {
@@ -352,10 +374,12 @@ const Batch = ({ onAddBatch, pricingType }) => {
           endDate: null,
           timeZone: "",
           seats: "",
+
           // price: {
           //   offerPrice: 0,
           //   standardPrice: 0,
           // },
+          batchType: "",
         });
         setStartTime("");
         setEndTime("");
@@ -408,6 +432,7 @@ const Batch = ({ onAddBatch, pricingType }) => {
       endDate: batch.endDate ? new Date(batch.endDate) : null,
       seats: batch.seats,
       price: batch.price,
+      batchType: batch.batchType,
     });
     console.log("Batch Details", batchDetails);
     setStartTime(convertTimeRangeTo24Hour(batch?.timeZone).start);
@@ -423,10 +448,12 @@ const Batch = ({ onAddBatch, pricingType }) => {
       endDate: null,
       timeZone: "",
       seats: "",
+
       // price: {
       //   offerPrice: 0,
       //   standardPrice: 0,
       // },
+      batchType: "",
     });
     setStartTime("");
     setEndTime("");
@@ -657,7 +684,7 @@ const Batch = ({ onAddBatch, pricingType }) => {
                           })
                         }
                       >
-                        <option value="" disabled>
+                        <option value="" selected={true} disabled>
                           Select Batch Type
                         </option>
                         <option value="weekdays">Weekdays</option>
@@ -733,10 +760,10 @@ const Batch = ({ onAddBatch, pricingType }) => {
                         endDate: null,
                         timeZone: "",
                         seats: "",
-                        price: {
-                          offerPrice: 0,
-                          standardPrice: 0,
-                        },
+                        // price: {
+                        //   offerPrice: 0,
+                        //   standardPrice: 0,
+                        // },
                       });
                       setStartTime("");
                       setEndTime("");
@@ -935,10 +962,10 @@ const Batch = ({ onAddBatch, pricingType }) => {
                     endDate: null,
                     timeZone: "",
                     seats: "",
-                    price: {
-                      offerPrice: 0,
-                      standardPrice: 0,
-                    },
+                    // price: {
+                    //   offerPrice: 0,
+                    //   standardPrice: 0,
+                    // },
                   });
                   setStartTime("");
                   setEndTime("");

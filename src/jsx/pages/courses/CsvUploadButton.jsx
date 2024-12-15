@@ -10,7 +10,7 @@ import api from "../../../services/AxiosInstance";
 import ButtonComponent from "./Components/ButtonComponent";
 import UploadingFile from "./Components/UploadingFile";
 
-const CsvUploadButton = ({ courseId }) => {
+const CsvUploadButton = ({ courseId, setPriceChange, priceChange }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -38,11 +38,12 @@ const CsvUploadButton = ({ courseId }) => {
         `course/courses/${courseId}/pricing/upload`,
         formData,
         {
-            headers: {
-              "Content-Type": "multipart/form-data", // Ensure the right content type
-            },
+          headers: {
+            "Content-Type": "multipart/form-data", // Ensure the right content type
+          },
         }
       );
+      setPriceChange(!priceChange)
       Swal.fire("Success", "File uploaded successfully.", "success");
       console.log(response.data);
     } catch (error) {
@@ -122,7 +123,8 @@ const CsvUploadButton = ({ courseId }) => {
                       height: "40px",
                       marginLeft: "auto",
                     }}
-                    href="#"
+                    href="/mycsv.csv"
+                    download={"sampleprice.csv"}
                     className="btn btn-outline-primary w-50 fs-6 mb-3 d-flex align-items-center justify-content-center gap-2"
                   >
                     <UploadSimple size={20} />

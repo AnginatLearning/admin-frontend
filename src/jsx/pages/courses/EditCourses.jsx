@@ -19,6 +19,7 @@ const EditCourses = () => {
   const [batches, setBatches] = useState([]);
   const [imagePreview, setImagePreview] = useState("/Course image.jpg");
   const [thumbnail, setThumbnail] = useState(null);
+  const [priceChange, setPriceChange] = useState(false)
   const [warningMessage, setWarningMessage] = useState("");
   const { id } = useParams();
 
@@ -50,15 +51,31 @@ const EditCourses = () => {
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
-
+  
     if (id.startsWith("price[0].")) {
       const priceField = id.split(".")[1]; // Extract 'offerPrice' or 'standardPrice'
-      setFormData((prev) => ({
-        ...prev,
-        price: prev.price.map((p, index) =>
-          index === 0 ? { ...p, [priceField]: value } : p
-        ),
-      }));
+      setFormData((prev) => {
+        const priceExists = prev.price.some((p) => p.currency === "INR");
+  
+        if (priceExists) {
+          // Update the existing object with currency === "INR"
+          return {
+            ...prev,
+            price: prev.price.map((p) =>
+              p.currency === "INR" ? { ...p, [priceField]: value } : p
+            ),
+          };
+        } else {
+          // Add a new object with currency === "INR"
+          return {
+            ...prev,
+            price: [
+              ...prev.price,
+              { currency: "INR", [priceField]: value },
+            ],
+          };
+        }
+      });
     } else {
       setFormData((prev) => ({
         ...prev,
@@ -66,6 +83,7 @@ const EditCourses = () => {
       }));
     }
   };
+  
 
   const handlePricingTypeChange = (selectedOption) => {
     setFormData((prev) => ({ ...prev, pricingType: selectedOption.value }));
@@ -257,9 +275,7 @@ const EditCourses = () => {
             courseCode: selectedCourse.courseCode || "",
             description: selectedCourse.description || "",
             pricingType: selectedCourse.pricingType || "",
-            price: selectedCourse.price || [
-              { currency: "INR", offerPrice: "", standardPrice: "" },
-            ], // Ensure price is an array
+            price: selectedCourse.price, // Ensure price is an array
             thumbnail: selectedCourse.thumbnail || "",
             languages: selectedCourse.languages || [],
           });
@@ -270,7 +286,7 @@ const EditCourses = () => {
     };
 
     fetchCourseDetails();
-  }, [id]);
+  }, [id, priceChange]);
 
   return (
     <>
@@ -291,7 +307,10 @@ const EditCourses = () => {
                   justifyContent: "center",
                 }}
               >
-                <CsvUploadButton courseId={id} />
+                <CsvUploadButton 
+                priceChange = {priceChange}
+                setPriceChange={setPriceChange}
+                courseId={id} />
               </div>
             </div>
             <div className="card-body">
@@ -354,22 +373,24 @@ const EditCourses = () => {
                   {formData.pricingType === "one-time" && (
                     <div className="col-sm-6">
                       <div style={{ display: "flex", gap: "4px" }}>
-                        <div style={{ marginTop: "7px" }} className="col-sm-6">
+                        <div style={{ marginTop: "" }} className="col-sm-6">
                           <InputField
+                          label="Offer Price (in INR)"
                             id="price[0].offerPrice"
                             required
                             type="number"
                             placeholder="Enter offer price"
-                            value={formData.price[0]?.offerPrice}
+                            value={formData.price.find((p)=> p.currency === "INR" )?.offerPrice || ""}
                             onChange={handleInputChange}
                           />
                         </div>
-                        <div style={{ marginTop: "7px" }} className="col-sm-6">
+                        <div style={{ marginTop: "" }} className="col-sm-6">
                           <InputField
+                          label="Standard Price (in INR)"
                             id="price[0].standardPrice"
                             type="number"
                             placeholder="Enter standard price"
-                            value={formData.price[0]?.standardPrice}
+                            value={formData.price.find((p)=> p.currency === "INR" )?.standardPrice || ""}
                             onChange={handleInputChange}
                             required
                           />
