@@ -461,7 +461,7 @@ const Batch = ({ onAddBatch, pricingType }) => {
     const updatedPrice = batch.price.map((priceObj) => ({
       offerPrice: priceObj.offerPrice || 0, // Ensure offerPrice is defined
       standardPrice: priceObj.standardPrice || 0, // Ensure standardPrice is defined
-      currency: priceObj.currency || "USD", // Add default currency if missing
+      currency: priceObj.currency || "INR", // Add default currency if missing
     }));
 
     setBatchDetails({
