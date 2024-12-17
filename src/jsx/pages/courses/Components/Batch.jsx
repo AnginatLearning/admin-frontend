@@ -20,6 +20,7 @@ const Batch = ({ onAddBatch, pricingType }) => {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [batches, setBatches] = useState([]);
+
   const [batchDetails, setBatchDetails] = useState({
     name: "",
     startDate: null,
@@ -30,7 +31,15 @@ const Batch = ({ onAddBatch, pricingType }) => {
     //   offerPrice: 0,
     //   standardPrice: 0,
     // },
-    
+
+    price: [
+      {
+        offerPrice: 0,
+        standardPrice: 0,
+        currency: "INR",
+      },
+    ],
+
     batchType: "",
   });
   const [editingBatch, setEditingBatch] = useState(null); // Track the batch being edited
@@ -56,7 +65,6 @@ const Batch = ({ onAddBatch, pricingType }) => {
   }, [id]);
 
   function convertTimeRangeTo24Hour(timeRange) {
-    console.log(timeRange);
     if (!timeRange || typeof timeRange !== "string") {
       return {
         error: "Invalid time range. Please provide a valid time range string.",
@@ -85,7 +93,6 @@ const Batch = ({ onAddBatch, pricingType }) => {
       // Format with leading zeros
       hours = hours.toString().padStart(2, "0");
       minutes = minutes.toString().padStart(2, "0");
-
       return `${hours}:${minutes}`;
     }
 
@@ -216,7 +223,9 @@ const Batch = ({ onAddBatch, pricingType }) => {
 
     if (
       pricingType === "batch" &&
-      (price.offerPrice === 0 || price.standardPrice === 0)
+      batchDetails.price.some(
+        (p) => p.offerPrice === 0 || p.standardPrice === 0
+      )
     ) {
       Swal.fire({
         title: "Error!",
@@ -256,6 +265,15 @@ const Batch = ({ onAddBatch, pricingType }) => {
             //   offerPrice: 0,
             //   standardPrice: 0,
             // },
+
+            price: [
+              {
+                offerPrice: 0,
+                standardPrice: 0,
+                currency: "INR",
+              },
+            ],
+
             batchType: "",
           });
           setStartTime("");
@@ -285,10 +303,15 @@ const Batch = ({ onAddBatch, pricingType }) => {
         endDate: null,
         timeZone: "",
         seats: "",
-        // price: {
-        //   offerPrice: 0,
-        //   standardPrice: 0,
-        // },
+
+        price: [
+          {
+            offerPrice: 0,
+            standardPrice: 0,
+            currency: "INR",
+          },
+        ],
+
         batchType: "",
       });
       setStartTime("");
@@ -379,6 +402,15 @@ const Batch = ({ onAddBatch, pricingType }) => {
           //   offerPrice: 0,
           //   standardPrice: 0,
           // },
+
+          price: [
+            {
+              offerPrice: 0,
+              standardPrice: 0,
+              currency: "INR",
+            },
+          ],
+
           batchType: "",
         });
         setStartTime("");
@@ -425,16 +457,22 @@ const Batch = ({ onAddBatch, pricingType }) => {
 
   const editBatch = (batch) => {
     setIconMoved(false);
-    console.log("batch", batch);
+
+    const updatedPrice = batch.price.map((priceObj) => ({
+      offerPrice: priceObj.offerPrice || 0, // Ensure offerPrice is defined
+      standardPrice: priceObj.standardPrice || 0, // Ensure standardPrice is defined
+      currency: priceObj.currency || "INR", // Add default currency if missing
+    }));
+
     setBatchDetails({
       name: batch.name,
       startDate: batch.startDate ? new Date(batch.startDate) : null,
       endDate: batch.endDate ? new Date(batch.endDate) : null,
       seats: batch.seats,
-      price: batch.price,
+      price: updatedPrice,
       batchType: batch.batchType,
     });
-    console.log("Batch Details", batchDetails);
+
     setStartTime(convertTimeRangeTo24Hour(batch?.timeZone).start);
     setEndTime(convertTimeRangeTo24Hour(batch?.timeZone).end);
     setEditingBatch(batch);
@@ -453,6 +491,15 @@ const Batch = ({ onAddBatch, pricingType }) => {
       //   offerPrice: 0,
       //   standardPrice: 0,
       // },
+
+      price: [
+        {
+          offerPrice: 0,
+          standardPrice: 0,
+          currency: "INR",
+        },
+      ],
+
       batchType: "",
     });
     setStartTime("");
@@ -647,7 +694,6 @@ const Batch = ({ onAddBatch, pricingType }) => {
                       value={startTime}
                       onChange={(e) => {
                         setStartTime(e.target.value);
-                        console.log(typeof startTime);
                       }}
                     />
                   </div>
@@ -760,10 +806,14 @@ const Batch = ({ onAddBatch, pricingType }) => {
                         endDate: null,
                         timeZone: "",
                         seats: "",
-                        // price: {
-                        //   offerPrice: 0,
-                        //   standardPrice: 0,
-                        // },
+
+                        price: [
+                          {
+                            offerPrice: 0,
+                            standardPrice: 0,
+                            currency: "INR",
+                          },
+                        ],
                       });
                       setStartTime("");
                       setEndTime("");
@@ -962,10 +1012,14 @@ const Batch = ({ onAddBatch, pricingType }) => {
                     endDate: null,
                     timeZone: "",
                     seats: "",
-                    // price: {
-                    //   offerPrice: 0,
-                    //   standardPrice: 0,
-                    // },
+
+                    price: [
+                      {
+                        offerPrice: 0,
+                        standardPrice: 0,
+                        currency: "INR",
+                      },
+                    ],
                   });
                   setStartTime("");
                   setEndTime("");
