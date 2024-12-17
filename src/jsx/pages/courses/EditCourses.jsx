@@ -267,7 +267,7 @@ const EditCourses = () => {
       try {
         const response = await api.get("course/courses/");
         const courses = response.data.data;
-
+        
         const selectedCourse = courses.find((course) => course._id === id);
         if (selectedCourse) {
           setFormData({
@@ -275,7 +275,7 @@ const EditCourses = () => {
             courseCode: selectedCourse.courseCode || "",
             description: selectedCourse.description || "",
             pricingType: selectedCourse.pricingType || "",
-            price: selectedCourse.price, // Ensure price is an array
+            price: selectedCourse.price, 
             thumbnail: selectedCourse.thumbnail || "",
             languages: selectedCourse.languages || [],
           });

@@ -605,7 +605,7 @@ const Leadtrash = () => {
 
                 const firstResult = await Swal.fire({
                     title: 'Delete items',
-                    text: 'Are you sure you want to permanently delete these items? This action cannot be undone.',
+                    text: 'Are you sure you want to permanently delete these items? ',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Yes',
