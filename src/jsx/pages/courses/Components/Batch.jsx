@@ -553,7 +553,7 @@ const Batch = ({ onAddBatch, pricingType }) => {
   const buttonStyle = (buttonType) => ({
     padding: "8px 12px",
     outline: "1px solid blue",
-    color: "blue",
+    color: activeButton === buttonType ? "white" : "blue",
     borderRadius: "12px",
     cursor: "pointer",
     backgroundColor: activeButton === buttonType ? "#6A73FA" : "white",
