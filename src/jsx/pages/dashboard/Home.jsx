@@ -1,77 +1,89 @@
-import React from 'react';
-import {Link} from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 import { Col, Row } from 'react-bootstrap';
-import {SparklinesBars, 
-	SparklinesLine,Sparklines
-} 
-from "react-sparklines";
+import Swal from 'sweetalert2';
+import api from '../../../services/AxiosInstance'; // Ensure the API instance is imported
 
+import { BgCard } from '../../elements/CardDesign';
 import loadable from "@loadable/component";
 import pMinDelay from "p-min-delay";
 
-//Import Components
-import { BgCard } from '../../elements/CardDesign';
-import { IMAGES } from '../../constant/theme';
-import CkEditorBlog from '../../elements/CkEditor/CkEditorBlog';
+// Import Charts
+const SurveyChart = loadable(() => pMinDelay(import("../../elements/dashboard/SurveyChart"), 500));
+const DonughtChart = loadable(() => pMinDelay(import("../../elements/dashboard/DonughtChart"), 500));
+const University = loadable(() => pMinDelay(import("../../elements/dashboard/University"), 500));
 
-//Charts
-const SurveyChart = loadable(() =>
- 	pMinDelay(import("../../elements/dashboard/SurveyChart"), 500)
-);
-const DonughtChart = loadable(() =>
- 	pMinDelay(import("../../elements/dashboard/DonughtChart"), 500)
-);
-const University = loadable(() =>
- 	pMinDelay(import("../../elements/dashboard/University"), 500)
-);
-
+// Card data template
 const bgCarddBlog = [
-    {title:"Total Students", number:'3180', icon: <i className="la la-users" />, percent:'80%', color:"primary"},
-    {title:"New Students", number:'360', icon:<i className="la la-user" />, percent:'50%', color:"warning"},
-    {title:"Total Course", number:'28', icon:<i className="la la-graduation-cap" />, percent:'60%', color:"secondary"},
-    {title:"Total Leads", number:'12', icon:<i className="la la-dollar" />, percent:'35%', color:"danger"},
+    { title: "Total Students", number: '3180', icon: <i className="la la-users" />, percent: '80%', color: "primary" },
+    { title: "New Students", number: '360', icon: <i className="la la-user" />, percent: '50%', color: "warning" },
+    { title: "Total Courses", number: '', icon: <i className="la la-graduation-cap" />, percent: '60%', color: "secondary" }, // Updated to hold dynamic data
+    { title: "Total Leads", number: '', icon: <i className="la la-dollar" />, percent: '35%', color: "danger" }, // Updated to hold dynamic data
 ];
 
-const detailCard = [
-	{title:"When Is the Best Time to Take an Education Course?", name:'Jack Ronan', image:IMAGES.course1},
-	{title:"Education Courses: A Guide to Unlocking Your Potential", name:'Jimmy Morris', image:IMAGES.course2},
-	{title:"A Comprehensive Guide to Taking an Education Course", name:'Konne Backfield', image:IMAGES.course3},
-	{title:"Why Should You Consider Taking an Education Course?", name:'Nashid Martines', image:IMAGES.course4},
-];
+const Home = () => {
+    const [totalLeads, setTotalLeads] = useState(0);
+    const [totalCourses, setTotalCourses] = useState(0); // State for total courses
 
-const examTable = [
-	{roll:'542', name:' Jack Ronan' },
-	{roll:'360', name:'Jimmy Morris' },
-	{roll:'450', name:'Samantha' },
-	{roll:'296', name:'Roman Aurora' },
-	{roll:'520', name:'Nashid Martines' },
-	{roll:'620', name:'Daigno' },
-];
+    // Fetch total leads
+    useEffect(() => {
+        const fetchTotalLeads = async () => {
+            const token = localStorage.getItem('accessToken');
+            if (!token) {
+                console.error('No token found');
+                return;
+            }
+            try {
+                const res = await api.get('auth/lead/leads'); // Assume this endpoint returns the leads
+                const allLeads = res.data.data.leads;
+                setTotalLeads(allLeads.length);
+            } catch (error) {
+                console.error('Error fetching leads:', error.response ? error.response.data : error.message);
+                Swal.fire('Error', 'Failed to load total leads.', 'error');
+            }
+        };
 
-const tabelData = [
-	{no:'01', name : "Jack Ronan",  proff:"Airi Satou", date:"02 jan 2024", status:'Checkin', color:'primary', subject:'Commerce', fees:'120'},
-	{no:'02', name : "Jimmy Morris",  proff:"Angelica Ramos", date:"02 jan 2024", status:'Pending', color:'warning', subject:'Mechanical', fees:'205'},
-	{no:'03', name : "Nashid Martines",  proff:"Ashton Cox", date:"04 jan 2024", status:'Canceled', color:'danger', subject:'Science', fees:'180'},
-	{no:'04', name : "Roman Aurora",  proff:"Cara Stevens", date:"05 jan 2024", status:'Process', color:'info', subject:'Arts', fees:'200'},
-	{no:'05', name : "Samantha",  proff:"Bruno Nash", date:"06 jan 2024", status:'Checkin', color:'primary', subject:'Maths', fees:'210'},
-	
-];
+        fetchTotalLeads();
+    }, []);
 
-const Home = () => {		
-	return(
-		<>
-			<Row>
-				{bgCarddBlog.map((item, index)=>(
-					<Col xl={'3'} xxl={'3'} sm={'6'} key={index}>
-						<div className={`widget-stat card bg-${item.color}`}>
-							<div className="card-body " >								
-								<BgCard title={item.title} number={item.number} percent={item.percent} color={item.color} icon={item.icon}/>
-							</div>
-						</div>
-					</Col>		
-				))}
-			</Row>				
-		</>
-	)
+    // Fetch total courses
+    useEffect(() => {
+        const fetchCourses = async () => {
+            const token = localStorage.getItem("accessToken");
+            if (!token) {
+                console.error("No token found");
+                return;
+            }
+            try {
+                const res = await api.get("course/courses/");  // Adjust the endpoint as necessary
+                const allCourses = res.data.data; // Assuming the API returns the courses in this format
+                setTotalCourses(allCourses.length); // Count the total number of courses
+            } catch (error) {
+                console.error("Error fetching Courses:", error.response ? error.response.data : error.message);
+                Swal.fire('Error', 'Failed to load total courses.', 'error'); // Alert on error
+            }
+        };
+        fetchCourses();
+    }, []);
+
+    // Update the cards with the dynamic values
+    bgCarddBlog[2].number = totalCourses; // Update the Total Courses card
+    bgCarddBlog[3].number = totalLeads;   // Update the Total Leads card
+
+    return (
+        <>
+            <Row>
+                {bgCarddBlog.map((item, index) => (
+                    <Col xl={'3'} xxl={'3'} sm={'6'} key={index}>
+                        <div className={`widget-stat card bg-${item.color}`}>
+                            <div className="card-body ">
+                                <BgCard title={item.title} number={item.number} percent={item.percent} color={item.color} icon={item.icon} />
+                            </div>
+                        </div>
+                    </Col>
+                ))}
+            </Row>
+        </>
+    );
 }
+
 export default Home;
