@@ -516,11 +516,11 @@ const EditCourses = () => {
                               <div
                                 key={faq._id}
 
-                              >  <div style={{ display: "flex", gap: "5px", }}>
+                              >  <div style={{ display: "flex", gap: "5px",alignItems:"center" }}>
                                   <p style={{ fontSize: "14px", color: "white", marginBottom: "0px" }}>Ques:</p> <span style={{ fontSize: "14px", color: "white" }}> {faq.question}</span> <br />
                                 </div>
 
-                                <div style={{ display: "flex", gap: "5px" }}>
+                                <div style={{ display: "flex", gap: "5px",alignItems:"center"  }}>
                                   <p style={{ fontSize: "14px", color: "white", marginBottom: "0px" }}>Ans:</p> <span style={{ fontSize: "14px", color: "white" }} s>{faq.answer}</span>
                                 </div>
 
@@ -539,7 +539,7 @@ const EditCourses = () => {
                       )}
 
                     {/* Same input  */}
-                      <div style={{ padding: "8px", outline: "1px solid black", borderRadius: "8px" }} >
+                      {/* <div style={{ padding: "8px", outline: "1px solid black", borderRadius: "8px" }} >
                         <div style={{ display: "flex", gap: "10px" }}>
                           <InputField
                             label="Question"
@@ -562,7 +562,7 @@ const EditCourses = () => {
                           />
                         </div>
 
-                      </div>
+                      </div> */}
 
                     </div>
 
