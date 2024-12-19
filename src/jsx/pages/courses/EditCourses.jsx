@@ -55,12 +55,12 @@ const EditCourses = () => {
     const { id, value } = e.target;
 
     if (id.startsWith("price[0].")) {
-      const priceField = id.split(".")[1]; // Extract 'offerPrice' or 'standardPrice'
+      const priceField = id.split(".")[1]; 
       setFormData((prev) => {
         const priceExists = prev.price.some((p) => p.currency === "INR");
 
         if (priceExists) {
-          // Update the existing object with currency === "INR"
+        
           return {
             ...prev,
             price: prev.price.map((p) =>
@@ -68,7 +68,7 @@ const EditCourses = () => {
             ),
           };
         } else {
-          // Add a new object with currency === "INR"
+        
           return {
             ...prev,
             price: [
@@ -203,7 +203,7 @@ const EditCourses = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        deleteCourse(id); // Pass the course ID to the delete method
+        deleteCourse(id); 
       }
     });
   };
@@ -217,22 +217,22 @@ const EditCourses = () => {
       courseName: formData.courseName,
       description: formData.description,
       pricingType: formData.pricingType,
-      price: formData.price, // Use price as an array
+      price: formData.price, 
       languages: formData.languages,
       status: "active",
     };
 
     try {
       const formDataToSend = new FormData();
-      formDataToSend.append("thumbnail", thumbnail); // Add thumbnail file
-      formDataToSend.append("payload", JSON.stringify(courseData)); // Add payload as JSON string
+      formDataToSend.append("thumbnail", thumbnail); 
+      formDataToSend.append("payload", JSON.stringify(courseData));
 
       const response = await api.put(
         `course/courses/${courseId}`,
         formDataToSend,
         {
           headers: {
-            "Content-Type": "multipart/form-data", // Ensure the right content type
+            "Content-Type": "multipart/form-data",
           },
         }
       );
@@ -284,7 +284,7 @@ const EditCourses = () => {
           });
 
 
-          setFaqs(selectedCourse.faqs || []); // Add this line to set FAQ data
+          setFaqs(selectedCourse.faqs || []); 
         }
       } catch (error) {
         console.error("Error fetching course details:", error);
@@ -327,6 +327,7 @@ const EditCourses = () => {
     }
   };
   const handleDeleteFAQ = (faqId) => {
+    console.log("Delete FAQ ID:", faqId); 
     Swal.fire({
       title: "Are you sure?",
       text: "You won’t be able to revert this!",
@@ -337,12 +338,77 @@ const EditCourses = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        deleteFAQ(faqId); // Call the delete function with the FAQ ID
+        deleteFAQ(faqId); 
       }
     });
   };
+  const [visibleEditFaqId, setVisibleEditFaqId] = useState(null);
+  const handleEditFAQ = (faq) => {
   
- 
+    if (visibleEditFaqId === faq._id) {
+      setVisibleEditFaqId(null); 
+    } else {
+      setVisibleEditFaqId(faq._id); 
+      setFaqQuestion(faq.question); 
+      setFaqAnswer(faq.answer); 
+    }
+  };
+
+  const handleSaveFAQ = async () => {
+    if (visibleEditFaqId) {
+      try {
+        const response = await api.put(
+          `course/courses/${id}/faqs/${visibleEditFaqId}`,
+          {
+            question: faqQuestion,
+            answer: faqAnswer,
+          }
+        );
+  
+        if (response.status === 200) {
+         
+          setFaqs((prevFaqs) =>
+            prevFaqs.map((faq) =>
+              faq._id === visibleEditFaqId
+                ? { ...faq, question: faqQuestion, answer: faqAnswer }
+                : faq
+            )
+          );
+  
+          Swal.fire({
+            title: "Success!",
+            text: "FAQ updated successfully.",
+            icon: "success",
+            confirmButtonText: "OK",
+          });
+        } else {
+          console.error(`Failed to update FAQ: ${response.data.message || response.statusText}`);
+          Swal.fire({
+            title: "Error!",
+            text: response.data.message || "There was an issue updating the FAQ.",
+            icon: "error",
+            confirmButtonText: "OK",
+          });
+        }
+      } catch (error) {
+        console.error("Network Error:", error);
+        Swal.fire({
+          title: "Error!",
+          text: "There was an issue connecting to the server.",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+      }
+    
+      setVisibleEditFaqId(null);
+      setFaqQuestion("");
+      setFaqAnswer("");
+    }
+  };
+
+  const [faqQuestion, setFaqQuestion] = useState(""); // State for editing question
+  const [faqAnswer, setFaqAnswer] = useState(""); // State for editing answer
+  const [currentEditingFaqId, setCurrentEditingFaqId] = useState(null);
  
   return (
     <>
@@ -528,7 +594,7 @@ const EditCourses = () => {
 
                               <div style={{ display: "flex", gap: "10px" }}>
                                 <Trash size={22} color="white" onClick={() => handleDeleteFAQ(faq._id)} />
-                                <PencilLine size={22} color="white"  />
+                                <PencilLine size={22} color="white" onClick={() => handleEditFAQ(faq)} />
                               </div>
 
                             </div>
@@ -539,30 +605,33 @@ const EditCourses = () => {
                       )}
 
                     {/* Same input  */}
-                      {/* <div style={{ padding: "8px", outline: "1px solid black", borderRadius: "8px" }} >
-                        <div style={{ display: "flex", gap: "10px" }}>
-                          <InputField
-                            label="Question"
-                            type="text"
-                            placeholder="Update Question"
-                           
-                          />
-                          <InputField
-                            label="Answer"
-                            type="text"
-                            placeholder="Update Answer"
-                           
-                          />
+                    {visibleEditFaqId && (
+                        <div style={{ padding: "8px", outline: "1px solid black", borderRadius: "8px" }}>
+                          <div style={{ display: "flex", gap: "10px" }}>
+                            <InputField
+                              label="Question"
+                              type="text"
+                              placeholder="Update Question"
+                              value={faqQuestion}
+                              onChange={(e) => setFaqQuestion(e.target.value)}
+                            />
+                            <InputField
+                              label="Answer"
+                              type="text"
+                              placeholder="Update Answer"
+                              value={faqAnswer}
+                              onChange={(e) => setFaqAnswer(e.target.value)}
+                            />
+                          </div>
+                          <div style={{ display: "flex", justifyContent: "end" }}>
+                            <ButtonComponent
+                              label="Save"
+                              onClick={handleSaveFAQ}
+                              className="btn btn-primary me-1 All-btn"
+                            />
+                          </div>
                         </div>
-                        <div style={{display:"flex",justifyContent:"end"}}>
-                          <ButtonComponent
-                            label="Save"
-                            type="submit"
-                            className="btn btn-primary me-1 All-btn"
-                          />
-                        </div>
-
-                      </div> */}
+                      )}
 
                     </div>
 
