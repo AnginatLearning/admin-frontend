@@ -7,7 +7,7 @@ import ButtonComponent from "./Components/ButtonComponent";
 import Batch from "./Components/Batch";
 import Rowbutton from "./Components/Rowbutton";
 import Uploadfile from "./Components/Uploadfile";
-import { DownloadSimple, UploadSimple } from "@phosphor-icons/react";
+import { DownloadSimple, Pencil, PencilLine, Trash, UploadSimple } from "@phosphor-icons/react";
 import Schedule from "./Components/Schedule";
 import { useParams } from "react-router-dom";
 import api from "../../../services/AxiosInstance";
@@ -19,7 +19,7 @@ const EditCourses = () => {
   const [batches, setBatches] = useState([]);
   const [imagePreview, setImagePreview] = useState("/Course image.jpg");
   const [thumbnail, setThumbnail] = useState(null);
-  const [priceChange, setPriceChange] = useState(false)
+  const [priceChange, setPriceChange] = useState(false);
   const [warningMessage, setWarningMessage] = useState("");
   const { id } = useParams();
 
@@ -39,6 +39,8 @@ const EditCourses = () => {
     languages: [],
   });
 
+  const [faqs, setFaqs] = useState([]); // State for FAQs
+
   const pricingOptions = [
     { value: "one-time", label: "One-time Price" },
     { value: "batch", label: "Batch Price" },
@@ -51,14 +53,14 @@ const EditCourses = () => {
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
-  
+
     if (id.startsWith("price[0].")) {
-      const priceField = id.split(".")[1]; // Extract 'offerPrice' or 'standardPrice'
+      const priceField = id.split(".")[1]; 
       setFormData((prev) => {
         const priceExists = prev.price.some((p) => p.currency === "INR");
-  
+
         if (priceExists) {
-          // Update the existing object with currency === "INR"
+        
           return {
             ...prev,
             price: prev.price.map((p) =>
@@ -66,7 +68,7 @@ const EditCourses = () => {
             ),
           };
         } else {
-          // Add a new object with currency === "INR"
+        
           return {
             ...prev,
             price: [
@@ -83,7 +85,6 @@ const EditCourses = () => {
       }));
     }
   };
-  
 
   const handlePricingTypeChange = (selectedOption) => {
     setFormData((prev) => ({ ...prev, pricingType: selectedOption.value }));
@@ -156,6 +157,7 @@ const EditCourses = () => {
       console.error("Error updating course:", error);
     }
   };
+
   const deleteCourse = async (courseId) => {
     try {
       const response = await api.delete(`course/courses/${courseId}`);
@@ -189,6 +191,7 @@ const EditCourses = () => {
       });
     }
   };
+
   const handleDelete = () => {
     Swal.fire({
       title: "Are you sure?",
@@ -200,7 +203,7 @@ const EditCourses = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        deleteCourse(id); // Pass the course ID to the delete method
+        deleteCourse(id); 
       }
     });
   };
@@ -214,22 +217,22 @@ const EditCourses = () => {
       courseName: formData.courseName,
       description: formData.description,
       pricingType: formData.pricingType,
-      price: formData.price, // Use price as an array
+      price: formData.price, 
       languages: formData.languages,
       status: "active",
     };
 
     try {
       const formDataToSend = new FormData();
-      formDataToSend.append("thumbnail", thumbnail); // Add thumbnail file
-      formDataToSend.append("payload", JSON.stringify(courseData)); // Add payload as JSON string
+      formDataToSend.append("thumbnail", thumbnail); 
+      formDataToSend.append("payload", JSON.stringify(courseData));
 
       const response = await api.put(
         `course/courses/${courseId}`,
         formDataToSend,
         {
           headers: {
-            "Content-Type": "multipart/form-data", // Ensure the right content type
+            "Content-Type": "multipart/form-data",
           },
         }
       );
@@ -275,10 +278,13 @@ const EditCourses = () => {
             courseCode: selectedCourse.courseCode || "",
             description: selectedCourse.description || "",
             pricingType: selectedCourse.pricingType || "",
-            price: selectedCourse.price, // Ensure price is an array
+            price: selectedCourse.price,
             thumbnail: selectedCourse.thumbnail || "",
             languages: selectedCourse.languages || [],
           });
+
+
+          setFaqs(selectedCourse.faqs || []); 
         }
       } catch (error) {
         console.error("Error fetching course details:", error);
@@ -288,6 +294,122 @@ const EditCourses = () => {
     fetchCourseDetails();
   }, [id, priceChange]);
 
+  const deleteFAQ = async (faqId) => {
+    try {
+      const response = await api.delete(`course/courses/${id}/faqs/${faqId}`);
+      if (response.status === 200) {
+        console.log("FAQ deleted successfully");
+
+        setFaqs((prevFaqs) => prevFaqs.filter((faq) => faq._id !== faqId));
+        Swal.fire({
+          title: "Deleted!",
+          text: "FAQ has been deleted successfully.",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
+      } else {
+        console.error("Error deleting FAQ:", response);
+        Swal.fire({
+          title: "Error!",
+          text: "There was an issue deleting the FAQ.",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+      }
+    } catch (error) {
+      console.error("Error deleting FAQ:", error);
+      Swal.fire({
+        title: "Error!",
+        text: "There was an issue deleting the FAQ.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    }
+  };
+  const handleDeleteFAQ = (faqId) => {
+    console.log("Delete FAQ ID:", faqId); 
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won’t be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteFAQ(faqId); 
+      }
+    });
+  };
+  const [visibleEditFaqId, setVisibleEditFaqId] = useState(null);
+  const handleEditFAQ = (faq) => {
+  
+    if (visibleEditFaqId === faq._id) {
+      setVisibleEditFaqId(null); 
+    } else {
+      setVisibleEditFaqId(faq._id); 
+      setFaqQuestion(faq.question); 
+      setFaqAnswer(faq.answer); 
+    }
+  };
+
+  const handleSaveFAQ = async () => {
+    if (visibleEditFaqId) {
+      try {
+        const response = await api.put(
+          `course/courses/${id}/faqs/${visibleEditFaqId}`,
+          {
+            question: faqQuestion,
+            answer: faqAnswer,
+          }
+        );
+  
+        if (response.status === 200) {
+         
+          setFaqs((prevFaqs) =>
+            prevFaqs.map((faq) =>
+              faq._id === visibleEditFaqId
+                ? { ...faq, question: faqQuestion, answer: faqAnswer }
+                : faq
+            )
+          );
+  
+          Swal.fire({
+            title: "Success!",
+            text: "FAQ updated successfully.",
+            icon: "success",
+            confirmButtonText: "OK",
+          });
+        } else {
+          console.error(`Failed to update FAQ: ${response.data.message || response.statusText}`);
+          Swal.fire({
+            title: "Error!",
+            text: response.data.message || "There was an issue updating the FAQ.",
+            icon: "error",
+            confirmButtonText: "OK",
+          });
+        }
+      } catch (error) {
+        console.error("Network Error:", error);
+        Swal.fire({
+          title: "Error!",
+          text: "There was an issue connecting to the server.",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+      }
+    
+      setVisibleEditFaqId(null);
+      setFaqQuestion("");
+      setFaqAnswer("");
+    }
+  };
+
+  const [faqQuestion, setFaqQuestion] = useState(""); // State for editing question
+  const [faqAnswer, setFaqAnswer] = useState(""); // State for editing answer
+  const [currentEditingFaqId, setCurrentEditingFaqId] = useState(null);
+ 
   return (
     <>
       <PageTitle
@@ -307,10 +429,10 @@ const EditCourses = () => {
                   justifyContent: "center",
                 }}
               >
-                <CsvUploadButton 
-                priceChange = {priceChange}
-                setPriceChange={setPriceChange}
-                courseId={id} />
+                <CsvUploadButton
+                  priceChange={priceChange}
+                  setPriceChange={setPriceChange}
+                  courseId={id} />
               </div>
             </div>
             <div className="card-body">
@@ -333,7 +455,6 @@ const EditCourses = () => {
                       placeholder="Course Code"
                       value={formData.courseCode}
                       onChange={handleInputChange}
-                      // required
                       disabled="true"
                     />
                   </div>
@@ -375,22 +496,22 @@ const EditCourses = () => {
                       <div style={{ display: "flex", gap: "4px" }}>
                         <div style={{ marginTop: "" }} className="col-sm-6">
                           <InputField
-                          label="Offer Price (in INR)"
+                            label="Offer Price (in INR)"
                             id="price[0].offerPrice"
                             required
                             type="number"
                             placeholder="Enter offer price"
-                            value={formData.price.find((p)=> p.currency === "INR" )?.offerPrice || ""}
+                            value={formData.price.find((p) => p.currency === "INR")?.offerPrice || ""}
                             onChange={handleInputChange}
                           />
                         </div>
                         <div style={{ marginTop: "" }} className="col-sm-6">
                           <InputField
-                          label="Standard Price (in INR)"
+                            label="Standard Price (in INR)"
                             id="price[0].standardPrice"
                             type="number"
                             placeholder="Enter standard price"
-                            value={formData.price.find((p)=> p.currency === "INR" )?.standardPrice || ""}
+                            value={formData.price.find((p) => p.currency === "INR")?.standardPrice || ""}
                             onChange={handleInputChange}
                             required
                           />
@@ -426,13 +547,12 @@ const EditCourses = () => {
                         id="Course_Photo"
                         type="file"
                         className="file"
-                        // value={formData.thumbnail}
                         onChange={handleFileChange}
-                        // required
                         style={{ width: "100%" }}
                       />
                     </div>
                   </div>
+
                   <div className="col-sm-6">
                     <PricingTable prices={formData.price} />
                   </div>
@@ -442,6 +562,83 @@ const EditCourses = () => {
                       pricingType={formData.pricingType}
                     />
                   </div>
+
+                  <div className="col-sm-6">
+                    <ButtonComponent
+                      className="btn btn-primary w-100"
+                      label="Add FAQs"
+                      onClick={() => window.location.href = `/courses/${id}/faqs`}
+                    />
+                  </div>
+
+
+                  <div className="col-sm-6">
+                    <div style={{ padding: "10px", outline: "1px solid black", borderRadius: "4px" }}>
+                      <h4>Faqs</h4>
+                      {faqs.length > 0 ? (
+                        <div>
+                          {faqs.map((faq) => (
+                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px", margin: "10px 0", backgroundColor: "#6A73FA", border: "1px solid #ccc", borderRadius: "5px" }}>
+                              <div
+                                key={faq._id}
+
+                              >  <div style={{ display: "flex", gap: "5px",alignItems:"center" }}>
+                                  <p style={{ fontSize: "14px", color: "white", marginBottom: "0px" }}>Ques:</p> <span style={{ fontSize: "14px", color: "white" }}> {faq.question}</span> <br />
+                                </div>
+
+                                <div style={{ display: "flex", gap: "5px",alignItems:"center"  }}>
+                                  <p style={{ fontSize: "14px", color: "white", marginBottom: "0px" }}>Ans:</p> <span style={{ fontSize: "14px", color: "white" }} s>{faq.answer}</span>
+                                </div>
+
+                              </div>
+
+                              <div style={{ display: "flex", gap: "10px" }}>
+                                <Trash size={22} color="white" onClick={() => handleDeleteFAQ(faq._id)} />
+                                <PencilLine size={22} color="white" onClick={() => handleEditFAQ(faq)} />
+                              </div>
+
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p>No FAQs available for this course.</p>
+                      )}
+
+                    {/* Same input  */}
+                    {visibleEditFaqId && (
+                        <div style={{ padding: "8px", outline: "1px solid black", borderRadius: "8px" }}>
+                          <div style={{ display: "flex", gap: "10px" }}>
+                            <InputField
+                              label="Question"
+                              type="text"
+                              placeholder="Update Question"
+                              value={faqQuestion}
+                              onChange={(e) => setFaqQuestion(e.target.value)}
+                            />
+                            <InputField
+                              label="Answer"
+                              type="text"
+                              placeholder="Update Answer"
+                              value={faqAnswer}
+                              onChange={(e) => setFaqAnswer(e.target.value)}
+                            />
+                          </div>
+                          <div style={{ display: "flex", justifyContent: "end" }}>
+                            <ButtonComponent
+                              label="Save"
+                              onClick={handleSaveFAQ}
+                              className="btn btn-primary me-1 All-btn"
+                            />
+                          </div>
+                        </div>
+                      )}
+
+                    </div>
+
+
+                  </div>
+
+
 
                   {iconMoved && (
                     <div style={{ marginTop: "20px" }}>
@@ -480,7 +677,7 @@ const EditCourses = () => {
                       <ButtonComponent
                         label="Delete"
                         type="button"
-                        className="btn btn-danger  All-btn"
+                        className="btn btn-danger All-btn"
                         onClick={handleDelete}
                       />
                     </div>

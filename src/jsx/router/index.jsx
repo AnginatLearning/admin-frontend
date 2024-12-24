@@ -195,7 +195,7 @@ const Markup = () => {
     { url: "add-courses", component: <AddCourses /> },
     { url: "edit-courses/:id", component: <EditCourses /> },
     { url: "about-courses/:id", component: <AboutCourses /> },
-    { url: "Faq-courses", component: <Faq /> },
+    { url: "courses/:id/faqs", component: <Faq /> },
   
 
     //Library

@@ -543,7 +543,39 @@ const Batch = ({ onAddBatch, pricingType }) => {
     }
     setStartTime(selectedTime);
   };
+  const [activeButton, setActiveButton] = useState("");
+  const [filter, setFilter] = useState("all");
+  const handleButtonClick = (buttonType) => {
+    setActiveButton(buttonType); // Set the active button type
+    setFilter(buttonType); // Apply the filter based on the button clicked
+  };
 
+  const buttonStyle = (buttonType) => ({
+    padding: "8px 12px",
+    outline: "1px solid blue",
+    color: activeButton === buttonType ? "white" : "blue",
+    borderRadius: "12px",
+    cursor: "pointer",
+    backgroundColor: activeButton === buttonType ? "#6A73FA" : "white",
+    boxShadow: activeButton === buttonType ? "0 4px 15px rgba(0, 0, 0, 0.2)" : "none",
+    transition: "background-color 0.3s ease, box-shadow 0.3s ease",
+  });
+  const getFilteredBatches = () => {
+    const today = new Date();
+    return batches.filter((batch) => {
+      const startDate = new Date(batch.startDate);
+      const endDate = new Date(batch.endDate);
+  
+      if (filter === "ongoing") {
+        return startDate <= today && endDate >= today; // Ongoing batches
+      } else if (filter === "upcoming") {
+        return startDate > today; // Upcoming batches
+      } else if (filter === "past") {
+        return endDate < today; // Past batches
+      }
+      return true; // Show all batches when "all" is selected
+    });
+  };
   return (
     <div>
       <div
@@ -565,8 +597,44 @@ const Batch = ({ onAddBatch, pricingType }) => {
         />
       </div>
 
+      <div style={{ display: "flex", gap: "10px" }}>
+        <p
+          style={buttonStyle("ongoing")}
+          onClick={() => handleButtonClick("ongoing")}
+        >
+          Ongoing
+        </p>
+        <p
+          style={buttonStyle("upcoming")}
+          onClick={() => handleButtonClick("upcoming")}
+        >
+          Upcoming
+        </p>
+        <p
+          style={buttonStyle("past")}
+          onClick={() => handleButtonClick("past")}
+        >
+          Past
+        </p>
+      </div>
+
       <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-        {batches.map((batch, index) => (
+      {filter === "past" && getFilteredBatches().length === 0 && (
+          <p style={{ color: "black", margin: "10px 0",fontSize:"13px"  }}>
+            No Past Batches
+          </p>
+        )}
+         {filter === "ongoing" && getFilteredBatches().length === 0 && (
+          <p style={{ color: "black", margin: "10px 0",fontSize:"13px" }}>
+            No Ongoing Batches
+          </p>
+        )}
+         {filter === "upcoming" && getFilteredBatches().length === 0 && (
+          <p style={{ color: "black", margin: "10px 0",fontSize:"13px"  }}>
+            No Upcoming Batches
+          </p>
+        )}
+        {getFilteredBatches().map((batch, index) => (
           <>
             <div
               key={index}
