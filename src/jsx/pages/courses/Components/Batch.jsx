@@ -5,6 +5,7 @@ import { PencilLine, Plus, Trash, TrashSimple } from "@phosphor-icons/react";
 import Swal from "sweetalert2";
 import api from "../../../../services/AxiosInstance";
 import { useParams } from "react-router-dom";
+import { combineDateTime } from "../../../../utils/combineDateTime";
 
 // Utility function to convert 24-hour time to 12-hour format
 const formatTimeTo12Hour = (time) => {
@@ -142,11 +143,11 @@ const Batch = ({ onAddBatch, pricingType }) => {
       }));
       return;
     }
-
     if (id === "startDate") {
       const selectedStartDate = new Date(value);
       const today = new Date();
       today.setHours(0, 0, 0, 0);
+      console.log("Selected Start Date", selectedStartDate);
       if (selectedStartDate < today) {
         Swal.fire({
           title: "Error!",
@@ -188,7 +189,7 @@ const Batch = ({ onAddBatch, pricingType }) => {
   };
 
   const addBatch = async () => {
-    const { name, startDate, endDate, seats, price, batchType } = batchDetails;
+    const { name, startDate, endDate, seats, batchType } = batchDetails;
 
     if (
       !name ||
@@ -246,6 +247,7 @@ const Batch = ({ onAddBatch, pricingType }) => {
 
     if (url.includes("edit-courses")) {
       try {
+        console.log("New batch Data", newBatch);
         const res = await api.post(`course/courses/${id}/batches`, newBatch);
 
         if (res.status === 200) {
@@ -346,7 +348,7 @@ const Batch = ({ onAddBatch, pricingType }) => {
       if (!seats) missingFields.push("Seats");
       if (!startTime) missingFields.push("Start Time");
       if (!endTime) missingFields.push("End Time");
-      if (!endTime) missingFields.push("Batch Type");
+      if (!batchType) missingFields.push("Batch Type");
 
       const errorMessage = `Please fill out the ${missingFields.join(", ")}`;
 
@@ -359,7 +361,7 @@ const Batch = ({ onAddBatch, pricingType }) => {
       return;
     }
 
-    const updatedBatch = {
+    console.log({
       name,
       startDate,
       endDate,
@@ -369,8 +371,21 @@ const Batch = ({ onAddBatch, pricingType }) => {
       )}`,
       price,
       batchType,
+    });
+    console.log("Start Time", startTime);
+    console.log("End Time", endTime);
+    const updatedBatch = {
+      name,
+      startDate: combineDateTime(startDate, startTime),
+      endDate: combineDateTime(endDate, endTime),
+      seats,
+      timeZone: `${formatTimeTo12Hour(startTime)} - ${formatTimeTo12Hour(
+        endTime
+      )}`,
+      price,
+      batchType,
     };
-
+    console.log("Update Batch Data", updatedBatch);
     try {
       const endpoint = `/course/courses/${id}/batches/${editingBatch._id}`;
       const response = await api.put(endpoint, updatedBatch);
@@ -521,6 +536,7 @@ const Batch = ({ onAddBatch, pricingType }) => {
     }
 
     const selectedDate = new Date(batchDetails.startDate);
+
     const currentDate = new Date();
     const currentTime = new Date();
     currentTime.setSeconds(0, 0);
@@ -528,8 +544,22 @@ const Batch = ({ onAddBatch, pricingType }) => {
     const selectedDateTime = new Date(selectedDate);
     const [selectedHours, selectedMinutes] = selectedTime.split(":");
     selectedDateTime.setHours(selectedHours, selectedMinutes, 0, 0);
+    console.log("Selected Start Date", selectedDateTime);
+    console.log("current date time", currentDate);
 
     if (selectedDate.toDateString() === currentDate.toDateString()) {
+      console.log(
+        "comparison between selectedDate  and currentDate ",
+        selectedDate.toDateString(),
+        "and",
+        currentDate.toDateString()
+      );
+      console.log(
+        "comparison between selected time and current time",
+        selectedDateTime,
+        "and",
+        currentTime
+      );
       if (selectedDateTime < currentTime) {
         Swal.fire({
           title: "Error!",
@@ -557,7 +587,8 @@ const Batch = ({ onAddBatch, pricingType }) => {
     borderRadius: "12px",
     cursor: "pointer",
     backgroundColor: activeButton === buttonType ? "#6A73FA" : "white",
-    boxShadow: activeButton === buttonType ? "0 4px 15px rgba(0, 0, 0, 0.2)" : "none",
+    boxShadow:
+      activeButton === buttonType ? "0 4px 15px rgba(0, 0, 0, 0.2)" : "none",
     transition: "background-color 0.3s ease, box-shadow 0.3s ease",
   });
   const getFilteredBatches = () => {
@@ -565,7 +596,7 @@ const Batch = ({ onAddBatch, pricingType }) => {
     return batches.filter((batch) => {
       const startDate = new Date(batch.startDate);
       const endDate = new Date(batch.endDate);
-  
+
       if (filter === "ongoing") {
         return startDate <= today && endDate >= today; // Ongoing batches
       } else if (filter === "upcoming") {
@@ -619,18 +650,18 @@ const Batch = ({ onAddBatch, pricingType }) => {
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-      {filter === "past" && getFilteredBatches().length === 0 && (
-          <p style={{ color: "black", margin: "10px 0",fontSize:"13px"  }}>
+        {filter === "past" && getFilteredBatches().length === 0 && (
+          <p style={{ color: "black", margin: "10px 0", fontSize: "13px" }}>
             No Past Batches
           </p>
         )}
-         {filter === "ongoing" && getFilteredBatches().length === 0 && (
-          <p style={{ color: "black", margin: "10px 0",fontSize:"13px" }}>
+        {filter === "ongoing" && getFilteredBatches().length === 0 && (
+          <p style={{ color: "black", margin: "10px 0", fontSize: "13px" }}>
             No Ongoing Batches
           </p>
         )}
-         {filter === "upcoming" && getFilteredBatches().length === 0 && (
-          <p style={{ color: "black", margin: "10px 0",fontSize:"13px"  }}>
+        {filter === "upcoming" && getFilteredBatches().length === 0 && (
+          <p style={{ color: "black", margin: "10px 0", fontSize: "13px" }}>
             No Upcoming Batches
           </p>
         )}
@@ -760,9 +791,7 @@ const Batch = ({ onAddBatch, pricingType }) => {
                       type="time"
                       className="form-control Inputfield-copy Inputfield-copys"
                       value={startTime}
-                      onChange={(e) => {
-                        setStartTime(e.target.value);
-                      }}
+                      onChange={handleTimeChange}
                     />
                   </div>
                   <div style={{ display: "flex", flexDirection: "column" }}>
