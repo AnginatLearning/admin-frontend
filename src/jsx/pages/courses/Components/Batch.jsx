@@ -573,26 +573,32 @@ const Batch = ({ onAddBatch, pricingType }) => {
     }
     setStartTime(selectedTime);
   };
-  const [activeButton, setActiveButton] = useState("");
+  const [activeButton, setActiveButton] = useState("ongoing");
   const [filter, setFilter] = useState("all");
   const handleButtonClick = (buttonType) => {
-    setActiveButton(buttonType); // Set the active button type
-    setFilter(buttonType); // Apply the filter based on the button clicked
+    setActiveButton(buttonType);
+    setFilter(buttonType); 
   };
+
 
   const buttonStyle = (buttonType) => ({
     padding: "8px 12px",
     outline: "1px solid blue",
-    color: activeButton === buttonType ? "white" : "blue",
+    color: filter === buttonType ? "white" : "blue", // White text if active
     borderRadius: "12px",
     cursor: "pointer",
-    backgroundColor: activeButton === buttonType ? "#6A73FA" : "white",
-    boxShadow:
-      activeButton === buttonType ? "0 4px 15px rgba(0, 0, 0, 0.2)" : "none",
-    transition: "background-color 0.3s ease, box-shadow 0.3s ease",
+    backgroundColor: filter === buttonType ? "#6A73FA" : "white", // Active button gets background color
+    boxShadow: filter === buttonType ? "0 4px 15px rgba(0, 0, 0, 0.2)" : "none", // Add shadow if active
+    transition: "background-color 0.3s ease, box-shadow 0.3s ease", // Smooth transition for hover and active states
   });
+
+  useEffect(() => {
+    // Automatically filter batches to show "ongoing" batches when the component first loads
+    setFilter("ongoing");
+  }, []);
   const getFilteredBatches = () => {
     const today = new Date();
+
     return batches.filter((batch) => {
       const startDate = new Date(batch.startDate);
       const endDate = new Date(batch.endDate);
@@ -604,7 +610,7 @@ const Batch = ({ onAddBatch, pricingType }) => {
       } else if (filter === "past") {
         return endDate < today; // Past batches
       }
-      return true; // Show all batches when "all" is selected
+      return true; // Default case, in case of any unknown filter
     });
   };
   return (
