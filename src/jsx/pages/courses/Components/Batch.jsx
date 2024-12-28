@@ -584,16 +584,16 @@ const Batch = ({ onAddBatch, pricingType }) => {
   const buttonStyle = (buttonType) => ({
     padding: "8px 12px",
     outline: "1px solid blue",
-    color: filter === buttonType ? "white" : "blue", // White text if active
+    color: filter === buttonType ? "white" : "blue",
     borderRadius: "12px",
     cursor: "pointer",
-    backgroundColor: filter === buttonType ? "#6A73FA" : "white", // Active button gets background color
-    boxShadow: filter === buttonType ? "0 4px 15px rgba(0, 0, 0, 0.2)" : "none", // Add shadow if active
-    transition: "background-color 0.3s ease, box-shadow 0.3s ease", // Smooth transition for hover and active states
+    backgroundColor: filter === buttonType ? "#6A73FA" : "white", 
+    boxShadow: filter === buttonType ? "0 4px 15px rgba(0, 0, 0, 0.2)" : "none",
+    transition: "background-color 0.3s ease, box-shadow 0.3s ease", 
   });
 
   useEffect(() => {
-    // Automatically filter batches to show "ongoing" batches when the component first loads
+    
     setFilter("ongoing");
   }, []);
   const getFilteredBatches = () => {
@@ -604,13 +604,13 @@ const Batch = ({ onAddBatch, pricingType }) => {
       const endDate = new Date(batch.endDate);
 
       if (filter === "ongoing") {
-        return startDate <= today && endDate >= today; // Ongoing batches
+        return startDate <= today && endDate >= today;
       } else if (filter === "upcoming") {
-        return startDate > today; // Upcoming batches
+        return startDate > today; 
       } else if (filter === "past") {
-        return endDate < today; // Past batches
+        return endDate < today; 
       }
-      return true; // Default case, in case of any unknown filter
+      return true; 
     });
   };
   return (
@@ -704,22 +704,23 @@ const Batch = ({ onAddBatch, pricingType }) => {
                 </p>
               </div>
 
-              <div
-                style={{ display: "flex", flexDirection: "row", gap: "8px" }}
-              >
-                <Trash
-                  style={{ cursor: "pointer" }}
-                  size={22}
-                  color="white"
-                  onClick={() => deleteBatch(batch._id)}
-                />
-                <PencilLine
-                  style={{ cursor: "pointer" }}
-                  size={22}
-                  color="white"
-                  onClick={() => editBatch(batch)}
-                />
-              </div>
+              {filter !== "ongoing" && (
+                <div style={{ display: "flex", flexDirection: "row", gap: "8px" }}>
+                  <Trash
+                    style={{ cursor: "pointer" }}
+                    size={22}
+                    color="white"
+                    onClick={() => deleteBatch(batch._id)}
+                  />
+                  <PencilLine
+                    style={{ cursor: "pointer" }}
+                    size={22}
+                    color="white"
+                    onClick={() => editBatch(batch)}
+                  />
+                </div>
+              )}
+
             </div>
 
             {editingBatch && editingBatch._id === batch._id && (
