@@ -704,7 +704,7 @@ const Batch = ({ onAddBatch, pricingType }) => {
                 </p>
               </div>
 
-              {filter !== "ongoing" && (
+              {filter !== "ongoing" && filter !== "past" && (
                 <div style={{ display: "flex", flexDirection: "row", gap: "8px" }}>
                   <Trash
                     style={{ cursor: "pointer" }}
