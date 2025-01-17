@@ -307,7 +307,7 @@ const AppProfile = () => {
                   onClick={() => setUploadImageModal(true)}
                 >
                   <img
-                    src={images.profileUrl}
+                    src={images.profileUrl || profile}
                     className="img-fluid"
                     alt="profile"
                     style={{
