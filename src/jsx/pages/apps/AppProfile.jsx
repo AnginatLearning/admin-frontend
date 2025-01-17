@@ -35,6 +35,21 @@ const initialState = false;
 const AppProfile = () => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
+  const [institute, setInstitute] = useState(null);
+  const [images, setImages] = useState({
+    profileUrl: "",
+    coverUrl: "",
+  });
+
+  useEffect(() => {
+    const data = JSON.parse(localStorage.getItem("InstitutionDetails"));
+    console.log("Institute Details", data);
+    setInstitute(data);
+    setImages({
+      profileUrl: data.profileUrl,
+      coverUrl: data.coverUrl,
+    });
+  }, []);
   useEffect(() => {
     const storedEmail = localStorage.getItem("institutionEmail");
 
@@ -58,14 +73,20 @@ const AppProfile = () => {
   // 		overlayColor: "#000000",
   //  	},
   // };
+
   const [changePassModal, setChangePassModal] = useState(false);
+  const [editEmailModal, setEditEmailModal] = useState(false);
+  const [newEmail, setNewEmail] = useState("");
   const [pass, setPass] = useState({
-    // currentPass: "",
+    currentPass: "",
     newPass: "",
     confirmPass: "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [imagePreview, setImagePreview] = useState(null); // For previewing the image
+  const [selectedFile, setSelectedFile] = useState(null); // For storing the selected file
+  const [uploadImageModal, setUploadImageModal] = useState(false);
 
   // Toggle show password state
   const toggleShowPassword = () => {
@@ -88,16 +109,140 @@ const AppProfile = () => {
     setError("");
   };
 
+  const submitUploadImage = async () => {
+ 
+    
+
+    if (!selectedFile) {
+      setError("Please select a image first")
+      console.error("No file selected!");
+      return; // Don't proceed if no file is selected
+    }
+
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+    formData.append("type", "profile");
+
+   
+
+    for (let pair of formData.entries()) {
+      console.log(pair[0] + ": " + pair[1]);
+    }
+    try {
+      const response = await api.post(
+        `institute/upload/${institute._id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data", // Ensure proper headers for file upload
+          },
+        }
+      );
+      console.log("After response ", response.data.institute);
+
+      if (response.status === 200) {
+
+        localStorage.setItem(
+          "InstitutionDetails",
+          JSON.stringify(response.data.institute)
+        );
+        setUploadImageModal(false);
+        setImages({
+          profileUrl:response.data.institute.profileUrl
+        })
+        Swal.fire({
+          title: "Success!",
+          text: "Profile Image successfully",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
+      
+        setImagePreview(null);
+        setSelectedFile(null)
+        setError("")
+      }
+    } catch (error) {
+      Swal.fire({
+        title: "Error!",
+        text: "Error in uploading profile.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+      setError("")
+      console.error("Error creating course:", error);
+      setUploadImageModal(false);
+    }
+  };
+
+  const submitChangeEmail = async () => {
+    setError("");
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    // Check if the email fields are not empty
+    if (newEmail === "") {
+      console.error("Email fields cannot be empty.");
+      setError("email field cannot be empty");
+      return;
+    }
+
+    // Check if the current email is a valid email
+    if (!emailRegex.test(newEmail)) {
+      console.error("email is not valid.");
+      setError("Email is not a valid email address.");
+      return;
+    }
+
+    try {
+      const update = await api.post(
+        `institute/update-details/${institute._id}`,
+        {
+          email: newEmail,
+        }
+      );
+
+      if (update.data.status === "success") {
+        localStorage.setItem(
+          "InstitutionDetails",
+          JSON.stringify(update.data.data.institute)
+        );
+        localStorage.setItem("institutionEmail", institute.email);
+        localStorage.setItem("institutionName", institute.name);
+        Swal.fire({
+          title: "Success!",
+          text: "Email change successfully",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
+        setEditEmailModal(false);
+      }
+    } catch (error) {
+      Swal.fire({
+        title: "Error!",
+        text: "Failed to change email.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+
+      console.error("Error creating course:", error);
+      setChangePassModal(false);
+    }
+    console.log("email is verified");
+  };
+
   const submitChangePass = async () => {
     console.log("passwords :", pass);
+
     if (pass.newPass !== pass.confirmPass) {
       setError("Passwords do not match");
     }
+
     try {
       const response = await api.post(
         "/auth/update-password",
         {
           email,
+          currentPassword: pass.currentPass,
           newPassword: pass.newPass,
         },
         {
@@ -140,21 +285,84 @@ const AppProfile = () => {
                 <div className="cover-photo rounded"></div>
               </div>
               <div className="profile-info">
-                <div className="profile-photo">
+                <div
+                  className="profile-photo position-relative"
+                  style={{
+                    width: "120px",
+                    height: "100px",
+                    borderRadius: "50%", // Ensures a perfectly round container
+                    overflow: "hidden", // Hides any overflow from the image
+                    position: "relative",
+                  }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.querySelector(
+                      ".hover-overlay"
+                    ).style.opacity = "1")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.querySelector(
+                      ".hover-overlay"
+                    ).style.opacity = "0")
+                  }
+                  onClick={() => setUploadImageModal(true)}
+                >
                   <img
-                    src={profile}
-                    className="img-fluid rounded-circle"
+                    src={images.profileUrl}
+                    className="img-fluid"
                     alt="profile"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover", // Ensures the image scales and fits well within the circle
+                    }}
                   />
+                  {/* Hover Overlay */}
+                  <div
+                    className="hover-overlay position-absolute"
+                    style={{
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: "100%",
+                      backgroundColor: "rgba(0, 0, 0, 0.5)", // Black shade
+                      borderRadius: "50%", // Matches the profile photo's round shape
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      opacity: "0", // Initially hidden
+                      transition: "opacity 0.3s ease-in-out", // Smooth fade-in effect
+                      cursor: "pointer",
+                    }}
+                  >
+                    <i
+                      className="fa fa-camera text-white"
+                      style={{
+                        fontSize: "24px", // Camera icon size
+                      }}
+                    ></i>
+                  </div>
                 </div>
-                <div className="profile-details">
+
+                <div className="profile-details ">
                   <div className="profile-name px-3 pt-2">
                     <h4 className="text-primary mb-0">{name}</h4>
                     <p>UX / UI Designer</p>
                   </div>
                   <div className="profile-email px-2 pt-2">
-                    <h4 className="text-muted mb-0">{email}</h4>
-                    <p>Email</p>
+                    <h4 className="text-muted mb-0">
+                      {email}{" "}
+                      <span
+                        className="pointer text-primary"
+                        role="button"
+                        onClick={() => setEditEmailModal(true)}
+                        style={{ cursor: "pointer" }}
+                      >
+                        <i className="fa fa-edit me-2" />
+                      </span>
+                    </h4>
+                    <div>
+                      <p>Email</p>
+                    </div>
                   </div>
                   <Dropdown
                     className="dropdown ms-auto"
@@ -222,24 +430,39 @@ const AppProfile = () => {
         <div className="modal-body">
           <form>
             <div className="mb-3">
+              <label htmlFor="currentPass" className="form-label">
+                Current Password
+              </label>
+              <input
+                type={showPassword === true ? "text" : "password"} // Switch between text and password
+                className="form-control"
+                id="currentPassword"
+                name="currentPass"
+                placeholder="Enter current password"
+                onChange={handlePassChange}
+              />
+            </div>
+
+            <div className="mb-3">
               <label htmlFor="newPassword" className="form-label">
                 New Password
               </label>
               <input
-                type={showPassword ? "text" : "password"} // Switch between text and password
+                type={showPassword === true ? "text" : "password"} // Switch between text and password
                 className="form-control"
                 id="newPassword"
                 name="newPass"
-                placeholder="Enter new password"
+                placeholder="Enter New password"
                 onChange={handlePassChange}
               />
             </div>
+
             <div className="mb-3">
               <label htmlFor="confirmPassword" className="form-label">
                 Confirm Password
               </label>
               <input
-                type={showPassword ? "text" : "password"} // Switch between text and password
+                type={showPassword === true ? "text" : "password"} // Switch between text and password
                 className={`form-control ${error ? "is-invalid" : ""}`}
                 id="confirmPassword"
                 name="confirmPass"
@@ -275,6 +498,143 @@ const AppProfile = () => {
             onClick={submitChangePass}
           >
             Change Password
+          </button>
+        </div>
+      </Modal>
+
+      {/*Change Email Modal*/}
+      <Modal
+        show={editEmailModal}
+        className="modal fade"
+        id="editEmailModal"
+        onHide={() => setEditEmailModal(false)}
+        centered
+      >
+        <div className="modal-header">
+          <h5 className="modal-title">Change Email</h5>
+          <button
+            type="button"
+            className="btn-close"
+            onClick={() => setEditEmailModal(false)}
+          ></button>
+        </div>
+        <div className="modal-body">
+          <form>
+            <div className="mb-3">
+              <label htmlFor="newEmail" className="form-label">
+                New Email
+              </label>
+              <input
+                type="email"
+                className={`form-control ${error ? "is-invalid" : ""}`}
+                id="newEmail"
+                name="newEmail"
+                placeholder="Enter new email"
+                onChange={(e) => {
+                  setError("");
+                  setNewEmail(e.target.value);
+                }}
+              />
+              {error && <div className="invalid-feedback">{error}</div>}
+            </div>
+          </form>
+        </div>
+        <div className="modal-footer">
+          <button
+            type="button"
+            className="btn btn-danger light"
+            onClick={() => setEditEmailModal(false)}
+          >
+            Close
+          </button>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={submitChangeEmail}
+          >
+            Change Email
+          </button>
+        </div>
+      </Modal>
+
+      {/* Upload Profile Modal */}
+      <Modal
+        show={uploadImageModal}
+        className="modal fade"
+        id="uploadImageModal"
+        onHide={() => setUploadImageModal(false)}
+        centered
+      >
+        <div className="modal-header">
+          <h5 className="modal-title">Upload Profile Picture</h5>
+          <button
+            type="button"
+            className="btn-close"
+            onClick={() => {
+              setError("")
+              setUploadImageModal(false)}}
+          ></button>
+        </div>
+        <div className="modal-body">
+          <form>
+            <div className="mb-3">
+              <label htmlFor="uploadImage" className="form-label">
+                Choose Image
+              </label>
+              <input
+                type="file"
+                className={`form-control ${error ? "is-invalid" : ""}`}
+                id="uploadImage"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  if (file) {
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                      setImagePreview(reader.result); // Display the image preview
+                    };
+                    reader.readAsDataURL(file);
+                    setSelectedFile(file); // Save the selected file for submission
+                  }
+                }}
+              />
+              {error && <div className="invalid-feedback">{error}</div>}
+            </div>
+            {imagePreview && (
+              <div className="text-center mb-3">
+                <img
+                  src={imagePreview}
+                  alt="Preview"
+                  className="img-fluid rounded-circle"
+                  style={{
+                    width: "120px",
+                    height: "120px",
+                    objectFit: "cover",
+                    border: "2px solid #ddd",
+                  }}
+                />
+              </div>
+            )}
+          </form>
+        </div>
+        <div className="modal-footer">
+          <button
+            type="button"
+            className="btn btn-danger light"
+            onClick={() => {
+              setUploadImageModal(false);
+              setImagePreview(null); // Clear the preview on close
+            }}
+          >
+            Close
+          </button>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={submitUploadImage}
+            disabled={!selectedFile} // Disable the button if no file is selected
+          >
+            Upload Image
           </button>
         </div>
       </Modal>
