@@ -155,11 +155,16 @@ const AppProfile = () => {
           text: "Profile Image successfully",
           icon: "success",
           confirmButtonText: "OK",
-        });
+        }).then(()=>{
+          setImages({
+            profileUrl:response.data.institute.profileUrl
+          })
+        })
       
         setImagePreview(null);
         setSelectedFile(null)
         setError("")
+     
       }
     } catch (error) {
       Swal.fire({
@@ -167,7 +172,7 @@ const AppProfile = () => {
         text: "Error in uploading profile.",
         icon: "error",
         confirmButtonText: "OK",
-      });
+      })
       setError("")
       console.error("Error creating course:", error);
       setUploadImageModal(false);
@@ -206,15 +211,19 @@ const AppProfile = () => {
           "InstitutionDetails",
           JSON.stringify(update.data.data.institute)
         );
-        localStorage.setItem("institutionEmail", institute.email);
-        localStorage.setItem("institutionName", institute.name);
+        
+        localStorage.setItem("institutionEmail", update.data.data.institute.email);
+        
         Swal.fire({
           title: "Success!",
           text: "Email change successfully",
           icon: "success",
           confirmButtonText: "OK",
+        }).then(() => {
+          setEmail(update.data.data.institute.email)
         });
         setEditEmailModal(false);
+
       }
     } catch (error) {
       Swal.fire({
@@ -258,7 +267,7 @@ const AppProfile = () => {
           text: "Password change successfully",
           icon: "success",
           confirmButtonText: "OK",
-        });
+        })
       }
       setChangePassModal(false);
     } catch (error) {
@@ -267,10 +276,11 @@ const AppProfile = () => {
         text: "Failed to change password.",
         icon: "error",
         confirmButtonText: "OK",
-      });
+      })
 
       console.error("Error creating course:", error);
       setChangePassModal(false);
+      
     }
   };
 
