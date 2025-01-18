@@ -43,7 +43,7 @@ const AppProfile = () => {
 
   useEffect(() => {
     const data = JSON.parse(localStorage.getItem("InstitutionDetails"));
-    console.log("Institute Details", data);
+
     setInstitute(data);
     setImages({
       profileUrl: data.profileUrl,
@@ -77,6 +77,8 @@ const AppProfile = () => {
   const [changePassModal, setChangePassModal] = useState(false);
   const [editEmailModal, setEditEmailModal] = useState(false);
   const [newEmail, setNewEmail] = useState("");
+  const [otpSent, setOtpSent] = useState(false); // To track if OTP has been sent
+  const [otp,setOtp] = useState("")
   const [pass, setPass] = useState({
     currentPass: "",
     newPass: "",
@@ -87,6 +89,101 @@ const AppProfile = () => {
   const [imagePreview, setImagePreview] = useState(null); // For previewing the image
   const [selectedFile, setSelectedFile] = useState(null); // For storing the selected file
   const [uploadImageModal, setUploadImageModal] = useState(false);
+
+  // Function to handle email submission
+  const handleEmailSubmit = async () => {
+    setError("");
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    // Check if the email fields are not empty
+    if (newEmail === "") {
+      console.error("Email fields cannot be empty.");
+      setError("email field cannot be empty");
+      return;
+    }
+
+    // Check if the current email is a valid email
+    if (!emailRegex.test(newEmail)) {
+      console.error("email is not valid.");
+      setError("Email is not a valid email address.");
+      return;
+    }
+    // Logic for sending OTP here (you can call your API to send the OTP)
+    try {
+      const response = await api.post(`otp/generate`, {
+        receiverId: newEmail,
+        otpType: "email",
+      });
+      setOtpSent(true); // Set OTP sent state to true
+    } catch (error) {
+      Swal.fire({
+        title: "Failure!",
+        text: "Failed to change email",
+        icon: "warning",
+        confirmButtonText: "OK",
+      });
+    }
+  };
+
+  const handleOtpSubmit = async () => {
+    try {
+      // Attempt to verify OTP
+      const response = await api.post("otp/verify", {
+        otpType: "email",
+        receiverId: newEmail,
+        otp:otp
+      });
+      
+      if (response.data.status === "success") {
+        setOtpSent(true);
+
+        // Proceed with updating email
+        const update = await api.post(
+          `institute/update-details/${institute._id}`,
+          {
+            email: newEmail,
+          }
+        );
+
+        if (update.data.status === "success") {
+          localStorage.setItem(
+            "InstitutionDetails",
+            JSON.stringify(update.data.data.institute)
+          );
+          localStorage.setItem(
+            "institutionEmail",
+            update.data.data.institute.email
+          );
+
+          // Show success notification
+          Swal.fire({
+            title: "Success!",
+            text: "Email changed successfully",
+            icon: "success",
+            confirmButtonText: "OK",
+          }).then(() => {
+            setEmail(update.data.data.institute.email);
+          });
+
+          // Close the modal and set email verification state
+          setEditEmailModal(false);
+
+          setOtpSent(false); // Reset OTP sent state
+        } else {
+          // Handle failed email update
+          setError("Email update failed. Please try again.");
+        }
+      } else {
+        // Handle OTP verification failure
+        setError("Invalid OTP. Please try again.");
+      }
+    } catch (error) {
+      // Handle unexpected errors
+      console.error("Error during OTP submission or email update:", error);
+      setError("An error occurred. Please try again later.");
+    }
+  };
 
   // Toggle show password state
   const toggleShowPassword = () => {
@@ -110,11 +207,8 @@ const AppProfile = () => {
   };
 
   const submitUploadImage = async () => {
- 
-    
-
     if (!selectedFile) {
-      setError("Please select a image first")
+      setError("Please select a image first");
       console.error("No file selected!");
       return; // Don't proceed if no file is selected
     }
@@ -123,11 +217,7 @@ const AppProfile = () => {
     formData.append("file", selectedFile);
     formData.append("type", "profile");
 
-   
-
-    for (let pair of formData.entries()) {
-      console.log(pair[0] + ": " + pair[1]);
-    }
+ 
     try {
       const response = await api.post(
         `institute/upload/${institute._id}`,
@@ -138,33 +228,32 @@ const AppProfile = () => {
           },
         }
       );
-      console.log("After response ", response.data.institute);
+
+
 
       if (response.status === 200) {
-
         localStorage.setItem(
           "InstitutionDetails",
           JSON.stringify(response.data.institute)
         );
         setUploadImageModal(false);
         setImages({
-          profileUrl:response.data.institute.profileUrl
-        })
+          profileUrl: response.data.institute.profileUrl,
+        });
         Swal.fire({
           title: "Success!",
           text: "Profile Image successfully",
           icon: "success",
           confirmButtonText: "OK",
-        }).then(()=>{
+        }).then(() => {
           setImages({
-            profileUrl:response.data.institute.profileUrl
-          })
-        })
-      
+            profileUrl: response.data.institute.profileUrl,
+          });
+        });
+
         setImagePreview(null);
-        setSelectedFile(null)
-        setError("")
-     
+        setSelectedFile(null);
+        setError("");
       }
     } catch (error) {
       Swal.fire({
@@ -172,32 +261,14 @@ const AppProfile = () => {
         text: "Error in uploading profile.",
         icon: "error",
         confirmButtonText: "OK",
-      })
-      setError("")
+      });
+      setError("");
       console.error("Error creating course:", error);
       setUploadImageModal(false);
     }
   };
 
   const submitChangeEmail = async () => {
-    setError("");
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    // Check if the email fields are not empty
-    if (newEmail === "") {
-      console.error("Email fields cannot be empty.");
-      setError("email field cannot be empty");
-      return;
-    }
-
-    // Check if the current email is a valid email
-    if (!emailRegex.test(newEmail)) {
-      console.error("email is not valid.");
-      setError("Email is not a valid email address.");
-      return;
-    }
-
     try {
       const update = await api.post(
         `institute/update-details/${institute._id}`,
@@ -211,19 +282,21 @@ const AppProfile = () => {
           "InstitutionDetails",
           JSON.stringify(update.data.data.institute)
         );
-        
-        localStorage.setItem("institutionEmail", update.data.data.institute.email);
-        
+
+        localStorage.setItem(
+          "institutionEmail",
+          update.data.data.institute.email
+        );
+
         Swal.fire({
           title: "Success!",
           text: "Email change successfully",
           icon: "success",
           confirmButtonText: "OK",
         }).then(() => {
-          setEmail(update.data.data.institute.email)
+          setEmail(update.data.data.institute.email);
         });
         setEditEmailModal(false);
-
       }
     } catch (error) {
       Swal.fire({
@@ -236,11 +309,11 @@ const AppProfile = () => {
       console.error("Error creating course:", error);
       setChangePassModal(false);
     }
-    console.log("email is verified");
+
   };
 
   const submitChangePass = async () => {
-    console.log("passwords :", pass);
+
 
     if (pass.newPass !== pass.confirmPass) {
       setError("Passwords do not match");
@@ -267,8 +340,9 @@ const AppProfile = () => {
           text: "Password change successfully",
           icon: "success",
           confirmButtonText: "OK",
-        })
+        });
       }
+
       setChangePassModal(false);
     } catch (error) {
       Swal.fire({
@@ -276,11 +350,10 @@ const AppProfile = () => {
         text: "Failed to change password.",
         icon: "error",
         confirmButtonText: "OK",
-      })
+      });
 
       console.error("Error creating course:", error);
       setChangePassModal(false);
-      
     }
   };
 
@@ -512,13 +585,17 @@ const AppProfile = () => {
         </div>
       </Modal>
 
-      {/*Change Email Modal*/}
       <Modal
         show={editEmailModal}
         className="modal fade"
         id="editEmailModal"
-        onHide={() => setEditEmailModal(false)}
-        centered
+        onHide={() => {
+          setOtpSent(false)
+          setError("")
+          setEditEmailModal(false)
+        }
+        }
+          centered
       >
         <div className="modal-header">
           <h5 className="modal-title">Change Email</h5>
@@ -530,39 +607,66 @@ const AppProfile = () => {
         </div>
         <div className="modal-body">
           <form>
-            <div className="mb-3">
-              <label htmlFor="newEmail" className="form-label">
-                New Email
-              </label>
-              <input
-                type="email"
-                className={`form-control ${error ? "is-invalid" : ""}`}
-                id="newEmail"
-                name="newEmail"
-                placeholder="Enter new email"
-                onChange={(e) => {
-                  setError("");
-                  setNewEmail(e.target.value);
-                }}
-              />
-              {error && <div className="invalid-feedback">{error}</div>}
-            </div>
+            {/* Email Input */}
+            {!otpSent && (
+              <div className="mb-3">
+                <label htmlFor="newEmail" className="form-label">
+                  New Email
+                </label>
+                <input
+                  type="email"
+                  className={`form-control ${error ? "is-invalid" : ""}`}
+                  id="newEmail"
+                  name="newEmail"
+                  placeholder="Enter new email"
+                  onChange={(e) => {
+                    setError("");
+                    setNewEmail(e.target.value);
+                  }}
+                />
+                {error && <div className="invalid-feedback">{error}</div>}
+              </div>
+            )}
+
+            {/* OTP Input */}
+            {otpSent && (
+              <div className="mb-3">
+                <label htmlFor="otp" className="form-label">
+                  Enter OTP
+                </label>
+                <input
+                  type="text"
+                  className={`form-control ${error ? "is-invalid" : ""}`}
+                  id="otp"
+                  name="otp"
+                  placeholder="Enter OTP"
+                  onChange={(e) => {
+                    setError("");
+                    setOtp(e.target.value);
+                  }}
+                />
+                {error && <div className="invalid-feedback">{error}</div>}
+              </div>
+            )}
           </form>
         </div>
         <div className="modal-footer">
           <button
             type="button"
             className="btn btn-danger light"
-            onClick={() => setEditEmailModal(false)}
+            onClick={() => {
+              setOtpSent(false)
+              setError("")
+              setEditEmailModal(false)}}
           >
             Close
           </button>
           <button
             type="button"
             className="btn btn-primary"
-            onClick={submitChangeEmail}
+            onClick={!otpSent ? handleEmailSubmit : handleOtpSubmit}
           >
-            Change Email
+            {!otpSent ? "Send OTP" : "Verify OTP"}
           </button>
         </div>
       </Modal>
@@ -581,8 +685,9 @@ const AppProfile = () => {
             type="button"
             className="btn-close"
             onClick={() => {
-              setError("")
-              setUploadImageModal(false)}}
+              setError("");
+              setUploadImageModal(false);
+            }}
           ></button>
         </div>
         <div className="modal-body">
