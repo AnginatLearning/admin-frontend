@@ -6,10 +6,13 @@ import Banner from "/public/Course image.jpg";
 import { PencilLine } from "@phosphor-icons/react";
 import api from "../../../services/AxiosInstance";
 import { calculateBatchDays } from "../../../utils/calculateBatchDays";
+import { useSelector } from "react-redux";
 
 const AllCourses = () => {
   const [loading, setLoading] = useState(true);
   const [filteredFeeData, setFilteredFeeData] = useState([]);
+  const [courses, SetCourses] = useState([]);
+  const query = useSelector((state) => state.search.query); // Access the query from Redux
   const navigate = useNavigate();
 
   const handleEditcourse = (id) => {
@@ -34,6 +37,16 @@ const AllCourses = () => {
     return Math.ceil(timeDifference / dayInMilliseconds);
   };
 
+  const filterCoursesByQuery = (courses, query) => {
+    if (query === "") {
+      return courses;
+    } else {
+      return courses.filter((course) =>
+        course.courseName.toLowerCase().includes(query.toLowerCase())
+      );
+    }
+  };
+
   useEffect(() => {
     const fetchCourses = async () => {
       const token = localStorage.getItem("accessToken");
@@ -45,7 +58,8 @@ const AllCourses = () => {
         const res = await api.get("course/courses/");
         const AllCourses = res.data.data;
         console.log(AllCourses);
-        setFilteredFeeData(AllCourses);
+        setFilteredFeeData(filterCoursesByQuery(AllCourses,query));
+        SetCourses(AllCourses);
         setLoading(false);
       } catch (error) {
         console.error(
@@ -56,6 +70,13 @@ const AllCourses = () => {
     };
     fetchCourses();
   }, []);
+
+  useEffect(() => {
+    setFilteredFeeData(filterCoursesByQuery(courses, query));
+  }, [query]);
+
+
+  
 
   const renderBatchStartDate = (batches) => {
     if (!batches || batches.length === 0) return null;
