@@ -26,9 +26,9 @@ const Editlead = () => {
     const fetchLeadDetails = async () => {
       try {
         setLoading(true);
-        const response = await api.get('auth/lead/leads');
+        const response = await api.get('lead/leads');
         const fetchedLeads = response.data.data.leads;
-        console.log(fetchedLeads);
+    
 
         const leadData = fetchedLeads.find((lead) => lead._id === id);
         
@@ -80,12 +80,12 @@ const Editlead = () => {
       email: updates.email || lead.email,
     };
 
-    const res = await api.patch('auth/lead/lead/status', {
+    const res = await api.patch('lead/lead/status', {
       leadId: lead._id,   
       updateData,         
     });
 
-    console.log('Update response:', res);
+  
 
     Swal.fire({
       title: 'Success!',

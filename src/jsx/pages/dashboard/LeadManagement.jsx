@@ -39,8 +39,7 @@ const LeadManagement = () => {
         const res = await api.get("/lead/leads");
         const allLeads = res.data.data.leads;
         const totalLeads = allLeads.length;
-        console.log(`Total number of leads: ${totalLeads}`);
-        console.log(allLeads);
+ 
 
         const activeLeads = allLeads.filter(
           (lead) => lead.status !== "Deleted" && lead.status !== "Trashed"

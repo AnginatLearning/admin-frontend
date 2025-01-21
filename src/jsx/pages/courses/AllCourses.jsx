@@ -72,6 +72,8 @@ const AllCourses = () => {
   }, []);
 
   useEffect(() => {
+    console.log("query", query);
+ 
     setFilteredFeeData(filterCoursesByQuery(courses, query));
   }, [query]);
 
