@@ -557,7 +557,7 @@ const Leadtrash = () => {
                 return;
             }
             try {
-                const res = await api.get('auth/lead/leads');
+                const res = await api.get('lead/leads');
                 const activeLeads = res.data.data.leads.filter(lead => lead.status === 'Trashed');
                 setFeeData(activeLeads);
                 setFilteredFeeData(activeLeads);
@@ -641,7 +641,7 @@ const Leadtrash = () => {
                             const lead = feeData.find(lead => lead._id === id);
         
                             if (lead) {
-                                console.log("Lead Information to delete:", lead);
+            
         
         
                                 const payload = {

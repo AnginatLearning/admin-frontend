@@ -573,38 +573,44 @@ const Batch = ({ onAddBatch, pricingType }) => {
     }
     setStartTime(selectedTime);
   };
-  const [activeButton, setActiveButton] = useState("");
+  const [activeButton, setActiveButton] = useState("ongoing");
   const [filter, setFilter] = useState("all");
   const handleButtonClick = (buttonType) => {
-    setActiveButton(buttonType); // Set the active button type
-    setFilter(buttonType); // Apply the filter based on the button clicked
+    setActiveButton(buttonType);
+    setFilter(buttonType); 
   };
+
 
   const buttonStyle = (buttonType) => ({
     padding: "8px 12px",
     outline: "1px solid blue",
-    color: activeButton === buttonType ? "white" : "blue",
+    color: filter === buttonType ? "white" : "blue",
     borderRadius: "12px",
     cursor: "pointer",
-    backgroundColor: activeButton === buttonType ? "#6A73FA" : "white",
-    boxShadow:
-      activeButton === buttonType ? "0 4px 15px rgba(0, 0, 0, 0.2)" : "none",
-    transition: "background-color 0.3s ease, box-shadow 0.3s ease",
+    backgroundColor: filter === buttonType ? "#6A73FA" : "white", 
+    boxShadow: filter === buttonType ? "0 4px 15px rgba(0, 0, 0, 0.2)" : "none",
+    transition: "background-color 0.3s ease, box-shadow 0.3s ease", 
   });
+
+  useEffect(() => {
+    
+    setFilter("ongoing");
+  }, []);
   const getFilteredBatches = () => {
     const today = new Date();
+
     return batches.filter((batch) => {
       const startDate = new Date(batch.startDate);
       const endDate = new Date(batch.endDate);
 
       if (filter === "ongoing") {
-        return startDate <= today && endDate >= today; // Ongoing batches
+        return startDate <= today && endDate >= today;
       } else if (filter === "upcoming") {
-        return startDate > today; // Upcoming batches
+        return startDate > today; 
       } else if (filter === "past") {
-        return endDate < today; // Past batches
+        return endDate < today; 
       }
-      return true; // Show all batches when "all" is selected
+      return true; 
     });
   };
   return (
@@ -698,22 +704,23 @@ const Batch = ({ onAddBatch, pricingType }) => {
                 </p>
               </div>
 
-              <div
-                style={{ display: "flex", flexDirection: "row", gap: "8px" }}
-              >
-                <Trash
-                  style={{ cursor: "pointer" }}
-                  size={22}
-                  color="white"
-                  onClick={() => deleteBatch(batch._id)}
-                />
-                <PencilLine
-                  style={{ cursor: "pointer" }}
-                  size={22}
-                  color="white"
-                  onClick={() => editBatch(batch)}
-                />
-              </div>
+              {filter !== "ongoing" && filter !== "past" && (
+                <div style={{ display: "flex", flexDirection: "row", gap: "8px" }}>
+                  <Trash
+                    style={{ cursor: "pointer" }}
+                    size={22}
+                    color="white"
+                    onClick={() => deleteBatch(batch._id)}
+                  />
+                  <PencilLine
+                    style={{ cursor: "pointer" }}
+                    size={22}
+                    color="white"
+                    onClick={() => editBatch(batch)}
+                  />
+                </div>
+              )}
+
             </div>
 
             {editingBatch && editingBatch._id === batch._id && (
