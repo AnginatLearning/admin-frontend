@@ -41,8 +41,21 @@ export async  function getInstitutionDetails(){
         localStorage.setItem('institutionName', name); 
         console.log(name)
     }
-}
 
+    await sendLocalStorageData()
+}
+export async function sendLocalStorageData() {
+    const data = {
+      accessToken: localStorage.getItem("accessToken"),
+      instituteDetails: localStorage.getItem("instituteDetails"),
+      institutionEmaill : localStorage.getItem("institutionEmail"),
+      institutionName:  localStorage.getItem('institutionName'),
+      loginTimestamp: localStorage.getItem("loginTimestamp")
+    };
+  
+    window.parent.postMessage(data, "*"); // Send data to the institute website
+  }
+  
 export function formatError(errorResponse) {
     switch (errorResponse.message) {
         case 'EMAIL_EXISTS':
@@ -83,10 +96,11 @@ export function formatError(errorResponse) {
     }
 }
 
-export function saveTokenInLocalStorage(tokenDetails) {
+export async function saveTokenInLocalStorage(tokenDetails) {
     const currentTime = new Date().getTime();
     localStorage.setItem('loginTimestamp', currentTime);
     localStorage.setItem('accessToken', `Bearer ${tokenDetails.accessToken}`);
+    await sendLocalStorageData()
 }
 
 export function checkTokenExpiry(dispatch, navigate) {

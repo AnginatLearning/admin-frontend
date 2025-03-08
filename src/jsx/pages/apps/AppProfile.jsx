@@ -20,6 +20,7 @@ import profile from "../../../assets/images/profile/profile.png";
 import PageTitle from "../../layouts/PageTitle";
 import api from "../../../services/AxiosInstance";
 import Swal from "sweetalert2";
+import { sendLocalStorageData } from "../../../services/AuthService";
 
 const galleryBlog = [
   { image: profile03 },
@@ -155,6 +156,7 @@ const AppProfile = () => {
             "institutionEmail",
             update.data.data.institute.email
           );
+          await sendLocalStorageData()
 
           // Show success notification
           Swal.fire({
@@ -236,6 +238,7 @@ const AppProfile = () => {
           "InstitutionDetails",
           JSON.stringify(response.data.institute)
         );
+        await sendLocalStorageData()
         setUploadImageModal(false);
         setImages({
           profileUrl: response.data.institute.profileUrl,
@@ -287,6 +290,7 @@ const AppProfile = () => {
           "institutionEmail",
           update.data.data.institute.email
         );
+        await sendLocalStorageData()
 
         Swal.fire({
           title: "Success!",
