@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 // Create an axios instance
 const api = axios.create({
-  baseURL: 'https://back-end.anginat.com/api/', // replace with your API base URL
+  baseURL: 'https://studentapi.anginatlearning.com/api/', // replace with your API base URL
   headers: {
     'Content-Type': 'application/json',
   },
