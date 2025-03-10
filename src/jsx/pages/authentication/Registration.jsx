@@ -176,9 +176,11 @@ function Register(props) {
                     checked={agreeToTerms}
                     onChange={() => setAgreeToTerms(!agreeToTerms)}  // Toggle agreement state
                   />
-                  <label className="form-check-label" htmlFor="basic_checkbox_1">
-                    I agree to the <span style={{ color: '#f9a19d' }}>Term Of Service</span> and <span style={{ color: '#f9a19d' }}>Privacy Policy.</span>
-                  </label>
+                  
+                    <label className="form-check-label" htmlFor="basic_checkbox_1">
+                      I agree to the <span style={{ color: '#f9a19d' }}>Term Of Service</span> and <span style={{ color: '#f9a19d' }}>Privacy Policy.</span>
+                    </label>
+                  
                   {error && (
                  <div className="text-danger mb-3">{error}</div>  
                   )}

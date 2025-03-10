@@ -178,7 +178,7 @@ function Institute() {
                                         onChange={handleCheckboxChange}
                                     />
                                     <label className="form-check-label" htmlFor="basic_checkbox_1">
-                                        I agree to the <span style={{ color: '#f9a19d' }}>Term Of Service</span> and <span style={{ color: '#f9a19d' }}>Privacy Policy</span>.
+                                        I agree to the <a href="https://www.anginatlearning.com/terms-and-condition"><span style={{ color: '#f9a19d' }}>Term Of Service</span></a> and <a href="https://www.anginatlearning.com/privacy-policy"><span style={{ color: '#f9a19d' }}>Privacy Policy</span></a>.
                                     </label>
                                     {checkboxError && <div className="text-danger fs-12">{checkboxError}</div>}
                                 </div>
