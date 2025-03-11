@@ -13,8 +13,8 @@ import logoFull from "../../../assets/images/logo-full.png";
 import Loginimage from '../../components/chatBox/Loginimage';
 
 function Login(props) {
-  const [email, setEmail] = useState('demo@example.com');
-  const [password, setPassword] = useState('123456');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({ email: '', password: '' });
   const [isChecked, setIsChecked] = useState(false); 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false); 
@@ -73,14 +73,10 @@ function Login(props) {
             <div className="upper">
               <div style={{ paddingTop: "80px", paddingBottom: "80px", backgroundColor:"white" }} className="signin">
                 <div className="card-body">
-                  <div className="mb-2">
-                    <p style={{ fontSize: "28px", fontWeight: "700", color: "black" }}>
-                      ANGINAT
-                    </p>
-                  </div>
+                  
 
                   <h4 style={{ fontSize: "24px", marginTop: "20px", fontWeight: "500" }} className="mb-4">
-                    Admin Sign in
+                    Admin Login
                   </h4>
                   {props.errorMessage && (
                     <div className="text-danger p-1 my-2">
@@ -154,33 +150,35 @@ function Login(props) {
 
                     <div style={{ marginTop: "20px" }} className="text-center">
                       <button type="submit" className="btn btn-primary btn-block">
-                        Sign Me In
+                        Login 
                       </button>
                     </div>
                   </form>
+                  <div className="new-account mt-3">
+                      <p style={{ textAlign: "center" }}>
+                        New user? <Link to="/select-one" className="text-primary">Create an Account</Link>
+                      </p>
+                  </div>
                 </div>
               </div>
              
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", marginTop: "0px", backgroundColor: "#fff5f4", paddingTop: "20px", paddingBottom: "20px", height: "240px" }}>
+              {/*<div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", marginTop: "0px", backgroundColor: "#fff5f4", paddingTop: "20px", paddingBottom: "20px", height: "240px" }}>
                     <p className="sign-title" style={{ fontSize: "15px", textAlign: "center" }}>
-                      Or sign in with
+                      Or login with
                     </p>
                     <div className="google-facebook" style={{ display: "flex", justifyContent: "center" }}>
                       <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
                         <div><img className="sign-img" style={{ width: "28px" }} src={google} alt="" /></div>
                         <div><p className="sign-text" style={{ marginTop: "15px", color: "black", fontWeight: "500" }}>Sign in using google</p></div>
                       </div>
-                      <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-                        <div><img className="sign-img" style={{ width: "28px" }} src={facebook} alt="" /></div>
-                        <div><p className="sign-text" style={{ marginTop: "15px", color: "black", fontWeight: "500" }}>Sign in using facebook</p></div>
-                      </div>
-                    </div>
+                      
+                    </div> 
                     <div className="new-account mt-3">
                       <p style={{ textAlign: "center" }}>
                         New user? <Link to="/select-one" className="text-primary">Create an Account</Link>
                       </p>
                     </div>
-                  </div>
+                  </div>*/}
               
             </div>
           </div>

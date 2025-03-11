@@ -172,9 +172,11 @@ function School(props) {
                                         checked={agree}
                                         onChange={(e) => setAgree(e.target.checked)} 
                                     />
-                                    <label className="form-check-label" htmlFor="basic_checkbox_1">
-                                        I agree to the <span style={{ color: '#f9a19d' }}>Term Of Service</span> and <span style={{ color: '#f9a19d' }}>Privacy Policy.</span>
-                                    </label>
+                                    
+                                        <label className="form-check-label" htmlFor="basic_checkbox_1">
+                                            I agree to the <span style={{ color: '#f9a19d' }}>Term Of Service</span> and <span style={{ color: '#f9a19d' }}>Privacy Policy.</span>
+                                        </label>
+                                    
                                     {checkboxError && <div className="text-danger fs-12">{checkboxError}</div>}
                                 </div>
 
