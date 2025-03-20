@@ -388,6 +388,7 @@ const Batch = ({ onAddBatch, pricingType }) => {
     console.log("Update Batch Data", updatedBatch);
     try {
       const endpoint = `/course/courses/${id}/batches/${editingBatch._id}`;
+      console.log("Endpoint",endpoint)
       const response = await api.put(endpoint, updatedBatch);
 
       if (response.status === 200) {
