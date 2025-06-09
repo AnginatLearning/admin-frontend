@@ -6,7 +6,7 @@ import api from './AxiosInstance';
 
 export const sendOtpOnEmail = async (email) => {
   try {
-    const response = await api.post(`auth/otp/generate`, { 
+    const response = await api.post(`/otp/generate`, { 
         "receiverId": email,     
         "otpType": "email"
     });
@@ -18,7 +18,7 @@ export const sendOtpOnEmail = async (email) => {
 
 export const verifyOtpOnEmail = async (otp,email) => {
     try {
-      const response = await api.post(`auth/otp/verify`, { 
+      const response = await api.post(`/otp/verify`, { 
           "otp": otp,     
           "otpType": "email",
           "receiverId": email,
