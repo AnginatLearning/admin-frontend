@@ -54,7 +54,6 @@ function SignUpOTP() {
         e.preventDefault();
         const otpCode = otp.join('');
 
-
         try {
             const response = await verifyOtpOnEmail(otpCode, ownerData.email);
             console.log(response)
@@ -108,6 +107,7 @@ function SignUpOTP() {
 
                 Swal.fire('Error', response.data.message || 'Registration failed. Please try again.', 'error');
             }
+            
         } catch (error) {
             console.error('Error registering institution:', error);
 

@@ -5,12 +5,15 @@ import { connect, useDispatch } from 'react-redux';
 import { loadingToggleAction, signupAction } from '../../../store/actions/AuthActions';
 import { useRegistration } from '../../../context/RegistrationContext';
 import { sendOtpOnEmail } from "../../../services/api";  // Adjust the import according to your file structure
+import axios from "axios";
+import { FaSpinner, FaCheckCircle } from "react-icons/fa";
 
 // images
 import google from "../../../assets/images/download (1).png";
 import facebook from "../../../assets/images/download (2).png";
 import login from "../../../assets/images/login-img.png";
 import Loginimage from "../../components/chatBox/Loginimage";
+import api from "../../../services/AxiosInstance";
 
 function Register(props) {
   const [showPassword, setShowPassword] = useState(false); // Toggle for Password field visibility
@@ -19,6 +22,16 @@ function Register(props) {
   const [confirmPassword, setConfirmPassword] = useState(''); 
   const [agreeToTerms, setAgreeToTerms] = useState(false);  // New state to track checkbox for agreement
   const [error, setError] = useState('');  // Error message state for form validation
+  const [fieldErrors, setFieldErrors] = useState({
+    email: '',
+    phoneNumber: '',
+    username: '',
+  });
+  const [fieldLoading, setFieldLoading] = useState({
+    email: false,
+    phoneNumber: false,
+    username: false,
+  });
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -45,7 +58,7 @@ function Register(props) {
       Swal.fire({ icon: 'error', title: 'Oops', text: 'Passwords do not match.' });
       return;
     }
-
+    
     try {
       setOwnerData({ ...ownerData, password }); 
       await sendOtpOnEmail(ownerData.email);
@@ -60,6 +73,72 @@ function Register(props) {
     setOwnerData({ ...ownerData, [e.target.name]: e.target.value });
   };
 
+  const checkFieldExists = async (field, value) => {
+    // Client-side validation
+    if (!value) return;
+
+    // Email validation
+    if (field === "email") {
+      const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+      if (!emailRegex.test(value)) {
+        setFieldErrors(prev => ({
+          ...prev,
+          email: "Invalid email address"
+        }));
+        return;
+      }
+    }
+
+    // Phone number validation
+    if (field === "phoneNumber") {
+      const phoneRegex = /^\d{10}$/;
+      if (!phoneRegex.test(value)) {
+        setFieldErrors(prev => ({
+          ...prev,
+          phoneNumber: "Invalid phone number"
+        }));
+        return;
+      }
+    }
+
+    // Username validation
+    if (field === "username") {
+      // Username: only letters, numbers, underscores, dots, not starting with _ or .
+      const usernameRegex = /^(?![_.])[A-Za-z0-9._]+$/;
+      if (!usernameRegex.test(value)) {
+        setFieldErrors(prev => ({
+          ...prev,
+          username: "Invalid username"
+        }));
+        return;
+      }
+    }
+
+    setFieldLoading(prev => ({ ...prev, [field]: true }));
+    setFieldErrors(prev => ({ ...prev, [field]: '' }));
+    try {
+      const body = { [field]: value };
+      const res = await api.post("auth/find-user", body);
+      if (res.data.data) {
+        setFieldErrors(prev => ({
+          ...prev,
+          [field]: `This ${field === "phoneNumber"? "phone number" : field} is already registered.`
+        }));
+      }
+    } catch (err) {
+      setFieldErrors(prev => ({
+        ...prev,
+        [field]: err.response?.data?.message || `Error checking ${field}.`
+      }));
+    } finally {
+      setFieldLoading(prev => ({ ...prev, [field]: false }));
+    }
+  };
+ 
+  const hasAnyError =
+  !!error ||
+  Object.values(fieldErrors).some((err) => err && err.length > 0);
+  
   return (
     <div className="Section">
       <div className='down'>
@@ -89,41 +168,128 @@ function Register(props) {
               <div className="two-input" style={{ display: "flex", justifyContent: "space-between" }}>
                 <div className="Email-section form-group">
                   <label className="form-label">Email</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={ownerData.email}
-                    onChange={handleChange}
-                    className="form-control"
-                    placeholder="Email"
-                    required
-                  />
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <input
+                      type="email"
+                      name="email"
+                      value={ownerData.email}
+                      onChange={handleChange}
+                      onBlur={e => checkFieldExists('email', e.target.value)}
+                      className="form-control"
+                      placeholder="Email"
+                      required
+                      style={{ flex: 1 }}
+                    />
+                    {fieldLoading.email ? (
+                      <FaSpinner
+                        style={{
+                          marginLeft: 8,
+                          fontSize: 18,
+                          color: "#007bff",
+                          animation: "spin 0.8s linear infinite"
+                        }}
+                      />
+                    ) : (
+                      ownerData.email && !fieldErrors.email && (
+                        <FaCheckCircle
+                          style={{
+                            marginLeft: 8,
+                            fontSize: 15,
+                            color: "#28a745", // Bootstrap green
+                            background: "#e6f9ec",
+                            borderRadius: "50%"
+                          }}
+                        />
+                      )
+                    )}
+                  </div>
+                  {fieldErrors.email && (
+                    <div className="text-danger" style={{ fontSize: "11px" }}>{fieldErrors.email}</div>
+                  )}
                 </div>
                 <div className="phone-section form-group">
                   <label className="form-label">Phone no.</label>
-                  <input
-                    type="text"
-                    name="phoneNumber"
-                    value={ownerData.phoneNumber}
-                    onChange={handleChange}
-                    className="form-control"
-                    placeholder="Phone no."
-                    required
-                  />
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <input
+                      type="text"
+                      name="phoneNumber"
+                      value={ownerData.phoneNumber}
+                      onChange={handleChange}
+                      onBlur={e => checkFieldExists('phoneNumber', e.target.value)}
+                      className="form-control"
+                      placeholder="Phone no."
+                      required
+                      style={{ flex: 1 }}
+                    />
+                    {fieldLoading.phoneNumber ? (
+                      <FaSpinner
+                        style={{
+                          marginLeft: 8,
+                          fontSize: 18,
+                          color: "#007bff",
+                          animation: "spin 0.8s linear infinite"
+                        }}
+                      />
+                    ) : (
+                      ownerData.phoneNumber && !fieldErrors.phoneNumber && (
+                        <FaCheckCircle
+                          style={{
+                            marginLeft: 8,
+                            fontSize: 15,
+                            color: "#28a745",
+                            background: "#e6f9ec",
+                            borderRadius: "50%"
+                          }}
+                        />
+                      )
+                    )}
+                  </div>
+                  {fieldErrors.phoneNumber && (
+                    <div className="text-danger" style={{ fontSize: "11px" }}>{fieldErrors.phoneNumber}</div>
+                  )}
                 </div>
               </div>
 
               <div className="form-group">
                 <label className="form-label">Username</label>
-                <input
-                  type="text"
-                  name="username"
-                  value={ownerData.username}
-                  onChange={handleChange}
-                  className="form-control"
-                  placeholder="Username"
-                  required
-                />
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <input
+                    type="text"
+                    name="username"
+                    value={ownerData.username}
+                    onChange={handleChange}
+                    onBlur={e => checkFieldExists('username', e.target.value)}
+                    className="form-control"
+                    placeholder="Username"
+                    required
+                    style={{ flex: 1 }}
+                  />
+                  {fieldLoading.username ? (
+                    <FaSpinner
+                      style={{
+                        marginLeft: 8,
+                        fontSize: 18,
+                        color: "#007bff",
+                        animation: "spin 0.8s linear infinite"
+                      }}
+                    />
+                  ) : (
+                    ownerData.username && !fieldErrors.username && (
+                      <FaCheckCircle
+                        style={{
+                          marginLeft: 8,
+                          fontSize: 15,
+                          color: "#28a745",
+                          background: "#e6f9ec",
+                          borderRadius: "50%"
+                        }}
+                      />
+                    )
+                  )}
+                </div>
+                {fieldErrors.username && (
+                  <div className="text-danger" style={{ fontSize: "11px" }}>{fieldErrors.username}</div>
+                )}
               </div>
 
               <div className="two-input" style={{ display: "flex", justifyContent: "space-between" }}>
@@ -182,7 +348,7 @@ function Register(props) {
                     </label>
                   
                   {error && (
-                 <div className="text-danger mb-3">{error}</div>  
+                    <div className="text-danger mb-3" style={{ fontSize: "12px" }}>{error}</div>
                   )}
                 </div>
               </div>
@@ -191,6 +357,7 @@ function Register(props) {
                 <button
                   type="submit"
                   className="btn btn-primary btn-block"
+                  disabled={hasAnyError}
                 >
                   Get OTP
                 </button>
@@ -225,6 +392,7 @@ function Register(props) {
   );
 }
 
+
 const mapStateToProps = (state) => {
   return {
     errorMessage: state.auth.errorMessage,
@@ -233,4 +401,13 @@ const mapStateToProps = (state) => {
   };
 };
 
+ 
 export default connect(mapStateToProps)(Register);
+
+<style>
+{`
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+`}
+</style>
