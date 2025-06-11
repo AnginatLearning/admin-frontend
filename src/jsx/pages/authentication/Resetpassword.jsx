@@ -20,11 +20,11 @@ function Resetpassword(props) {
     const email = sessionStorage.getItem('email');
 
     const validatePassword = (password) => {
+        console.log("password", password)
         const lengthCheck = password.length >= 8;
         const capitalLetterCheck = /[A-Z]/.test(password);
-        const validSymbolsCheck = /^[A-Za-z0-9_.]*$/.test(password);
 
-        return lengthCheck && capitalLetterCheck && validSymbolsCheck;
+        return lengthCheck && capitalLetterCheck;
     };
 
     const handleSubmit = async (e) => {
