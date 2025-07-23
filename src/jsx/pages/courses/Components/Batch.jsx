@@ -247,7 +247,7 @@ const Batch = ({ onAddBatch, pricingType }) => {
 
     if (url.includes("edit-courses")) {
       try {
-        console.log("New batch Data", newBatch);
+        
         const res = await api.post(`course/courses/${id}/batches`, newBatch);
 
         if (res.status === 200) {
@@ -280,7 +280,7 @@ const Batch = ({ onAddBatch, pricingType }) => {
           });
           setStartTime("");
           setEndTime("");
-          setBatches((prevBatches) => [...prevBatches, newBatch]);
+          setBatches(res.data.data.batches);
         }
       } catch (error) {
         Swal.fire({
@@ -361,19 +361,7 @@ const Batch = ({ onAddBatch, pricingType }) => {
       return;
     }
 
-    console.log({
-      name,
-      startDate,
-      endDate,
-      seats,
-      timeZone: `${formatTimeTo12Hour(startTime)} - ${formatTimeTo12Hour(
-        endTime
-      )}`,
-      price,
-      batchType,
-    });
-    console.log("Start Time", startTime);
-    console.log("End Time", endTime);
+
     const updatedBatch = {
       name,
       startDate: combineDateTime(startDate, startTime),
@@ -386,11 +374,11 @@ const Batch = ({ onAddBatch, pricingType }) => {
       batchType,
     };
     console.log("Update Batch Data", updatedBatch);
-  
+
     try {
-      console.log("Editing Batch", editingBatch);
+     
       const endpoint = `/course/courses/${id}/batches/${editingBatch._id}`;
-      console.log("Endpoint",endpoint)
+      console.log("Endpoint", endpoint)
       const response = await api.put(endpoint, updatedBatch);
 
       if (response.status === 200) {
@@ -493,6 +481,7 @@ const Batch = ({ onAddBatch, pricingType }) => {
 
     setStartTime(convertTimeRangeTo24Hour(batch?.timeZone).start);
     setEndTime(convertTimeRangeTo24Hour(batch?.timeZone).end);
+    console.log("Before adding in editing batch state", batch);
     setEditingBatch(batch);
   };
 
@@ -580,7 +569,7 @@ const Batch = ({ onAddBatch, pricingType }) => {
   const [filter, setFilter] = useState("all");
   const handleButtonClick = (buttonType) => {
     setActiveButton(buttonType);
-    setFilter(buttonType); 
+    setFilter(buttonType);
   };
 
 
@@ -590,13 +579,13 @@ const Batch = ({ onAddBatch, pricingType }) => {
     color: filter === buttonType ? "white" : "blue",
     borderRadius: "12px",
     cursor: "pointer",
-    backgroundColor: filter === buttonType ? "#6A73FA" : "white", 
+    backgroundColor: filter === buttonType ? "#6A73FA" : "white",
     boxShadow: filter === buttonType ? "0 4px 15px rgba(0, 0, 0, 0.2)" : "none",
-    transition: "background-color 0.3s ease, box-shadow 0.3s ease", 
+    transition: "background-color 0.3s ease, box-shadow 0.3s ease",
   });
 
   useEffect(() => {
-    
+
     setFilter("ongoing");
   }, []);
   const getFilteredBatches = () => {
@@ -609,11 +598,11 @@ const Batch = ({ onAddBatch, pricingType }) => {
       if (filter === "ongoing") {
         return startDate <= today && endDate >= today;
       } else if (filter === "upcoming") {
-        return startDate > today; 
+        return startDate > today;
       } else if (filter === "past") {
-        return endDate < today; 
+        return endDate < today;
       }
-      return true; 
+      return true;
     });
   };
   return (
@@ -693,10 +682,10 @@ const Batch = ({ onAddBatch, pricingType }) => {
                 <p style={{ color: "white", fontSize: "12px", margin: "0" }}>
                   {batch.startDate
                     ? new Date(batch.startDate).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                      })
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })
                     : "N/A"}
                 </p>
                 <p style={{ color: "white", fontSize: "12px", margin: "0" }}>
